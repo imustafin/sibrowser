@@ -1,0 +1,10 @@
+build:
+  config:
+    RAILS_ENV: production
+  docker:
+    web: Dockerfile
+
+release:
+  image: web
+  command:
+    - bundle exec rails db:migrate

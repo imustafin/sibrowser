@@ -88,9 +88,8 @@ RUN yarn install
 
 COPY . .
 
-    # SECRET_KEY_BASE="$(openssl rand -base64 32)"
 RUN if [ "x$RAILS_ENV" = "xproduction" ]; then \
-    bundle exec rake assets:precompile ; \
+    SECRET_KEY_BASE="$(openssl rand -base64 32)" bundle exec rake assets:precompile ; \
 fi
 
 CMD bundle exec rails server

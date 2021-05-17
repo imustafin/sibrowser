@@ -8,12 +8,15 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: <%= ENV.fetch('PG_USERNAME') %>
-  password: <%= ENV.fetch('PG_PASSWORD') %>
-  host: <%= ENV.fetch('PG_HOST') %>
+
+docker-compose-creds: &docker-compose-creds
+  username: <%= ENV['PG_USERNAME'] %>
+  password: <%= ENV['PG_PASSWORD'] %>
+  host: <%= ENV['PG_HOST'] %>
 
 development:
   <<: *default
+  <<: *docker-compose-creds
   database: sibrowser_development
 
 # Warning: The database defined as "test" will be erased and
@@ -21,8 +24,10 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
+  <<: *docker-compose-creds
   database: sibrowser_test
 
 production:
   <<: *default
+  url: <%= ENV['DATABASE_URL'] %>
   database: sibrowser_production
