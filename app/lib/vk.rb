@@ -28,4 +28,8 @@ module Vk
 
     JSON.parse(res.body)
   end
+
+  def self.board_get_comments(params)
+    request('board.getComments', params)
+  end
 end
