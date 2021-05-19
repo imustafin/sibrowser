@@ -1,2 +1,17 @@
-<h1>Packages#index</h1>
-<p>Find me in app/views/packages/index.html.erb</p>
+<h1>Packages</h1>
+
+Total packages: <%= @packages.count %>
+
+<ul>
+  <% @packages.each do |package| %>
+    <li>
+      <h2><%= package.name %></h2>
+
+      <% if package.authors.present? %>
+        <h3>by <%= package.authors %></h3>
+      <% end %>
+
+      <a href="<%= package.source_link %>">Download from Source</a>
+    </li>
+  <% end %>
+</ul>
