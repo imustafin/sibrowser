@@ -1,3 +1,5 @@
 Rails.application.routes.draw do
-  root 'home#index'
+  root 'packages#index'
+
+  get 'packages', to: 'packages#index'
 end
