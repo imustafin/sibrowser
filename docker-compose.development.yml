@@ -16,6 +16,11 @@ services:
       PG_HOST: pg
       PG_USERNAME: postgres
       PG_PASSWORD: 123
+      VK_APP_ID:
+      VK_SECRET:
+      VK_SERVICE:
+
+
     tmpfs:
       - /tmp
     stdin_open: true
