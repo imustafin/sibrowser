@@ -20,7 +20,21 @@
     <%= stylesheet_pack_tag "application", "data-turbo-track": "reload" %>
   </head>
 
-  <body class="bg-indigo-900 text-white">
-    <%= yield %>
+  <body class="bg-indigo-300 text-black-20 min-h-screen flex flex-col justify-between">
+    <header class="px-4 flex justify-between h-16 bg-indigo-800 text-white">
+      <ul class="flex items-center font-bold">
+        <%= link_to 'Sibrowser', root_path %>
+      </ul>
+    </header>
+    <main class="mb-auto">
+      <%= yield %>
+    </main>
+    <footer>
+      <div class="px-4 mt-12 flex justify-center items-center bg-white h-16 bg-indigo-800 text-white">
+        <span>
+          Made by <a href="https://imustafin.tatar/en" class="font-bold">Ilgiz Mustafin</a>
+        </span>
+      </div>
+    </footer>
   </body>
 </html>
