@@ -1,16 +1,32 @@
-<h1>Packages</h1>
-
-<ul>
-  <% @packages.each do |package| %>
-    <li>
-      <h2><%= package.name %></h2>
-
-      <% if package.authors.present? %>
-        <h3>by <%= package.authors %></h3>
+<div class="container mx-auto">
+  <h1 class="text-2xl font-bold text-center pb-4 pt-8">
+    Packages
+  </h1>
+  <table class="table-fixed container mx-auto">
+    <thead>
+      <tr class="bg-indigo-600">
+        <th class="w-1/2 text-center py-4">Name</th>
+        <th class="w-1/4 text-center py-4">Authors</th>
+        <th class="w-1/4 text-center py-4">Download from Source</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @packages.each do |package| %>
+      <tr class="bg-indigo-100 hover:bg-indigo-300 text-black">
+        <td class="py-4 text-center"><%= package.name %></td>
+        <td class="text-center"><%= package.authors %></td>
+        <td class="text-center">
+          <a
+            class="border-2 border-transparent bg-indigo-500 ml-3 py-2 px-4 font-bold text-white hover:border-indigo-900"
+            href="<%= package.source_link %>"
+          >
+            Link
+          </a>
+        </td>
+      </tr>
       <% end %>
+    </tbody>
+  </table>
+  <%= paginate @packages %>
+</div>
 
-      <a href="<%= package.source_link %>">Download from Source</a>
-    </li>
-  <% end %>
-</ul>
-<%= paginate @packages %>
