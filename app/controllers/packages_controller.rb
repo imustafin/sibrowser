@@ -1,5 +1,5 @@
 class PackagesController < ApplicationController
   def index
-    @packages = Package.all
+    @packages = Package.order(:id).page(params[:page])
   end
 end

@@ -1,7 +1,5 @@
 <h1>Packages</h1>
 
-Total packages: <%= @packages.count %>
-
 <ul>
   <% @packages.each do |package| %>
     <li>
@@ -15,3 +13,4 @@ Total packages: <%= @packages.count %>
     </li>
   <% end %>
 </ul>
+<%= paginate @packages %>
