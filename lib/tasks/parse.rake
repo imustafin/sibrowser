@@ -1,3 +1,5 @@
+require 'net/http'
+
 namespace :parse do
   desc "Parse packages from https://vk.com/topic-135725718_34975471"
   task vk_si_game: :environment do
@@ -23,8 +25,32 @@ namespace :parse do
           if a['type'] == 'doc' && a['doc']['title'].end_with?('.siq')
             doc = a['doc']
 
+            url = doc['url']
+            puts "Parsing #{doc['title']} with url"
+            puts "  #{url}"
+            begin
+              resp = Net::HTTP.get_response(URI(url))
+              url = resp['location']
+            end while resp.is_a?(Net::HTTPRedirection)
+
+            unless resp.is_a?(Net::HTTPOK)
+              puts "HTTP result is #{resp.class.name}, skipping..."
+              next
+            end
+
+            body = resp.body
+
+            unless body.starts_with?("\x50\x4b\x03\x04")
+              puts "This doesn't look like zip, skipping..."
+              next
+            end
+
+            si_package = Si::Package.read_from_siq(body)
+
             p = Package.create!(
-              name: doc['title'],
+              filename: doc['title'],
+              name: si_package.name,
+              authors: si_package.authors,
               source_link: "https://vk.com/topic-135725718_34975471?post=#{i['id']}",
               post_text: i['text']
             )
