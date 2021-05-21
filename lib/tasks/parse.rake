@@ -25,7 +25,8 @@ namespace :parse do
 
             p = Package.create!(
               name: doc['title'],
-              source_link: "https://vk.com/topic-135725718_34975471?post=#{i['id']}"
+              source_link: "https://vk.com/topic-135725718_34975471?post=#{i['id']}",
+              post_text: i['text']
             )
             puts "Created #{p.name}"
           end
@@ -42,6 +43,11 @@ namespace :parse do
     else
       puts "Done in #{requests} requests"
     end
+  end
+
+  desc 'Delete all packages'
+  task delete_packages: :environment do
+    Package.delete_all
   end
 
 end

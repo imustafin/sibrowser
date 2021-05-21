@@ -1,18 +1,28 @@
-<div class="container mx-auto">
-  <h1 class="text-2xl font-bold text-center pt-8">
+<div class="container mx-auto bg-indigo-100 my-14 p-10">
+  <h1 class="text-2xl font-bold text-center">
     <%= @package.name %>
   </h1>
   <h2 class="text-xl font-bold text-center pb-4">
     by <%= @package.authors || '?' %>
   </h2>
+
+  <% if @package.post_text.present? %>
+    <div class="mb-8 ml-8">
+      <h3 class="text-xl mb-2">Original Message</h3>
+      <%= simple_format(@package.post_text) %>
+    </div>
+  <% end %>
+
   Added to Sibrowser: <%= @package.created_at %> <br>
   <% if @package.created_at != @package.updated_at %>
     Information changed in Sibrowser: <%= @package.updated_at %> <br>
   <% end %>
-  <a
-    class="border-4 border-transparent bg-purple-500 inline-block py-2 px-4 font-bold text-white hover:border-purple-600"
-    href="<%= @package.source_link %>"
-  >
-    Download from Source
-  </a>
+  <div class="flex justify-center">
+    <a
+      class="border-4 border-transparent bg-purple-500 inline-block py-2 px-4 font-bold text-white hover:border-purple-600"
+      href="<%= @package.source_link %>"
+    >
+      Download from Source
+    </a>
+  </div>
 </div>
