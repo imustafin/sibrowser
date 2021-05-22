@@ -15,15 +15,17 @@
     </div>
   <% end %>
 
-  Published in Source: <%= @package.published_at %> <br>
+  Published in Source: <%= @package.published_at.to_date %> <br>
 
-  Added to Sibrowser: <%= @package.created_at %> <br>
+  Added to Sibrowser: <%= @package.created_at.to_date %> <br>
 
-  <% if @package.created_at != @package.updated_at %>
-    Information changed in Sibrowser: <%= @package.updated_at %> <br>
+  <% if @package.created_at.to_date != @package.updated_at.to_date %>
+    Information changed in Sibrowser: <%= @package.updated_at.to_date %> <br>
   <% end %>
 
-  Filename: <%= @package.filename %> <br>
+  <% if @package.filename != @package.name + '.siq' %>
+    Filename: <%= @package.filename %> <br>
+  <% end %>
 
   <div class="flex justify-center">
     <a
