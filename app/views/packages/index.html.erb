@@ -7,6 +7,7 @@
       <tr class="bg-indigo-500">
         <th class="w-1/2 text-center py-4">Name</th>
         <th class="w-1/4 text-center py-4">Authors</th>
+        <th class="w-1/4 text-center py-4">Date Published</th>
         <th class="w-1/4 text-center py-4">Download from Source</th>
       </tr>
     </thead>
@@ -20,6 +21,9 @@
           <% if package.authors.present? %>
             <%= package.authors.join(', ')  %>
           <% end %>
+        </td>
+        <td class="text-center">
+          <%= package.published_at %>
         </td>
         <td class="text-center">
           <a

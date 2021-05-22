@@ -35,7 +35,8 @@ class BoardParser
             filename: doc['title'],
             source_link: "https://vk.com/topic-135725718_34975471?post=#{i['id']}",
             post_text: i['text'],
-            file_url: doc['url']
+            file_url: doc['url'],
+            file_date: Time.at(doc['date'])
           }
         end
       end
@@ -84,7 +85,8 @@ class BoardParser
             name: name,
             authors: si_package.authors,
             source_link: meta[:source_link],
-            post_text: meta[:post_text]
+            post_text: meta[:post_text],
+            published_at: meta[:file_date]
           )
         end
       end
