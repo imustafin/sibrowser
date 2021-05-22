@@ -61,3 +61,4 @@ gem 'kaminari', '~> 1.2', '>= 1.2.1'
 
 gem 'tailwindcss-rails', '~> 0.3.3'
 gem 'rubyzip', '~> 2.3'
+gem 'heroicon', '~> 0.3.0'

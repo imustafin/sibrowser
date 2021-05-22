@@ -5,9 +5,9 @@
   <table class="table-fixed container mx-auto mb-4">
     <thead>
       <tr class="bg-indigo-500">
-        <th class="w-1/2 text-center py-4">Name</th>
-        <th class="w-1/4 text-center py-4">Authors</th>
-        <th class="w-1/4 text-center py-4">Date Published</th>
+        <%= sortable 'Date Published', :published_at %>
+        <%= sortable 'Name', :name %>
+        <%= sortable 'Authors', :authors %>
         <th class="w-1/4 text-center py-4">Download from Source</th>
       </tr>
     </thead>
@@ -15,15 +15,15 @@
       <% @packages.each do |package| %>
       <tr class="bg-indigo-100 hover:bg-indigo-200 text-black">
         <td class="py-4 text-center">
+          <%= package.published_at %>
+        </td>
+        <td class="text-center">
           <%= link_to package.name, package, class: 'font-bold' %>
         </td>
         <td class="text-center">
           <% if package.authors.present? %>
             <%= package.authors.join(', ')  %>
           <% end %>
-        </td>
-        <td class="text-center">
-          <%= package.published_at %>
         </td>
         <td class="text-center">
           <a
