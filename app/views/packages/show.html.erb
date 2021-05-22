@@ -8,12 +8,41 @@
     <% end %>
   </h2>
 
-  <% if @package.post_text.present? %>
-    <div class="mb-8 ml-8">
-      <h3 class="text-xl mb-2">Original Message</h3>
+  <div class="mb-8 ml-8">
+    <% if @package.post_text.present? %>
+      <h3 class="text-xl mb-2">
+        Original Message
+      </h3>
       <%= simple_format(@package.post_text) %>
-    </div>
-  <% end %>
+    <% end %>
+
+
+    <h3 class="text-xl my-2 text-center">
+      Rounds
+    </h1>
+
+    <ul
+      class="mb-2 grid justify-items-center auto-rows-max gap-10"
+      style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));"
+    >
+      <% @package.structure.each do |round, questions| %>
+      <li class="border-4 border-indigo-400 min-h-full min-w-full" style="max-width: 240px">
+        <h4 class="text-center block font-bold">
+          <%= round %>
+        </h4>
+        <ul class="m-4">
+          <% questions.each do |question| %>
+          <li>
+            <%= question %>
+          </li>
+          <% end %>
+        </ul>
+      </li>
+      <% end %>
+    </ul>
+  </div>
+
+
 
   Published in Source: <%= @package.published_at.to_date %> <br>
 

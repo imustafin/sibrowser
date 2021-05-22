@@ -3,4 +3,5 @@ class Package < ApplicationRecord
   validates :source_link, presence: true
 
   serialize :authors, Array
+  serialize :structure, Hash
 end

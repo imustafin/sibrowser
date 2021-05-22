@@ -2,22 +2,31 @@ require 'zip'
 
 module Si
   class Package
-    attr_accessor :name, :version, :authors
-
-    def self.read_from_siq(zip_buffer)
-      p = new
-
-      Zip::File.open_buffer(zip_buffer) do |zip|
-        content = Nokogiri::XML(zip.read('content.xml'))
-
-        package = content.css('package').first
-
-        p.authors = package.css('info authors author').map(&:text)
-        p.name = package['name']
-        p.version = package['version']
+    def initialize(buffer)
+      Zip::File.open_buffer(buffer) do |zip|
+        @content = Nokogiri::XML(zip.read('content.xml'))
       end
+    end
 
-      p
+    def package
+      @package ||= @content.css('package').first
+    end
+
+    def name
+      package['name']
+    end
+
+    def authors
+      package.css('info authors author').map(&:text)
+    end
+
+    # Hash from round name to themes array
+    def structure
+      package.css('rounds round').map do |round|
+        themes = round.css('themes theme').map { |x| x['name'] }
+
+        [round['name'], themes]
+      end.to_h
     end
   end
 end
