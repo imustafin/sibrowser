@@ -76,9 +76,12 @@ class BoardParser
 
           si_package = Si::Package.read_from_siq(body)
 
+          name = si_package.name
+          name = meta[:filename] if name.blank?
+
           Package.create!(
             filename: meta[:filename],
-            name: si_package.name,
+            name: name,
             authors: si_package.authors,
             source_link: meta[:source_link],
             post_text: meta[:post_text]
