@@ -21,9 +21,20 @@
   </head>
 
   <body class="bg-indigo-300 text-black-20 min-h-screen flex flex-col justify-between">
-    <header class="px-4 flex justify-between h-16 bg-indigo-800 text-white">
-      <ul class="flex items-center font-bold">
-        <%= link_to 'Sibrowser', root_path %>
+    <header class="px-4 flex justify-between h-16 bg-indigo-800 text-white font-bold items-center">
+      <%= link_to 'Sibrowser', root_path %>
+      <ul class="flex gap-2">
+        <% Languages.each do |(name, code)| %>
+          <% if code != I18n.locale %>
+            <li>
+              <% if code != I18n.default_locale %>
+                <%= link_to name, locale: code %>
+              <% else %>
+                <%= link_to name, locale: nil %>
+              <% end %>
+            </li>
+            <% end %>
+        <% end %>
       </ul>
     </header>
     <main class="mb-auto">
