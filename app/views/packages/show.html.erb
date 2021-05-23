@@ -44,12 +44,12 @@
 
 
 
-  <%= t('published_at') %>: <%= @package.published_at.to_date %> <br>
+  <%= t('published_at') %>: <%= l @package.published_at.to_date %> <br>
 
-  <%= t('added_to_sibrowser') %>: <%= @package.created_at.to_date %> <br>
+  <%= t('added_to_sibrowser') %>: <%= l @package.created_at.to_date %> <br>
 
   <% if @package.created_at.to_date != @package.updated_at.to_date %>
-    <%= t('updated_in_sibrowser') %>: <%= @package.updated_at.to_date %> <br>
+    <%= t('updated_in_sibrowser') %>: <%= l @package.updated_at.to_date %> <br>
   <% end %>
 
   <% if @package.filename != @package.name + '.siq' %>
