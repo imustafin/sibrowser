@@ -32,7 +32,10 @@
     <footer>
       <div class="px-4 mt-12 flex justify-center items-center bg-white h-16 bg-indigo-800 text-white">
         <span>
-          Made by <a href="https://imustafin.tatar/en" class="font-bold">Ilgiz Mustafin</a>
+          <%= t('made_by') %>
+          <a href="https://imustafin.tatar/<%= I18n.locale %>" class="font-bold">
+            <%= t('ilgiz') %>
+          </a>
         </span>
       </div>
     </footer>

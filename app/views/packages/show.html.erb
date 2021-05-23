@@ -4,21 +4,21 @@
   </h1>
   <h2 class="text-xl font-bold text-center pb-4">
     <% if @package.authors.present? %>
-    by <%= @package.authors.join(', ') %>
+    <%= @package.authors.join(', ') %>
     <% end %>
   </h2>
 
   <div class="mb-8 ml-8">
     <% if @package.post_text.present? %>
       <h3 class="text-xl mb-2">
-        Original Message
+        <%= t('original_message') %>
       </h3>
       <%= simple_format(@package.post_text) %>
     <% end %>
 
 
     <h3 class="text-xl my-2 text-center">
-      Rounds
+      <%= t('rounds') %>
     </h1>
 
     <ul
@@ -44,16 +44,16 @@
 
 
 
-  Published in Source: <%= @package.published_at.to_date %> <br>
+  <%= t('published_at') %>: <%= @package.published_at.to_date %> <br>
 
-  Added to Sibrowser: <%= @package.created_at.to_date %> <br>
+  <%= t('added_to_sibrowser') %>: <%= @package.created_at.to_date %> <br>
 
   <% if @package.created_at.to_date != @package.updated_at.to_date %>
-    Information changed in Sibrowser: <%= @package.updated_at.to_date %> <br>
+    <%= t('updated_in_sibrowser') %>: <%= @package.updated_at.to_date %> <br>
   <% end %>
 
   <% if @package.filename != @package.name + '.siq' %>
-    Filename: <%= @package.filename %> <br>
+    <%= t('filename') %>: <%= @package.filename %> <br>
   <% end %>
 
   <div class="flex justify-center">
@@ -61,7 +61,7 @@
       class="border-4 border-transparent bg-purple-500 inline-block py-2 px-4 font-bold text-white hover:border-purple-600"
       href="<%= @package.source_link %>"
     >
-      Download from Source
+      <%= t('download') %>
     </a>
   </div>
 </div>

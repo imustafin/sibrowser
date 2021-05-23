@@ -1,0 +1,21 @@
+ru:
+  views:
+    pagination:
+      truncate: "..."
+      next: ›
+      last: »
+      previous: ‹
+      first: «
+  packages: Пакеты
+  published_at: Опубликовано
+  name: Название
+  authors: Авторы
+  download: Скачать из источника
+  link: Ссылка
+  made_by: Автор сайта —
+  ilgiz: Мустафин Ильгиз
+  original_message: Оригинальное сообщение
+  rounds: Раунды
+  added_to_sibrowser: Добавлено в Sibrowser
+  updated_in_sibrowser: Обновлено в Sibrowser
+  filename: Имя файла
