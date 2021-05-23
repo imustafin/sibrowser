@@ -20,3 +20,8 @@ ru:
   updated_in_sibrowser: Обновлено в Sibrowser
   filename: Имя файла
   tags: Теги
+  packages_for_sigame: Пакеты для Своей Игры (%{link}).
+  sigame_author: Автор игры — %{link}.
+  khil: Владимир Хиль
+  on_this_site_packages: На этом сайте собраны пакеты из темы %{link}.
+  sigame_package: Пакет для Своей Игры (%{link}).

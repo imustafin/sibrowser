@@ -1,74 +1,81 @@
-<div class="container mx-auto bg-indigo-100 my-14 p-10">
-  <h1 class="text-2xl font-bold text-center">
-    <%= @package.name %>
+<h1 class="text-2xl font-bold text-center">
+  <%= @package.name %>
+</h1>
+<h2 class="text-xl font-bold text-center pb-4">
+  <% if @package.authors.present? %>
+    <p>
+      <%= @package.authors.join(', ') %>
+    </p>
+  <% end %>
+  <% if @package.tags.present? %>
+    <p>
+      <%= @package.tags.join(', ') %>
+    </p>
+  <% end %>
+</h2>
+
+<p>
+  <%= t('sigame_package',
+        link: link_to('SIGame', 'https://vladimirkhil.com/si/game', class: 'font-bold')).html_safe
+  %>
+  <%= t('sigame_author',
+        link: link_to(t('khil'), 'https://vladimirkhil.com/', class: 'font-bold')).html_safe
+  %>
+</p>
+
+<div class="mb-8">
+  <% if @package.post_text.present? %>
+    <h3 class="text-xl mb-2">
+      <%= t('original_message') %>
+    </h3>
+    <%= simple_format(@package.post_text) %>
+  <% end %>
+
+
+  <h3 class="text-xl my-2 text-center">
+    <%= t('rounds') %>
   </h1>
-  <h2 class="text-xl font-bold text-center pb-4">
-    <% if @package.authors.present? %>
-      <p>
-        <%= @package.authors.join(', ') %>
-      </p>
+
+  <ul
+    class="mb-2 grid justify-items-center auto-rows-max gap-10"
+    style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));"
+  >
+    <% @package.structure.each do |round, questions| %>
+    <li class="border-4 border-indigo-400 min-h-full min-w-full" style="max-width: 240px">
+      <h4 class="text-center block font-bold">
+        <%= round %>
+      </h4>
+      <ul class="m-4">
+        <% questions.each do |question| %>
+        <li>
+          <%= question %>
+        </li>
+        <% end %>
+      </ul>
+    </li>
     <% end %>
-    <% if @package.tags.present? %>
-      <p>
-        <%= @package.tags.join(', ') %>
-      </p>
-    <% end %>
-  </h2>
-
-  <div class="mb-8 ml-8">
-    <% if @package.post_text.present? %>
-      <h3 class="text-xl mb-2">
-        <%= t('original_message') %>
-      </h3>
-      <%= simple_format(@package.post_text) %>
-    <% end %>
-
-
-    <h3 class="text-xl my-2 text-center">
-      <%= t('rounds') %>
-    </h1>
-
-    <ul
-      class="mb-2 grid justify-items-center auto-rows-max gap-10"
-      style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));"
-    >
-      <% @package.structure.each do |round, questions| %>
-      <li class="border-4 border-indigo-400 min-h-full min-w-full" style="max-width: 240px">
-        <h4 class="text-center block font-bold">
-          <%= round %>
-        </h4>
-        <ul class="m-4">
-          <% questions.each do |question| %>
-          <li>
-            <%= question %>
-          </li>
-          <% end %>
-        </ul>
-      </li>
-      <% end %>
-    </ul>
-  </div>
+  </ul>
+</div>
 
 
 
-  <%= t('published_at') %>: <%= l @package.published_at.to_date %> <br>
+<%= t('published_at') %>: <%= l @package.published_at.to_date %> <br>
 
-  <%= t('added_to_sibrowser') %>: <%= l @package.created_at.to_date %> <br>
+<%= t('added_to_sibrowser') %>: <%= l @package.created_at.to_date %> <br>
 
-  <% if @package.created_at.to_date != @package.updated_at.to_date %>
-    <%= t('updated_in_sibrowser') %>: <%= l @package.updated_at.to_date %> <br>
-  <% end %>
+<% if @package.created_at.to_date != @package.updated_at.to_date %>
+  <%= t('updated_in_sibrowser') %>: <%= l @package.updated_at.to_date %> <br>
+<% end %>
 
-  <% if @package.filename != @package.name + '.siq' %>
-    <%= t('filename') %>: <%= @package.filename %> <br>
-  <% end %>
+<% if @package.filename != @package.name + '.siq' %>
+  <%= t('filename') %>: <%= @package.filename %> <br>
+<% end %>
 
-  <div class="flex justify-center">
-    <a
-      class="border-4 border-transparent bg-purple-500 inline-block py-2 px-4 font-bold text-white hover:border-purple-600"
-      href="<%= @package.source_link %>"
-    >
-      <%= t('download') %>
-    </a>
-  </div>
+<div class="flex justify-center">
+  <a
+    class="border-4 border-transparent bg-purple-500 inline-block py-2 px-4 font-bold text-white hover:border-purple-600"
+    href="<%= @package.source_link %>"
+  >
+    <%= t('download') %>
+  </a>
 </div>

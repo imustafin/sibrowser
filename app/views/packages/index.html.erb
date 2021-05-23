@@ -1,20 +1,38 @@
-<div class="container mx-auto">
-  <h1 class="text-2xl font-bold text-center pb-4 pt-8">
-    <%= t('packages') %>
-  </h1>
-  <table class="table-fixed container mx-auto mb-4">
+<p>
+  <%= t('packages_for_sigame',
+        link: link_to('SIGame', 'https://vladimirkhil.com/si/game', class: 'font-bold')).html_safe
+  %>
+  <%= t('sigame_author',
+        link: link_to(t('khil'), 'https://vladimirkhil.com/', class: 'font-bold')).html_safe
+  %>
+</p>
+<p>
+  <%= t('on_this_site_packages',
+        link: link_to(
+          'Пакеты, созданные своими руками',
+          'https://vk.com/topic-135725718_34975471',
+          class: 'font-bold'
+        )
+      ).html_safe
+  %>
+</p>
+<h1 class="text-2xl font-bold text-center pb-2 pt-4">
+  <%= t('packages') %>
+</h1>
+<div class="w-full">
+  <table class="table-fixed mb-4 w-full">
     <thead>
       <tr class="bg-indigo-500">
         <%= sortable t('published_at'), :published_at %>
         <%= sortable t('name'), :name %>
         <%= sortable t('authors'), :authors %>
-        <th class="w-1/4 text-center py-4"><%= t('tags') %></th>
-        <th class="w-1/4 text-center py-4"><%= t('download') %></th>
+        <th class="text-center py-4 pl-10"><%= t('tags') %></th>
+        <th class="text-center py-4 mr-10"><%= t('download') %></th>
       </tr>
     </thead>
     <tbody>
       <% @packages.each do |package| %>
-      <tr class="bg-indigo-100 hover:bg-indigo-200 text-black">
+      <tr class="bg-indigo-200 hover:bg-indigo-300 text-black">
         <td class="py-4 text-center">
           <%= l package.published_at.to_date %>
         </td>
@@ -33,7 +51,7 @@
         </td>
         <td class="text-center">
           <a
-            class="border-4 border-transparent bg-purple-500 ml-3 py-2 px-4 font-bold text-white hover:border-purple-600"
+            class="border-4 border-transparent inline-block bg-purple-500 mx-3 py-2 px-4 font-bold text-white hover:border-purple-600"
             href="<%= package.source_link %>"
           >
             <%= t('link') %>
@@ -45,4 +63,3 @@
   </table>
   <%= paginate @packages %>
 </div>
-

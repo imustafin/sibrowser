@@ -20,3 +20,8 @@ en:
   updated_in_sibrowser: Updated in Sibrowser
   filename: Filename
   tags: Tags
+  packages_for_sigame: Packages for the game Jeopardy! (%{link}).
+  sigame_author: The game is made by %{link}.
+  khil: Vladimir Khil
+  on_this_site_packages: The packages are collected from the %{link} topic.
+  sigame_package: A package for the game Jeopardy! (%{link}).
