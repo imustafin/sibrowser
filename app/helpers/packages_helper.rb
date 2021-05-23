@@ -8,9 +8,9 @@ module PackagesHelper
            when column != sort_column
                'selector'
            when sort_direction == :asc
-             'chevron-down'
-           else
              'chevron-up'
+           else
+             'chevron-down'
            end
 
     render partial: 'sortable', locals: {
