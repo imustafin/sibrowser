@@ -8,6 +8,7 @@
         <%= sortable t('published_at'), :published_at %>
         <%= sortable t('name'), :name %>
         <%= sortable t('authors'), :authors %>
+        <th class="w-1/4 text-center py-4"><%= t('tags') %></th>
         <th class="w-1/4 text-center py-4"><%= t('download') %></th>
       </tr>
     </thead>
@@ -23,6 +24,11 @@
         <td class="text-center">
           <% if package.authors.present? %>
             <%= package.authors.join(', ')  %>
+          <% end %>
+        </td>
+        <td class="text-center">
+          <% if package.tags.present? %>
+            <%= package.tags.join(', ') %>
           <% end %>
         </td>
         <td class="text-center">

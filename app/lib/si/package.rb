@@ -28,5 +28,9 @@ module Si
         [round['name'], themes]
       end.to_h
     end
+
+    def tags
+      package.css('> tags tag').map(&:text)
+    end
   end
 end

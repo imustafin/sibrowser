@@ -58,5 +58,9 @@ RSpec.describe Si::Package do
     it 'has authors' do
       expect(package.authors).to eq(['Axel_Trevors & Time2Hack'])
     end
+
+    it 'has tags' do
+      expect(package.tags).to eq(['Аниме'])
+    end
   end
 end

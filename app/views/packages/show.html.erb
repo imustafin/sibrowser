@@ -4,7 +4,14 @@
   </h1>
   <h2 class="text-xl font-bold text-center pb-4">
     <% if @package.authors.present? %>
-    <%= @package.authors.join(', ') %>
+      <p>
+        <%= @package.authors.join(', ') %>
+      </p>
+    <% end %>
+    <% if @package.tags.present? %>
+      <p>
+        <%= @package.tags.join(', ') %>
+      </p>
     <% end %>
   </h2>
 

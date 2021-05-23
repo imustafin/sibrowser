@@ -87,7 +87,8 @@ class BoardParser
             source_link: meta[:source_link],
             post_text: meta[:post_text],
             published_at: meta[:file_date],
-            structure: si_package.structure
+            structure: si_package.structure,
+            tags: si_package.tags,
           )
         end
       end

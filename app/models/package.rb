@@ -4,4 +4,5 @@ class Package < ApplicationRecord
 
   serialize :authors, Array
   serialize :structure, Hash
+  serialize :tags, Array
 end
