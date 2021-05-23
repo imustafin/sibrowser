@@ -1,0 +1,21 @@
+tt:
+  views:
+    pagination:
+      truncate: "..."
+      next: ›
+      last: »
+      previous: ‹
+      first: «
+  packages: Пакетлар
+  published_at: Бастыру көне
+  name: Исем
+  authors: Ясаучылар
+  download: Чыганактан йөкләргә
+  link: Сылтама
+  made_by: Сайтның ясаучы —
+  ilgiz: Мустафин Ильгиз
+  original_message: Оригиналь язмасы
+  rounds: Раундлар
+  added_to_sibrowser: Sibrowser-га өстәгән
+  updated_in_sibrowser: Sibrowser-да үзгәргән
+  filename: Файл исеме
