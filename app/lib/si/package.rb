@@ -17,7 +17,7 @@ module Si
     end
 
     def authors
-      package.css('info authors author').map(&:text)
+      package.css('> info authors author').map(&:text)
     end
 
     # Hash from round name to themes array

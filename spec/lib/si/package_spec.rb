@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Si::Package do
-  describe '.read_from_siq' do
+  context 'in Ananas_v_narezku.siq' do
     let(:zip_buffer) { File.open(file_fixture('Ananas_v_narezku.siq'))}
     subject(:package) { described_class.new(zip_buffer) }
 
@@ -48,6 +48,15 @@ RSpec.describe Si::Package do
           'Инструмент дело такое',
         ]
       )
+    end
+  end
+
+  context 'in Axel6Anime_With_Time2hack.siq' do
+    let(:file) { File.open(file_fixture('Axel6Anime_With_Time2hack.siq')) }
+    subject(:package) { described_class.new(file) }
+
+    it 'has authors' do
+      expect(package.authors).to eq(['Axel_Trevors & Time2Hack'])
     end
   end
 end
