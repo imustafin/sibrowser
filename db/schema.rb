@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_23_142504) do
+ActiveRecord::Schema.define(version: 2021_05_24_165613) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +26,8 @@ ActiveRecord::Schema.define(version: 2021_05_23_142504) do
     t.datetime "published_at"
     t.text "structure"
     t.string "tags"
+    t.string "vk_document_id", null: false
+    t.index ["vk_document_id"], name: "index_packages_on_vk_document_id"
   end
 
 end

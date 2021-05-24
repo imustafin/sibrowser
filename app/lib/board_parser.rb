@@ -36,7 +36,8 @@ class BoardParser
             source_link: "https://vk.com/topic-135725718_34975471?post=#{i['id']}",
             post_text: i['text'],
             file_url: doc['url'],
-            file_date: Time.at(doc['date'])
+            file_date: Time.at(i['date']),
+            file_id: doc['id']
           }
         end
       end
@@ -54,6 +55,10 @@ class BoardParser
     threads = metas.values.in_groups(num_threads, false).each_with_index.map do |batch, t|
       Thread.new do
         batch.each do |meta|
+          existing = Package.find_by(vk_document_id: meta[:file_id])
+          # Skip if this is newer
+          next if existing && existing.published_at < meta[:file_date]
+
           url = meta[:file_url]
 
           puts "#{t}: Parsing #{meta[:filename]} with url"
@@ -80,7 +85,7 @@ class BoardParser
           name = si_package.name
           name = meta[:filename] if name.blank?
 
-          Package.create!(
+          Package.update_or_create!(
             filename: meta[:filename],
             name: name,
             authors: si_package.authors,
@@ -89,6 +94,7 @@ class BoardParser
             published_at: meta[:file_date],
             structure: si_package.structure,
             tags: si_package.tags,
+            vk_document_id: meta[:file_id],
           )
         end
       end
