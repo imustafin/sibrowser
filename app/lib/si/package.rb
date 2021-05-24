@@ -20,10 +20,24 @@ module Si
       package.css('> info authors author').map(&:text)
     end
 
-    # Hash from round name to themes array
+    # [i][j][k] = i-th round, j-th theme, k-th question { question_text, question_types, answers }
     def structure
       package.css('rounds round').map do |round|
-        themes = round.css('themes theme').map { |x| x['name'] }
+        themes = round.css('themes theme').map do |theme|
+          questions = theme.css('questions question').map do |q|
+            question_text = q.css('scenario atom:not([type]), scenario atom[type=text]').map(&:text).join(' ')
+            answers = q.css('right answer').map(&:text)
+            question_types = q.css('scenario atom').map { |a| a['type'] || 'text' }
+
+            {
+              question_text: question_text,
+              answers: answers,
+              question_types: question_types
+            }
+          end
+
+          [theme['name'], questions]
+        end.to_h
 
         [round['name'], themes]
       end.to_h
