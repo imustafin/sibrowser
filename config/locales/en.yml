@@ -25,3 +25,6 @@ en:
   khil: Vladimir Khil
   on_this_site_packages: The packages are collected from the %{link} topic.
   sigame_package: A package for the game Jeopardy! (%{link}).
+  community_vk: VK Community
+  source_code: Source Code
+  roadmap: Development Roadmap

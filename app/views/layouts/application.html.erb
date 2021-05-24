@@ -43,13 +43,18 @@
       </div>
     </main>
     <footer>
-      <div class="px-4 md:mt-4 flex justify-center items-center bg-white h-16 bg-indigo-800 text-white">
-        <span>
+      <div class="px-4 md:mt-4 flex flex-col justify-center items-center bg-white min-h-16 bg-indigo-800 text-white gap-4 py-4">
+        <span class="text-center" class="block">
           <%= t('made_by') %>
           <a href="https://imustafin.tatar/<%= I18n.locale %>" class="font-bold">
             <%= t('ilgiz') %>
           </a>
         </span>
+        <p class="flex flex-col md:flex-row justify-center items-center gap-4 flex-wrap">
+          <a href="" class="block font-bold"><%= t('community_vk') %></a>
+          <a href="" class="block font-bold"><%= t('source_code') %></a>
+          <a href="" class="block font-bold"><%= t('roadmap') %></a>
+        </p>
       </div>
     </footer>
   </body>
