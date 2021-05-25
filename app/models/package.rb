@@ -31,4 +31,10 @@ class Package < ApplicationRecord
       retry
     end
   end
+
+  def self.skip_updating?(new_vk_document_id, new_published_at)
+    where(vk_document_id: new_vk_document_id)
+      .where('published_at < ?', new_published_at)
+      .exists?
+  end
 end

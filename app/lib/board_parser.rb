@@ -55,9 +55,7 @@ class BoardParser
     threads = metas.values.in_groups(num_threads, false).each_with_index.map do |batch, t|
       Thread.new do
         batch.each do |meta|
-          existing = Package.find_by(vk_document_id: meta[:file_id])
-          # Skip if this is newer
-          next if existing && existing.published_at < meta[:file_date]
+          next if Package.skip_updating?(meta[:file_id], meta[:file_date])
 
           url = meta[:file_url]
 
