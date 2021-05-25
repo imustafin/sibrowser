@@ -78,7 +78,12 @@ class BoardParser
             next
           end
 
-          si_package = Si::Package.new(body)
+          begin
+            si_package = Si::Package.new(body)
+          rescue Zip::Error => e
+            puts "#{t}: Could not parse zip (#{e}), skipping..."
+            next
+          end
 
           name = si_package.name
           name = meta[:filename] if name.blank?
