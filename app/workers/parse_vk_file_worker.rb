@@ -1,0 +1,44 @@
+class ParseVkFileWorker
+  include Sidekiq::Worker
+
+  def perform(params)
+    return if Package.skip_updating?(params['file_id'], params['file_date'])
+
+    url = params['file_url']
+
+    logger.info "Parsing #{params['filename']} with url #{url}"
+    begin
+      resp = Net::HTTP.get_response(URI(url))
+      url = resp['location']
+    end while resp.is_a?(Net::HTTPRedirection)
+
+    unless resp.is_a?(Net::HTTPOK)
+      logger.info "HTTP result is #{resp.class.name}, skipping..."
+      return
+    end
+
+    body = resp.body
+
+    begin
+      si_package = Si::Package.new(body)
+    rescue Zip::Error => e
+      logger.info "Could not parse zip (#{e}), skipping..."
+      return
+    end
+
+    name = si_package.name
+    name = params['filename'] if name.blank?
+
+    Package.update_or_create!(
+      filename: params['filename'],
+      name: name,
+      authors: si_package.authors,
+      source_link: params['source_link'],
+      post_text: params['post_text'],
+      published_at: params['file_date'],
+      structure: si_package.structure,
+      tags: si_package.tags,
+      vk_document_id: params['file_id'],
+    )
+  end
+end

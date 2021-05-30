@@ -8,3 +8,10 @@ release:
   image: web
   command:
     - bundle exec rails db:migrate
+
+run:
+  sidekiq:
+    command:
+      - bundle exec sidekiq -c 4
+    image: web
+
