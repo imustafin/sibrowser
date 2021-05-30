@@ -1,7 +1,10 @@
 class Package < ApplicationRecord
+  VERSION = 1
+
   validates :name, presence: true
   validates :source_link, presence: true
   validates :vk_document_id, presence: true, uniqueness: true
+  validates :version, presence: true
 
   serialize :authors, Array
   serialize :structure, Hash
@@ -11,11 +14,13 @@ class Package < ApplicationRecord
     transaction do
       model = find_by(vk_document_id: params[:vk_document_id])
 
+      params = params.merge(version: VERSION)
+
       unless model
         create!(params)
       else
-        # Update if params is older (maybe a more specific original post)
-        if params[:published_at] <= model.published_at
+        # Same login as in .skip_updating?
+        if params[:published_at] < model.published_at || model.version < VERSION
           model.update(params)
           model.save!
         end
@@ -23,9 +28,12 @@ class Package < ApplicationRecord
     end
   end
 
+  # Skip updating if there is a record
+  # which was published not after this new date and has compatible version
   def self.skip_updating?(new_vk_document_id, new_published_at)
     where(vk_document_id: new_vk_document_id)
-      .where('published_at < ?', new_published_at)
+      .where('published_at <= ?', new_published_at) # The older post can have a more relevant original_text
+      .where('version >= ?', VERSION) # same version is compatible, greater version should not happen
       .exists?
   end
 end

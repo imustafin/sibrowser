@@ -2,7 +2,8 @@ class ParseVkFileWorker
   include Sidekiq::Worker
 
   def perform(params)
-    return if Package.skip_updating?(params['file_id'], params['file_date'])
+    file_date = Time.at(params['file_date'])
+    return if Package.skip_updating?(params['file_id'], file_date)
 
     url = params['file_url']
 
@@ -35,7 +36,7 @@ class ParseVkFileWorker
       authors: si_package.authors,
       source_link: params['source_link'],
       post_text: params['post_text'],
-      published_at: params['file_date'],
+      published_at: file_date,
       structure: si_package.structure,
       tags: si_package.tags,
       vk_document_id: params['file_id'],

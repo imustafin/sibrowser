@@ -29,7 +29,7 @@ class ParseBoardWorker
             source_link: "https://vk.com/topic-#{group_id}_#{topic_id}?post=#{i['id']}",
             post_text: i['text'],
             file_url: doc['url'],
-            file_date: Time.at(i['date']),
+            file_date: i['date'],
             file_id: doc['id']
           )
         end
