@@ -1,5 +1,5 @@
 <th class="pl-10 text-center py-4">
-  <%= link_to sort: column, direction: direction do %>
+  <%= link_to sort: column, direction: direction, q: q do %>
   <span><%= title %></span><span class="whitespace-nowrap">&nbsp;<%= heroicon icon, options: { class: 'w-3 h-3 inline' } %></span>
   <% end %>
 </th>

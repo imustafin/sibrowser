@@ -19,6 +19,10 @@
 <h1 class="text-2xl font-bold text-center pb-2 pt-4">
   <%= t('packages') %>
 </h1>
+<%= form_tag(packages_path, method: :get, class: 'mb-2') do %>
+  <%= text_field_tag(:q, params[:q], class: 'p-2') %>
+  <%= submit_tag(t('search'), name: nil, class: button_class(type: :small)) %>
+<% end %>
 <div class="w-full overflow-x-auto">
   <table class="w-full">
     <thead>
@@ -51,7 +55,7 @@
         </td>
         <td class="text-center">
           <a
-            class="border-4 border-transparent inline-block bg-purple-500 mx-3 py-2 px-4 font-bold text-white hover:border-purple-600"
+            class="<%= button_class %>"
             href="<%= package.source_link %>"
           >
             <%= t('link') %>

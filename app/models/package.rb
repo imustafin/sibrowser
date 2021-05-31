@@ -1,10 +1,22 @@
 class Package < ApplicationRecord
+  include PgSearch::Model
+
   VERSION = 2
 
   validates :name, presence: true
   validates :source_link, presence: true
   validates :vk_document_id, presence: true, uniqueness: true
   validates :version, presence: true
+
+  pg_search_scope :search_freetext,
+    against: :searchable, # actually not used if tsvector_column is specified
+    using: {
+      tsearch: {
+        dictionary: 'russian',
+        tsvector_column: 'searchable'
+      }
+    }
+
 
   def self.update_or_create!(params)
     transaction do
