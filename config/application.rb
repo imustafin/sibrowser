@@ -23,5 +23,7 @@ module Sibrowser
     config.x.vk_app_id = ENV['VK_APP_ID']
     config.x.vk_secret = ENV['VK_SECRET']
     config.x.vk_service = ENV['VK_SERVICE']
+
+    config.active_record.schema_format = :sql
   end
 end
