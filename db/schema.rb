@@ -17,17 +17,17 @@ ActiveRecord::Schema.define(version: 2021_05_30_233703) do
 
   create_table "packages", force: :cascade do |t|
     t.string "name", null: false
-    t.string "authors"
     t.string "source_link", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.text "post_text"
     t.string "filename"
     t.datetime "published_at"
-    t.text "structure"
-    t.string "tags"
     t.string "vk_document_id", null: false
     t.integer "version", null: false
+    t.string "authors"
+    t.text "structure"
+    t.string "tags"
     t.index ["vk_document_id"], name: "index_packages_on_vk_document_id"
   end
 

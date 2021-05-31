@@ -36,11 +36,17 @@ module Si
             }
           end
 
-          [theme['name'], questions]
-        end.to_h
+          {
+            name: theme['name'],
+            questions: questions
+          }
+        end
 
-        [round['name'], themes]
-      end.to_h
+        {
+          name: round['name'],
+          themes: themes
+        }
+      end
     end
 
     def tags

@@ -6,10 +6,6 @@ class Package < ApplicationRecord
   validates :vk_document_id, presence: true, uniqueness: true
   validates :version, presence: true
 
-  serialize :authors, Array
-  serialize :structure, Hash
-  serialize :tags, Array
-
   def self.update_or_create!(params)
     transaction do
       model = find_by(vk_document_id: params[:vk_document_id])

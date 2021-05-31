@@ -15,22 +15,27 @@ RSpec.describe Si::Package do
 
     it 'has structure' do
       expect(package.structure).to include(
-        '1-й раунд' => include(
-          'География' => include(
+        {
+          name: '1-й раунд',
+          themes: include(
             {
+            name: 'География',
+            questions: include(
               answers: ['Гренландия'],
               question_text: 'Какой остров самый большой в мире?',
               question_types: ['text']
+            )
             },
-          ),
-          'Юмористы' => include(
             {
-              answers: ['Петросян'],
-              question_text: '',
-              question_types: ['image']
+              name: 'Юмористы',
+              questions: include(
+                answers: ['Петросян'],
+                question_text: '',
+                question_types: ['image']
+              )
             }
           )
-        )
+        }
       )
     end
   end
