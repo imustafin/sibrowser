@@ -23,7 +23,7 @@ class PackagesController < ApplicationController
     if %w[asc desc].include?(params[:direction])
       params[:direction].to_sym
     else
-      :asc
+      :desc
     end
   end
 
