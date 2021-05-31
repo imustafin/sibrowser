@@ -36,7 +36,7 @@ services:
       - '3000:3000'
 
   redis:
-    image: redis:3
+    image: redis:4
 
 volumes:
   bundle:
