@@ -1,5 +1,5 @@
 class Package < ApplicationRecord
-  VERSION = 1
+  VERSION = 2
 
   validates :name, presence: true
   validates :source_link, presence: true

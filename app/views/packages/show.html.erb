@@ -36,25 +36,27 @@
     <%= t('rounds') %>
   </h1>
 
-  <ul
-    class="mb-2 grid justify-items-center auto-rows-max gap-10"
-    style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));"
-  >
-    <% @package.structure.each do |round| %>
-    <li class="border-4 border-indigo-400 min-h-full min-w-full" style="max-width: 240px">
-      <h4 class="text-center block font-bold">
-        <%= round[:name] %>
-      </h4>
-      <ul class="m-4">
-        <% round['themes'].each do |theme| %>
-        <li>
-          <%= theme['name'] %>
-        </li>
-        <% end %>
-      </ul>
-    </li>
-    <% end %>
-  </ul>
+  <% if @package.structure.present? %>
+    <ul
+      class="mb-2 grid justify-items-center auto-rows-max gap-10"
+      style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));"
+    >
+      <% @package.structure.each do |round| %>
+      <li class="border-4 border-indigo-400 min-h-full min-w-full" style="max-width: 240px">
+        <h4 class="text-center block font-bold">
+          <%= round[:name] %>
+        </h4>
+        <ul class="m-4">
+          <% round['themes'].each do |theme| %>
+          <li>
+            <%= theme['name'] %>
+          </li>
+          <% end %>
+        </ul>
+      </li>
+      <% end %>
+    </ul>
+  <% end %>
 </div>
 
 

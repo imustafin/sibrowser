@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_30_233703) do
+ActiveRecord::Schema.define(version: 2021_05_31_120921) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,9 +25,9 @@ ActiveRecord::Schema.define(version: 2021_05_30_233703) do
     t.datetime "published_at"
     t.string "vk_document_id", null: false
     t.integer "version", null: false
-    t.string "authors"
-    t.text "structure"
-    t.string "tags"
+    t.jsonb "authors"
+    t.jsonb "structure"
+    t.jsonb "tags"
     t.index ["vk_document_id"], name: "index_packages_on_vk_document_id"
   end
 
