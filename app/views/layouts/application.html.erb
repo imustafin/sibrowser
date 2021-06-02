@@ -28,9 +28,9 @@
           <% if code != I18n.locale %>
             <li>
               <% if code != I18n.default_locale %>
-                <%= link_to name, locale: code %>
+                <%= link_to name, request.query_parameters.merge(locale: code) %>
               <% else %>
-                <%= link_to name, locale: nil %>
+                <%= link_to name, request.query_parameters.merge(locale: nil) %>
               <% end %>
             </li>
             <% end %>
