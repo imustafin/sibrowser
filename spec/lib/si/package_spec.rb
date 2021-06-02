@@ -19,12 +19,12 @@ RSpec.describe Si::Package do
           name: '1-й раунд',
           themes: include(
             {
-            name: 'География',
-            questions: include(
-              answers: ['Гренландия'],
-              question_text: 'Какой остров самый большой в мире?',
-              question_types: ['text']
-            )
+              name: 'География',
+              questions: include(
+                answers: ['Гренландия'],
+                question_text: 'Какой остров самый большой в мире?',
+                question_types: ['text']
+              )
             },
             {
               name: 'Юмористы',
@@ -50,6 +50,20 @@ RSpec.describe Si::Package do
 
     it 'has tags' do
       expect(package.tags).to eq(['Аниме'])
+    end
+
+    describe '#structure' do
+      it 'collects all atom types for question types' do
+        suisei = package.structure
+          .find { |r| r[:name] == 'Когда' }[:themes]
+          .find { |t| t[:name] == 'Скрины' }[:questions]
+          .find { |q| q[:answers] == ['Suisei no Gargantia'] }
+
+        expect(suisei).to include(
+          question_text: 'Назвать тайтл',
+          question_types: ['text', 'image']
+        )
+      end
     end
   end
 end

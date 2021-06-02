@@ -32,7 +32,7 @@ module Si
             {
               question_text: question_text,
               answers: answers,
-              question_types: question_types
+              question_types: question_types # types of atoms in scenario
             }
           end
 
