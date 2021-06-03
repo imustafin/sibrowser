@@ -52,7 +52,59 @@ RSpec.describe Package, type: :model do
         expect(described_class.find_by(vk_document_id: 1).post_text).to eq('older')
       end
     end
+  end
 
+  describe '#question_distribution' do
+    it 'ignores types after marker' do
+      p = build(:package_one_theme, questions: [{
+        'question_types' => %w[text marker image voice video say]
+      }])
 
+      expect(p.question_distribution).to eq({
+        total: 1,
+        types: {
+          text: 1
+        }
+      })
+    end
+
+    it 'takes the type of non-text atoms' do
+      p = build(:package_one_theme, questions: [{
+        'question_types' => %w[text text image text text text]
+      }])
+
+      expect(p.question_distribution).to eq({
+        total: 1,
+        types: {
+          image: 1
+        }
+      })
+    end
+
+    it 'ignores "say"' do
+      p = build(:package_one_theme, questions: [{
+        'question_types' => %w[text text say say text say]
+      }])
+
+      expect(p.question_distribution).to eq({
+        total: 1,
+        types: {
+          text: 1
+        }
+      })
+    end
+
+    it 'keeps gives :mixed if more than one of image-voice-video' do
+      p = build(:package_one_theme, questions: [{
+        'question_types' => %w[text text image voice video]
+      }])
+
+      expect(p.question_distribution).to eq({
+        total: 1,
+        types: {
+          mixed: 1
+        }
+      })
+    end
   end
 end
