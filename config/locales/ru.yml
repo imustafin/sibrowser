@@ -10,8 +10,9 @@ ru:
   published_at: Опубликовано
   name: Название
   authors: Авторы
-  download: Скачать из источника
-  link: Ссылка
+  download: Источник
+  link: Скачать
+  download_from_source: Скачать из источника
   made_by: Автор сайта —
   ilgiz: Мустафин Ильгиз
   original_message: Оригинальное сообщение

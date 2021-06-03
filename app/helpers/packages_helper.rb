@@ -1,5 +1,5 @@
 module PackagesHelper
-  def sortable(title, column)
+  def sortable(title, column, html_params={})
     column = column.to_sym
 
     new_direction = (column == sort_column && sort_direction == :asc) ? :desc : :asc
@@ -18,7 +18,8 @@ module PackagesHelper
       column: column,
       direction: new_direction,
       icon: icon,
-      q: params[:q]
+      q: params[:q],
+      html_params: html_params
     }
   end
 

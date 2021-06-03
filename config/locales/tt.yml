@@ -10,8 +10,9 @@ tt:
   published_at: Бастырылган
   name: Исем
   authors: Ясаучылар
-  download: Чыганактан йөкләргә
-  link: Сылтама
+  download: Чыганак
+  download_from_source: Чыганактан йөкләргә
+  link: Йөкләргә
   made_by: Сайт ясаучы —
   ilgiz: Мустафин Ильгиз
   original_message: Оригиналь язмасы

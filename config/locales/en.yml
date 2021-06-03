@@ -10,8 +10,9 @@ en:
   published_at: Published
   name: Name
   authors: Authors
-  download: Download from Source
-  link: Link
+  download: Source
+  link: Download
+  download_from_source: Download from Source
   made_by: Made by
   ilgiz: Ilgiz Mustafin
   original_message: Original Message
