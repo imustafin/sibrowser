@@ -9,6 +9,7 @@ RSpec.describe Package, type: :model do
             vk_document_id: 1,
             name: 'qwe',
             source_link: 'qweqwe',
+            version: described_class::VERSION
           )
         }
           .to change { described_class.count }.by(1)
@@ -23,6 +24,7 @@ RSpec.describe Package, type: :model do
           post_text: 'original',
           name: 'qwe',
           source_link: 'qweqwe',
+          version: described_class::VERSION
         )
       end
 
