@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html lang="<%= I18n.locale %>">
   <head>
-    <title>Sibrowser</title>
+    <title><%=
+      if content_for?(:title)
+        yield(:title) + ' | ' + t('site_name')
+      else
+        t('default_title')
+      end
+      %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -22,7 +28,7 @@
 
   <body class="bg-indigo-300 text-black-20 min-h-screen flex flex-col justify-between">
     <header class="px-4 flex justify-between h-16 bg-indigo-800 text-white font-bold items-center">
-      <%= link_to 'Sibrowser', root_path %>
+      <%= link_to t(:site_name), root_path %>
       <ul class="flex gap-6 md:gap-10 md:mr-4">
         <% Languages.each do |(name, code)| %>
           <% if code != I18n.locale %>

@@ -17,15 +17,15 @@ tt:
   ilgiz: Мустафин Ильгиз
   original_message: Оригиналь язмасы
   rounds: Раундлар
-  added_to_sibrowser: Sibrowser-га өстәгән
-  updated_in_sibrowser: Sibrowser-да үзгәргән
+  added_to_sibrowser: SIBrowser-га өстәгән
+  updated_in_sibrowser: SIBrowser-да үзгәргән
   filename: Файл исеме
   tags: Теглар
-  packages_for_sigame: «Своя Игра» (%{link}) уены өчен пакетлары.
+  packages_for_sigame: "%{link} уен өчен пакетлары."
   sigame_author: Уен ясаучы — %{link}.
   khil: Владимир Хиль
   on_this_site_packages: Сайтка %{link} темадагы пакетлары җыелган.
-  sigame_package: «Своя Игра» (%{link}) уены өчен пакет.
+  sigame_package: "%{link} уены өчен пакет."
   community_vk: VK берлешмә
   source_code: Башлангыч текст
   roadmap: Төзү планы
@@ -36,3 +36,5 @@ tt:
   mixed: Катнаш
   questions: Сораулар
   total_questions: Сораулар саны
+  site_name: SIBrowser
+  default_title: SIBrowser — SIGame (Своя Игра) өчен пакетлар

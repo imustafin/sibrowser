@@ -17,8 +17,8 @@ ru:
   ilgiz: Мустафин Ильгиз
   original_message: Оригинальное сообщение
   rounds: Раунды
-  added_to_sibrowser: Добавлено в Sibrowser
-  updated_in_sibrowser: Обновлено в Sibrowser
+  added_to_sibrowser: Добавлено в SIBrowser
+  updated_in_sibrowser: Обновлено в SIBrowser
   filename: Имя файла
   tags: Теги
   packages_for_sigame: Пакеты для Своей Игры (%{link}).
@@ -36,3 +36,6 @@ ru:
   mixed: Смешанный
   questions: Вопросы
   total_questions: Всего вопросов
+  site_name: SIBrowser
+  default_title: SIBrowser — пакеты для Своей Игры (SIGame)
+

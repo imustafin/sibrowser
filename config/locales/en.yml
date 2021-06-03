@@ -17,15 +17,15 @@ en:
   ilgiz: Ilgiz Mustafin
   original_message: Original Message
   rounds: Rounds
-  added_to_sibrowser: Added to Sibrowser
-  updated_in_sibrowser: Updated in Sibrowser
+  added_to_sibrowser: Added to SIBrowser
+  updated_in_sibrowser: Updated in SIBrowser
   filename: Filename
   tags: Tags
-  packages_for_sigame: Packages for the game Jeopardy! (%{link}).
+  packages_for_sigame: Packages for %{link}.
   sigame_author: The game is made by %{link}.
   khil: Vladimir Khil
   on_this_site_packages: The packages are collected from the %{link} topic.
-  sigame_package: A package for the game Jeopardy! (%{link}).
+  sigame_package: A package for %{link}.
   community_vk: VK Community
   source_code: Source Code
   roadmap: Development Roadmap
@@ -36,3 +36,5 @@ en:
   mixed: Mixed
   questions: Questions
   total_questions: Total questions
+  site_name: SIBrowser
+  default_title: SIBrowser — SIGame (Своя Игра) Packages
