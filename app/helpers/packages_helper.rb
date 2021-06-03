@@ -22,6 +22,10 @@ module PackagesHelper
     }
   end
 
+  def distribution(dist)
+    render partial: 'distribution', locals: dist
+  end
+
   def button_class(params = {})
     small = params[:type] == :small
 

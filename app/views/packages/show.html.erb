@@ -25,14 +25,41 @@
 
 <div class="mb-8">
   <% if @package.post_text.present? %>
-    <h3 class="text-xl mb-2">
+    <h3 class="text-xl mb-2 text-center">
       <%= t('original_message') %>
     </h3>
     <%= simple_format(@package.post_text) %>
   <% end %>
 
+    <h3 class="text-xl mb-2 mt-4 text-center">
+      <%= t :questions %> <br>
+    </h3>
 
-  <h3 class="text-xl my-2 text-center">
+    <p class="mb-2">
+      <%= t :total_questions %>: <%= @package.question_distribution[:total] %>
+    </p>
+    <div class="w-full h-8 mb-2">
+      <%= distribution(@package.question_distribution) %>
+    </div>
+    <% @package.question_distribution[:types].each do |type, count| %>
+    <span class="mr-4 inline-block">
+      <div class="<%= ApplicationHelper::TYPE_COLORS[type] %> w-4 h-4 inline-block bottom-0"></div>
+      <span class="font-bold">
+        <%= t type %>
+      </span>
+      <span class="text-gray-700">
+        <%=
+          number_to_percentage(
+            count.to_f / @package.question_distribution[:total] * 100,
+            precision: 0
+          )
+        %>
+      </span>
+    </span>
+    <% end %>
+
+
+  <h3 class="text-xl mb-4 text-center">
     <%= t('rounds') %>
   </h1>
 
@@ -48,7 +75,7 @@
         </h4>
         <ul class="m-4">
           <% round['themes'].each do |theme| %>
-          <li>
+          <li class="mb-2">
             <%= theme['name'] %>
           </li>
           <% end %>
@@ -72,6 +99,7 @@
 <% if @package.filename != @package.name + '.siq' %>
   <%= t('filename') %>: <%= @package.filename %> <br>
 <% end %>
+
 
 <div class="flex justify-center mt-8 mb-4">
   <a

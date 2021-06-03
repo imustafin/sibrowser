@@ -31,6 +31,7 @@
         <%= sortable t('name'), :name %>
         <%= sortable t('authors'), :authors %>
         <th class="text-center py-4 pl-10"><%= t('tags') %></th>
+        <th class="text-center py-4 pl-10"><%= t('questions') %></th>
         <th class="text-center py-4 mr-10"><%= t('download') %></th>
       </tr>
     </thead>
@@ -52,6 +53,11 @@
           <% if package.tags.present? %>
             <%= package.tags.join(', ') %>
           <% end %>
+        </td>
+        <td>
+          <div class="w-full h-6">
+            <%= distribution(package.question_distribution) %>
+          </div>
         </td>
         <td class="text-center">
           <a

@@ -1,0 +1,8 @@
+<div class="w-full h-full bg-black flex">
+  <% types.each do |type, count| %>
+  <div
+    class="<%= ApplicationHelper::TYPE_COLORS[type] %> h-full inline-block"
+    style="flex: <%= count %>"
+  ></div>
+  <% end %>
+</div>
