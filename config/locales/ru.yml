@@ -33,6 +33,7 @@ ru:
   image: Изображение
   text: Текст
   voice: Звук
+  video: Видео
   mixed: Смешанный
   questions: Вопросы
   total_questions: Всего вопросов

@@ -33,6 +33,7 @@ en:
   image: Image
   text: Text
   voice: Sound
+  video: Video
   mixed: Mixed
   questions: Questions
   total_questions: Total questions
