@@ -56,7 +56,9 @@
         </td>
         <td>
           <div class="w-full h-6">
-            <%= distribution(package.question_distribution) %>
+            <% if package.question_distribution.present? %>
+              <%= distribution(package.question_distribution) %>
+            <% end %>
           </div>
         </td>
         <td class="text-center">

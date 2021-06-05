@@ -18,6 +18,8 @@ class Package < ApplicationRecord
     }
 
   def question_distribution
+    return nil unless structure
+
     questions = structure
       .flat_map { |r| r['themes'] }
       .flat_map { |t| t['questions'] }
