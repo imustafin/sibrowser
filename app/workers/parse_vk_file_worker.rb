@@ -11,6 +11,7 @@ class ParseVkFileWorker
     begin
       resp = Net::HTTP.get_response(URI(url))
       url = resp['location']
+      logger.info "Redirecting to #{url}"
     end while resp.is_a?(Net::HTTPRedirection)
 
     unless resp.is_a?(Net::HTTPOK)
@@ -19,6 +20,8 @@ class ParseVkFileWorker
     end
 
     body = resp.body
+
+    logger.info "Body length #{body.length}, parsing"
 
     begin
       si_package = Si::Package.new(body)
@@ -30,6 +33,7 @@ class ParseVkFileWorker
     name = si_package.name
     name = params['filename'] if name.blank?
 
+    logger.info "Parsed, update_or_create! now"
     Package.update_or_create!(
       filename: params['filename'],
       name: name,
