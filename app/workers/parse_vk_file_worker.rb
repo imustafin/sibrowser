@@ -1,6 +1,30 @@
 class ParseVkFileWorker
   include Sidekiq::Worker
 
+  def download_vk(url)
+    redirects_finished = false
+
+    until redirects_finished
+      Net::HTTP.get_response(URI(url)) do |resp|
+        if resp.is_a?(Net::HTTPRedirection)
+          url = resp['location']
+        else
+          redirects_finished = true
+        end
+      end
+    end
+
+    tempfile = Tempfile.new(['package', '.siq'], binmode: true)
+
+    Net::HTTP.get_response(URI(url)) do |resp|
+      raise "HTTP result is #{resp.class.name}, not ok" unless resp.is_a?(Net::HTTPOK)
+      resp.read_body(tempfile)
+    end
+
+    tempfile
+  end
+
+
   def perform(params)
     file_date = Time.at(params['file_date'])
     return if Package.skip_updating?(params['file_id'], file_date)
@@ -8,32 +32,18 @@ class ParseVkFileWorker
     url = params['file_url']
 
     logger.info "Parsing #{params['filename']} with url #{url}"
-    begin
-      resp = Net::HTTP.get_response(URI(url))
-      url = resp['location']
-      logger.info "Redirecting to #{url}"
-    end while resp.is_a?(Net::HTTPRedirection)
 
-    unless resp.is_a?(Net::HTTPOK)
-      logger.info "HTTP result is #{resp.class.name}, skipping..."
-      return
-    end
+    siq = download_vk(url)
 
-    body = resp.body
+    logger.info "Body length #{siq.length}, parsing"
 
-    logger.info "Body length #{body.length}, parsing"
-
-    begin
-      si_package = Si::Package.new(body)
-    rescue Zip::Error => e
-      logger.info "Could not parse zip (#{e}), skipping..."
-      return
-    end
+    si_package = Si::Package.new(siq)
 
     name = si_package.name
     name = params['filename'] if name.blank?
 
-    logger.info "Parsed, update_or_create! now"
+    logger.info "Parsed"
+
     Package.update_or_create!(
       filename: params['filename'],
       name: name,
@@ -45,5 +55,7 @@ class ParseVkFileWorker
       tags: si_package.tags,
       vk_document_id: params['file_id'],
     )
+
+    siq.close!
   end
 end
