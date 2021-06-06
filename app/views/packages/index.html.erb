@@ -1,3 +1,7 @@
+<% content_for :title do %>
+  <%= params['page'] ? t('title_packages_page', page: params['page']) : t('default_title') %>
+<% end %>
+
 <p>
   <%= t('packages_for_sigame',
         link: link_to('SIGame', 'https://vladimirkhil.com/si/game', class: 'font-bold')).html_safe

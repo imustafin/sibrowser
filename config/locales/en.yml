@@ -40,3 +40,4 @@ en:
   site_name: SIBrowser
   default_title: SIBrowser — SIGame (Своя Игра) Packages
   title_package: "%{name} — SIGame Package"
+  title_packages_page: Packages — Page %{page}

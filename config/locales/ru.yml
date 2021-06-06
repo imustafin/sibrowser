@@ -40,3 +40,4 @@ ru:
   site_name: SIBrowser
   default_title: SIBrowser — пакеты для Своей Игры (SIGame)
   title_package: "%{name} — Пакет для SIGame"
+  title_packages_page: Пакеты — Страница %{page}

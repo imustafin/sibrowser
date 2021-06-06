@@ -40,3 +40,4 @@ tt:
   site_name: SIBrowser
   default_title: SIBrowser — SIGame (Своя Игра) өчен пакетлар
   title_package: "%{name} — SIGame өчен пакет"
+  title_packages_page: Пакетлар — Бит %{page}
