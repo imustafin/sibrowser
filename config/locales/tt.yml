@@ -26,7 +26,7 @@ tt:
   khil: Владимир Хиль
   on_this_site_packages: Сайтка %{link} темадагы пакетлары җыелган.
   sigame_package: "%{link} уены өчен пакет."
-  community_vk: VK берлешмә
+  community_vk: VK берләшмә
   source_code: Башлангыч текст
   roadmap: Төзү планы
   search: Эзләргә
@@ -41,3 +41,4 @@ tt:
   default_title: SIBrowser — SIGame (Своя Игра) өчен пакетлар
   title_package: "%{name} — SIGame өчен пакет"
   title_packages_page: Пакетлар — Бит %{page}
+  default_description: SIBrowser — SIGame (Своя Игра) өчен пакетлар җыелмасы.

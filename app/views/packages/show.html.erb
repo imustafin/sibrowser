@@ -1,6 +1,8 @@
 <% content_for :title do %>
   <%= t('title_package', name: @package.name) %>
 <% end %>
+<% content_for :description do %><%= package_description(@package) %><% end %>
+
 <h1 class="text-2xl font-bold text-center">
   <%= @package.name %>
 </h1>

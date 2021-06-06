@@ -8,6 +8,18 @@
         t('default_title')
       end
       %></title>
+
+    <meta
+      name="description"
+      content="<%=
+        if content_for?(:description)
+          yield(:description)
+        else
+          t('default_description')
+        end
+      %>"
+    >
+
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
