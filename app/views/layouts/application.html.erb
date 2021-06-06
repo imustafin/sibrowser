@@ -20,6 +20,14 @@
       %>"
     >
 
+    <% Languages.each do |(name, code)| %>
+      <link
+        rel="alternate"
+        hreflang="<%= code %>"
+        href="<%= url_for(request.query_parameters.merge(locale: code == I18n.default_locale ? nil : code, only_path: false)) %>"
+      />
+    <% end %>
+
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
