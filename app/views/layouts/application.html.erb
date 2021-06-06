@@ -44,6 +44,10 @@
     <meta name="msapplication-TileColor" content="#000038">
     <meta name="theme-color" content="#ffffff">
     <%= stylesheet_pack_tag "application", "data-turbo-track": "reload" %>
+
+    <% if ENV['YANDEX_VERIFICATION'] %>
+      <meta name="yandex-verification" content="<%= ENV['YANDEX_VERIFICATION'] %>">
+    <% end %>
   </head>
 
   <body class="bg-indigo-300 text-black-20 min-h-screen flex flex-col justify-between">
