@@ -117,7 +117,7 @@ CREATE INDEX index_packages_on_searchable ON public.packages USING gin (searchab
 -- Name: index_packages_on_vk_document_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_packages_on_vk_document_id ON public.packages USING btree (vk_document_id);
+CREATE UNIQUE INDEX index_packages_on_vk_document_id ON public.packages USING btree (vk_document_id);
 
 
 --
@@ -137,6 +137,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210530233703'),
 ('20210531120921'),
 ('20210531205957'),
-('20210531215651');
+('20210531215651'),
+('20210606162204');
 
 
