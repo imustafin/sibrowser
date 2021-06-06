@@ -39,3 +39,4 @@ en:
   total_questions: Total questions
   site_name: SIBrowser
   default_title: SIBrowser — SIGame (Своя Игра) Packages
+  title_package: "%{name} — SIGame Package"

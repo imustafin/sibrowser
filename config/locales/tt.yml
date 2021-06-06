@@ -39,3 +39,4 @@ tt:
   total_questions: Сораулар саны
   site_name: SIBrowser
   default_title: SIBrowser — SIGame (Своя Игра) өчен пакетлар
+  title_package: "%{name} — SIGame өчен пакет"
