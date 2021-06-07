@@ -17,7 +17,7 @@ module Si
     end
 
     def authors
-      package.css('> info authors author').map(&:text)
+      AuthorExtractor.extract(package.css('> info authors author').map(&:text))
     end
 
     # [i][j][k] = i-th round, j-th theme, k-th question { question_text, question_types, answers }
