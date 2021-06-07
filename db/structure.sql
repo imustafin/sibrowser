@@ -107,6 +107,13 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
+-- Name: authors_icase_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX authors_icase_index ON public.packages USING gin (((lower((authors)::text))::jsonb));
+
+
+--
 -- Name: index_packages_on_searchable; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -138,6 +145,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210531120921'),
 ('20210531205957'),
 ('20210531215651'),
-('20210606162204');
+('20210606162204'),
+('20210607220249');
 
 
