@@ -53,7 +53,7 @@
   <body class="bg-indigo-300 text-black-20 min-h-screen flex flex-col justify-between">
     <header class="px-4 flex justify-between h-16 bg-indigo-800 text-white font-bold items-center">
       <%= link_to t(:site_name), root_path %>
-      <ul class="flex gap-6 md:gap-10 md:mr-4">
+      <ul class="flex space-x-4 md:mr-4">
         <% Languages.each do |(name, code)| %>
           <% if code != I18n.locale %>
             <li>
@@ -74,13 +74,13 @@
     </main>
     <footer>
       <div class="px-4 md:mt-4 flex flex-col justify-center items-center bg-white min-h-16 bg-indigo-800 text-white gap-4 py-4">
-        <span class="text-center" class="block">
+        <span class="block">
           <%= t('made_by') %>
           <a href="https://imustafin.tatar/<%= I18n.locale %>" class="font-bold">
             <%= t('ilgiz') %>
           </a>
         </span>
-        <p class="flex flex-col md:flex-row justify-center items-center gap-4 flex-wrap">
+        <p class="flex flex-col md:flex-row justify-center items-center space-x-4 flex-wrap">
           <a href="https://vk.com/sibrowser" class="block font-bold"><%= t('community_vk') %></a>
           <a href="https://github.com/imustafin/sibrowser" class="block font-bold"><%= t('source_code') %></a>
           <a href="https://github.com/imustafin/sibrowser/projects/1" class="block font-bold"><%= t('roadmap') %></a>
