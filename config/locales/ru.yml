@@ -42,3 +42,9 @@ ru:
   title_package: "%{name} — Пакет для SIGame"
   title_packages_page: Пакеты — Страница %{page}
   default_description: SIBrowser — коллекция пакетов для Своей Игры (SIGame).
+  title_author: "%{name} — Автор пакетов для SIGame"
+  description_author: Всего пакетов за авторством %{name} — %{package_count}.
+  author_text: Всего пакетов — %{package_count}.
+  author_packages: Пакеты автора
+  description_author_coauthors: Соавторы — %{names}.
+  author_text_coauthors: "Другие авторы, с которыми этот автор делал пакеты:"

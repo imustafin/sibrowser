@@ -73,4 +73,6 @@ class Package < ApplicationRecord
       .where('structure IS NOT NULL') # parse if structure was deleted when upgrading
       .exists?
   end
+
+  scope :by_author, ->(author) { where('LOWER(authors::text)::jsonb @> to_jsonb(LOWER(?)::text)', author) }
 end

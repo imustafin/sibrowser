@@ -42,3 +42,9 @@ tt:
   title_package: "%{name} — SIGame өчен пакет"
   title_packages_page: Пакетлар — Бит %{page}
   default_description: SIBrowser — SIGame (Своя Игра) өчен пакетлар җыелмасы.
+  title_author: "%{name} — SIGame пакетлар ясаучы"
+  description_author: "%{name} %{package_count} SIGame өчен пакет ясаган."
+  author_text: Пакет саны — %{package_count}.
+  author_packages: Ясаучының пакетлар
+  description_author_coauthors: Автордашлар — %{names}.
+  author_text_coauthors: "Бу ясаучының автордашлар:"

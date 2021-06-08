@@ -1,0 +1,29 @@
+<% content_for :title do %>
+  <%= t('title_author', name: @author) %>
+<% end %>
+<%- content_for :description do -%>
+<%= t('description_author', name: @author, package_count: @package_count) -%>
+<%- if @other_authors.present? -%>
+<%= ' ' + t('description_author_coauthors', names: @other_authors.join(', ')) -%>
+<% end %>
+<% end %>
+
+
+<h1 class="text-2xl font-bold text-center">
+  <%= @author %>
+</h1>
+
+<p>
+  <%= t('author_text', package_count: @package_count) %>
+  <% if @other_authors.present? %>
+    <br>
+    <%= t('author_text_coauthors') %>
+    <%= safe_join(@other_authors.map { |a| link_to a, author_path(a), class: 'font-bold' }, ', ') %>
+  <% end %>
+</p>
+
+<h2 class="text-xl mb-2 mt-4 text-center">
+  <%= t('author_packages') %>
+</h2>
+
+<%= render 'components/packages_table', packages: @packages %>
