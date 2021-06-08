@@ -18,7 +18,7 @@
   <% if @other_authors.present? %>
     <br>
     <%= t('author_text_coauthors') %>
-    <%= safe_join(@other_authors.map { |a| link_to a, author_path(a), class: 'font-bold' }, ', ') %>
+    <%= safe_join(@other_authors.map { |a| author_link a, class: 'font-bold' }, ', ') %>
   <% end %>
 </p>
 

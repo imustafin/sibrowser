@@ -22,7 +22,7 @@
       </td>
       <td class="text-center">
         <% if package.authors.present? %>
-          <%= safe_join(package.authors.reject(&:blank?).map { |a| link_to a, author_path(a), class: 'font-bold' }, ', ') %>
+          <%= safe_join(package.authors.reject(&:blank?).map { |a| author_link a, class: 'font-bold' }, ', ') %>
         <% end %>
       </td>
       <td class="text-center">

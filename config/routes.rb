@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   scope '(:locale)' do
     root 'packages#index'
     resources :packages, only: [:index, :show]
-    resources :authors, only: [:show]
+
+    resources :authors, only: [:show], constraints: { id: /.+/ }
   end
 end

@@ -34,4 +34,10 @@ module ApplicationHelper
   def distribution(dist)
     render partial: 'components/distribution', locals: dist
   end
+
+  def author_link(author, **kwargs)
+    locale = request.path_parameters[:locale]
+    params = { locale: locale, id: author }
+    link_to author, author_path(params), **kwargs
+  end
 end
