@@ -17,6 +17,10 @@ class Package < ApplicationRecord
       }
     }
 
+  def authors
+    (self[:authors] || []).reject(&:blank?)
+  end
+
   def question_distribution
     return nil unless structure
 

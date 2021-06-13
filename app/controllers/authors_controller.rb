@@ -12,7 +12,6 @@ class AuthorsController < ApplicationController
     @other_authors = Package.by_author(@author)
       .pluck(:authors)
       .flatten
-      .reject(&:blank?)
       .uniq(&:downcase)
       .delete_if { |x| x.downcase == @author.downcase }
       .sort
