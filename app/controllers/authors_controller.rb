@@ -17,5 +17,11 @@ class AuthorsController < ApplicationController
       .sort
 
     @packages = ps
+
+    @page_title = t('title_author', name: @author)
+    @page_description = t('description_author', name: @author, package_count: @package_count)
+    if @other_authors.present?
+      @page_description += ' ' + t('description_author_coauthors', names: @other_authors.join(', '))
+    end
   end
 end

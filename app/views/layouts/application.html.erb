@@ -1,24 +1,13 @@
 <!DOCTYPE html>
 <html lang="<%= I18n.locale %>">
   <head>
-    <title><%=
-      if content_for?(:title)
-        yield(:title) + ' | ' + t('site_name')
-      else
-        t('default_title')
-      end
-      %></title>
-
-    <meta
-      name="description"
-      content="<%=
-        if content_for?(:description)
-          yield(:description)
-        else
-          t('default_description')
-        end
-      %>"
-    >
+    <%= display_meta_tags(
+          site: t('site_name'),
+          title: t('default_title'),
+          description: t('default_description'),
+          reverse: true
+    )
+    %>
 
     <% Languages.each do |(name, code)| %>
       <link

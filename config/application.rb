@@ -25,5 +25,10 @@ module Sibrowser
     config.x.vk_service = ENV['VK_SERVICE']
 
     config.active_record.schema_format = :sql
+
+    MetaTags.configure do |c|
+      c.title_limit = 0
+      c.description_limit = 0
+    end
   end
 end
