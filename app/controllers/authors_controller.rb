@@ -23,5 +23,7 @@ class AuthorsController < ApplicationController
     if @other_authors.present?
       @page_description += ' ' + t('description_author_coauthors', names: @other_authors.join(', '))
     end
+
+    set_meta_tags noindex: any_sorting?
   end
 end

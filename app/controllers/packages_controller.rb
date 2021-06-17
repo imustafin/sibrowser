@@ -12,6 +12,8 @@ class PackagesController < ApplicationController
     if params['page']
       @page_title = t('title_packages_page', page: params['page'])
     end
+
+    set_meta_tags noindex: any_sorting? || params[:q].present? || params['page'].present?
   end
 
   def show
