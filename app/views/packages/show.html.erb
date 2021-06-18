@@ -1,18 +1,18 @@
-<h1 class="text-2xl font-bold text-center">
+<h1 class="text-4xl font-bold text-center">
   <%= @package.name %>
 </h1>
-<h2 class="text-xl font-bold text-center pb-4">
-  <% if @package.authors.present? %>
-    <p>
-      <%= @package.authors.join(', ') %>
-    </p>
-  <% end %>
-  <% if @package.tags.present? %>
-    <p>
-      <%= @package.tags.join(', ') %>
-    </p>
-  <% end %>
-</h2>
+
+<% if @package.authors.present? %>
+  <h2 class="text-2xl font-bold text-center">
+    <%= safe_join(@package.authors.map { |a| author_link a }, ', ') %>
+  </h2>
+<% end %>
+
+<% if @package.tags.present? %>
+  <h3 class="text-l text-center">
+    <%= @package.tags.join(', ') %>
+  </h3>
+<% end %>
 
 <p>
   <%= t('sigame_package',
