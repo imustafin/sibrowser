@@ -18,7 +18,7 @@ module PackagesTable
   def table_packages
     ps = Package
 
-    ps = ps.order(sort_column => sort_direction) if any_sorting?
+    ps = ps.order(sort_column => sort_direction) if sort_column && sort_direction
 
     ps = ps.page(params[:page]).per(10)
 
