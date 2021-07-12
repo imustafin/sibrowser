@@ -107,4 +107,16 @@ RSpec.describe Package, type: :model do
       })
     end
   end
+
+  describe '.search_freetext' do
+    it 'uses theme names' do
+      p = create(:package_one_theme, theme: 'Яблоки')
+      expect(described_class.search_freetext('яблоко')).to include(p)
+    end
+
+    it 'uses round names' do
+      p = create(:package_one_theme, round: 'Бананы')
+      expect(described_class.search_freetext('банан')).to include(p)
+    end
+  end
 end
