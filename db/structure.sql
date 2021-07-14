@@ -128,6 +128,13 @@ CREATE UNIQUE INDEX index_packages_on_vk_document_id ON public.packages USING bt
 
 
 --
+-- Name: tags_icase_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tags_icase_index ON public.packages USING gin (((lower((tags)::text))::jsonb));
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -147,6 +154,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210531215651'),
 ('20210606162204'),
 ('20210607220249'),
-('20210712210249');
+('20210712210249'),
+('20210714194116');
 
 
