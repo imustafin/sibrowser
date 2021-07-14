@@ -12,7 +12,7 @@
   <% @tags.each do |t| %>
     <tr>
       <td class="py-4 text-center">
-        <%= t.tag %>
+        <%= tag_link t.tag, class: 'font-bold' %>
       </td>
       <td class="text-center">
         <%= t.count %>

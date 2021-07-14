@@ -27,7 +27,7 @@
       </td>
       <td class="text-center">
         <% if package.tags.present? %>
-          <%= package.tags.join(', ') %>
+          <%= safe_join(package.tags.map { |t| tag_link t, class: 'font-bold' }, ', ') %>
         <% end %>
       </td>
       <td>

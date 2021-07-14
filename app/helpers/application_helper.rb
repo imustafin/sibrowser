@@ -41,6 +41,12 @@ module ApplicationHelper
     link_to author, author_path(params), **kwargs
   end
 
+  def tag_link(tag, **kwargs)
+    locale = request.path_parameters[:locale]
+    params = { locale: locale, id: tag }
+    link_to tag, tag_path(params), **kwargs
+  end
+
   def package_link(package, **kwargs)
     locale = request.path_parameters[:locale]
     params = { locale: locale, id: package.id }

@@ -43,10 +43,13 @@ en:
   title_packages_page: Packages — Page %{page}
   default_description: SIBrowser — a collection of packages for SIGame (Своя Игра).
   title_author: "%{name} — SIGame Package Author"
-  description_author: Total packages count created by %{name} — %{package_count}.
+  description_author: Total packages created by %{name} count — %{package_count}.
   author_text: Total packages — %{package_count}.
   author_packages: Packages of this Author
   description_author_coauthors: Co-authors — %{names}.
   author_text_coauthors: "This author has created packages together with:"
   tag: Tag
   package_count: Package count
+  title_tag: "%{tag} — SIGame Package Tag"
+  description_tag: Total packages tagged %{tag} — %{package_count}
+  tag_packages: Packages with this tag

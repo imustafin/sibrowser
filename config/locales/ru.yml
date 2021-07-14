@@ -50,3 +50,6 @@ ru:
   author_text_coauthors: "Другие авторы, с которыми этот автор делал пакеты:"
   tag: Тег
   package_count: Количество пакетов
+  title_tag: "%{tag} — Тег пакетов для SIGame"
+  description_tag: Всего пакетов с тегом %{tag} — %{package_count}
+  tag_packages: Пакеты с этим тегом
