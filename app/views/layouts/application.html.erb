@@ -36,10 +36,14 @@
 
   <body class="bg-indigo-300 text-black-20 min-h-screen flex flex-col justify-between">
     <header class="px-4 flex justify-between h-16 bg-indigo-800 text-white font-bold items-center">
-      <%= link_to t(:site_name), root_path %>
-      <% if admin? %>
-        <%= button_to "Logout", logout_path, method: :post, class: 'bg-red-700' %>
-      <% end %>
+      <div class="flex space-x-8">
+        <%= link_to t(:site_name), root_path, class: 'font-black font-mono' %>
+        <%= link_to t(:packages), packages_path %>
+        <%= link_to t(:tags), tags_path %>
+        <% if admin? %>
+          <%= button_to "Logout", logout_path, method: :post, class: 'bg-red-700' %>
+        <% end %>
+      </div>
       <ul class="flex space-x-4 md:mr-4">
         <% Languages.each do |(name, code)| %>
           <% if code != I18n.locale %>

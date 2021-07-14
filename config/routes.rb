@@ -28,10 +28,13 @@ Rails.application.routes.draw do
   post 'admin/login', to: 'admin#login', as: 'login'
   post 'admin/logout', to: 'admin#logout', as: 'logout'
 
-  scope '(:locale)' do
+  scope '(:locale)', constraints: { locale: Languages.map(&:last).map(&:to_s) } do
     root 'packages#index'
+
     resources :packages, only: [:index, :show]
 
     resources :authors, only: [:show], constraints: { id: /.+/ }
+
+    resources :tags, only: [:index, :show], constraints: { id: /.+/ }
   end
 end

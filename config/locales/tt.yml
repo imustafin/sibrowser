@@ -48,3 +48,5 @@ tt:
   author_packages: Ясаучының пакетлар
   description_author_coauthors: Автордашлар — %{names}.
   author_text_coauthors: "Бу ясаучының автордашлар:"
+  tag: Тег
+  package_count: Пакет саны

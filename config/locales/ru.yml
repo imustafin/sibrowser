@@ -48,3 +48,5 @@ ru:
   author_packages: Пакеты автора
   description_author_coauthors: Соавторы — %{names}.
   author_text_coauthors: "Другие авторы, с которыми этот автор делал пакеты:"
+  tag: Тег
+  package_count: Количество пакетов

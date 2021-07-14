@@ -48,3 +48,5 @@ en:
   author_packages: Packages of this Author
   description_author_coauthors: Co-authors — %{names}.
   author_text_coauthors: "This author has created packages together with:"
+  tag: Tag
+  package_count: Package count
