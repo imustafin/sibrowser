@@ -24,6 +24,10 @@ Rails.application.routes.draw do
 
   # Routes
 
+  get 'admin', to: 'admin#index', as: 'admin'
+  post 'admin/login', to: 'admin#login', as: 'login'
+  post 'admin/logout', to: 'admin#logout', as: 'logout'
+
   scope '(:locale)' do
     root 'packages#index'
     resources :packages, only: [:index, :show]

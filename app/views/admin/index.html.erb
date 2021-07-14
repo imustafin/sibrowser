@@ -1,0 +1,15 @@
+<%= flash[:notice] %>
+
+<% if admin? %>
+  <%= button_to "Logout", logout_path, method: :post %>
+<% else %>
+  <%= form_with url: login_path, method: :post do |f| %>
+    <%= f.label :login %>
+    <%= f.text_field :login, tabindex: 1 %>
+
+    <%= f.label :password %>
+    <%= f.password_field :password, tabindex: 2 %>
+
+    <%= submit_tag 'Login' %>
+  <% end %>
+<% end %>

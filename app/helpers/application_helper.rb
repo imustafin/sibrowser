@@ -40,4 +40,8 @@ module ApplicationHelper
     params = { locale: locale, id: author }
     link_to author, author_path(params), **kwargs
   end
+
+  def admin?
+    session[:admin]
+  end
 end

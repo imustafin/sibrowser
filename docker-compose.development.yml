@@ -21,6 +21,8 @@ services:
       VK_SERVICE:
       REDIS_PROVIDER: REDIS_URL
       REDIS_URL: redis://redis:6379
+      ADMIN_LOGIN: admin
+      ADMIN_PASSWORD: admin
 
     tmpfs:
       - /tmp
