@@ -53,3 +53,4 @@ ru:
   title_tag: "%{tag} — Тег пакетов для SIGame"
   description_tag: Всего пакетов с тегом %{tag} — %{package_count}
   tag_packages: Пакеты с этим тегом
+  categories: Категории

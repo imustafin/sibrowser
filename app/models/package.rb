@@ -81,4 +81,15 @@ class Package < ApplicationRecord
   scope :by_author, ->(author) { where('LOWER(authors::text)::jsonb @> to_jsonb(LOWER(?)::text)', author) }
 
   scope :by_tag, ->(tag) { where('LOWER(tags::text)::jsonb @> to_jsonb(LOWER(?)::text)', tag) }
+
+  def categories
+    scores = category_scores.sort_by(&:last).reverse
+    return [] if scores.empty?
+
+    best = scores.first.last
+
+    threshold = best * 0.8
+
+    scores.reject { |x| x.last < threshold }.to_h
+  end
 end
