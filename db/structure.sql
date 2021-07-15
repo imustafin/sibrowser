@@ -76,10 +76,46 @@ CREATE TABLE public.schema_migrations (
 
 
 --
+-- Name: sibrowser_configs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.sibrowser_configs (
+    id bigint NOT NULL,
+    tags_to_cats jsonb
+);
+
+
+--
+-- Name: sibrowser_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.sibrowser_configs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sibrowser_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.sibrowser_configs_id_seq OWNED BY public.sibrowser_configs.id;
+
+
+--
 -- Name: packages id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.packages ALTER COLUMN id SET DEFAULT nextval('public.packages_id_seq'::regclass);
+
+
+--
+-- Name: sibrowser_configs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sibrowser_configs ALTER COLUMN id SET DEFAULT nextval('public.sibrowser_configs_id_seq'::regclass);
 
 
 --
@@ -104,6 +140,14 @@ ALTER TABLE ONLY public.packages
 
 ALTER TABLE ONLY public.schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: sibrowser_configs sibrowser_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sibrowser_configs
+    ADD CONSTRAINT sibrowser_configs_pkey PRIMARY KEY (id);
 
 
 --
@@ -155,6 +199,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210606162204'),
 ('20210607220249'),
 ('20210712210249'),
-('20210714194116');
+('20210714194116'),
+('20210714194426');
 
 

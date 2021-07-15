@@ -5,7 +5,12 @@
 <table class="w-full">
   <thead>
     <tr class="bg-indigo-600 text-white">
-      <th class="text-center py-4 px-3"><%= t('tag') %></th>
+      <th class="text-center py-4 px-3 <%= admin? ? 'w-96' : '' %>"><%= t('tag') %></th>
+      <% if admin? %>
+        <% @cats.each do |c| %>
+          <th class="text-center py-4 px-3"><%= c %></th>
+        <% end %>
+      <% end %>
       <th class="text-center py-4 px-3"><%= t('package_count') %></th>
     </tr>
   </thead>
@@ -14,12 +19,25 @@
       <td class="py-4 text-center">
         <%= tag_link t.tag, class: 'font-bold' %>
       </td>
+      <% if admin? %>
+        <% @cats.each do |c| %>
+          <td class="text-center">
+            <%= button_to(
+              @tags_to_cats[t.tag.downcase]&.include?(c) ? '+' : '',
+              tag_toggle_cat_path(tag_id: t.tag.downcase),
+              params: { cat: c, page: params[:page] },
+              class: "bg-blue-300 w-10"
+            ) %>
+          </td>
+        <% end %>
+      <% end %>
       <td class="text-center">
         <%= t.count %>
       </td>
     </tr>
   <% end %>
 </table>
+
 <div class="mt-4">
   <%= paginate @tags %>
 </div>
