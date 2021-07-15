@@ -1,0 +1,22 @@
+<h1 class="text-2xl font-bold text-center pb-2">
+  <%= t('categories') %>
+</h1>
+
+<table class="w-full">
+  <thead>
+    <tr class="bg-indigo-600 text-white">
+      <th class="text-center py-4 px-3"><%= t('category') %></th>
+      <th class="text-center py-4 px-3"><%= t('package_count') %></th>
+    </tr>
+  </thead>
+  <% @categories.each do |c| %>
+    <tr>
+      <td class="py-4 text-center">
+        <%= category_link c.first, class: 'font-bold' %>
+      </td>
+      <td class="text-center">
+        <%= c.last %>
+      </td>
+    </tr>
+  <% end %>
+</table>

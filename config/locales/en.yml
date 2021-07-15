@@ -54,3 +54,9 @@ en:
   description_tag: Total packages tagged %{tag} — %{package_count}
   tag_packages: Packages with this tag
   categories: Categories
+  category: Category
+  category_packages: Packages in this Category
+  title_category: "%{category} — SIGame Package Category"
+  description_category: Total packages in category %{category} — %{package_count}
+
+

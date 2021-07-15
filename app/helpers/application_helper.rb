@@ -53,6 +53,12 @@ module ApplicationHelper
     link_to package.name, package_path(params), **kwargs
   end
 
+  def category_link(category, **kwargs)
+    locale = request.path_parameters[:locale]
+    params = { locacle: locale, id: category }
+    link_to category, category_path(params), **kwargs
+  end
+
   def admin?
     session[:admin]
   end

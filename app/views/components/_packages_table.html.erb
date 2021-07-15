@@ -33,7 +33,7 @@
       </td>
       <td class="text-center">
         <% unless admin? %>
-          <%= safe_join(package.categories.map(&:first), ', ') %>
+          <%= safe_join(package.categories.map { |c| category_link c.first, class: 'font-bold' }, ', ') %>
         <% else %>
           <% package.categories.each do |k, v| %>
             <%= k %>&nbsp;<%= v.round(2) %> <br>

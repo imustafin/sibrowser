@@ -54,3 +54,7 @@ tt:
   description_tag: "%{tag} теглы пакет саны — %{package_count}"
   tag_packages: Бу теглы пакетлар
   categories: Категорияләр
+  category: Категория
+  category_packages: Бу категориядәге пакетлар
+  title_category: "%{category} — SIGame пакет категориясе"
+  description_category: "%{category} категориядәге пакет саны — %{package_count}"

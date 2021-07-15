@@ -38,5 +38,7 @@ Rails.application.routes.draw do
     resources :tags, only: [:index, :show], constraints: { id: /.+/ } do
       post :toggle_cat
     end
+
+    resources :categories, only: [:index, :show]
   end
 end
