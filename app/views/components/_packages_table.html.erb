@@ -30,7 +30,7 @@
       </td>
       <td class="text-center">
         <% if package.tags.present? %>
-          <%= safe_join(package.tags.map { |t| tag_link t, class: 'font-bold' }, ', ') %>
+          <%= safe_join(package.tags.reject(&:empty?).map { |t| tag_link t, class: 'font-bold' }, ', ') %>
         <% end %>
       </td>
       <% if admin? %>
