@@ -7,6 +7,9 @@
       <%= sortable t('name'), :name, class: 'w-72 text-center py-4 px-3' %>
       <%= sortable t('authors'), :authors, class: 'w-52 text-center py-4 px-3' %>
       <th class="w-52 text-center py-4 px-3"><%= t('tags') %></th>
+      <% if admin? %>
+        <th class="w-52 text-center py-4 px-3">Cats</th>
+      <% end %>
       <th class="w-44 text-center py-4 px-3"><%= t('questions') %></th>
       <th class="w-32 text-center py-4 px-3"><%= t('download') %></th>
     </tr>
@@ -30,6 +33,9 @@
           <%= safe_join(package.tags.map { |t| tag_link t, class: 'font-bold' }, ', ') %>
         <% end %>
       </td>
+      <% if admin? %>
+        <td><%= package.category_scores.sort_by(&:last).reverse.map { |k, v| "#{k}#{v.round(2)}"}.join(' ') %></td>
+      <% end %>
       <td>
         <div class="w-full h-6">
           <% if package.question_distribution.present? %>

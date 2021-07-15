@@ -43,7 +43,8 @@ CREATE TABLE public.packages (
     authors jsonb,
     structure jsonb,
     tags jsonb,
-    searchable tsvector GENERATED ALWAYS AS (((((((setweight(to_tsvector('russian'::regconfig, (COALESCE(name, ''::character varying))::text), 'A'::"char") || setweight(to_tsvector('russian'::regconfig, (COALESCE(filename, ''::character varying))::text), 'A'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(authors, '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(tags, '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(jsonb_path_query_array(structure, '$[*]."name"'::jsonpath), '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(jsonb_path_query_array(structure, '$[*]."themes"[*]."name"'::jsonpath), '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(post_text, ''::text)), 'C'::"char"))) STORED
+    searchable tsvector GENERATED ALWAYS AS (((((((setweight(to_tsvector('russian'::regconfig, (COALESCE(name, ''::character varying))::text), 'A'::"char") || setweight(to_tsvector('russian'::regconfig, (COALESCE(filename, ''::character varying))::text), 'A'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(authors, '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(tags, '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(jsonb_path_query_array(structure, '$[*]."name"'::jsonpath), '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(jsonb_path_query_array(structure, '$[*]."themes"[*]."name"'::jsonpath), '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(post_text, ''::text)), 'C'::"char"))) STORED,
+    category_scores jsonb
 );
 
 
@@ -200,6 +201,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210607220249'),
 ('20210712210249'),
 ('20210714194116'),
-('20210714194426');
+('20210714194426'),
+('20210715131534');
 
 

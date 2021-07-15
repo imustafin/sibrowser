@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.7.3'
+ruby '2.7.4'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> 6.1.4'
@@ -67,3 +67,6 @@ gem 'rails-i18n', '~> 6.0'
 gem 'sidekiq', '~> 6.2', '>= 6.2.1'
 gem 'pg_search', '~> 2.3', '>= 2.3.5'
 gem 'meta-tags', '~> 2.14'
+
+gem 'classifier-reborn', '~> 2.2'
+gem 'gsl', '~> 2.1', '>= 2.1.0.3'

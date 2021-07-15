@@ -60,7 +60,7 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
       zeitwerk (~> 2.3)
-    addressable (2.7.0)
+    addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
     bindex (0.8.1)
     bootsnap (1.7.5)
@@ -76,6 +76,8 @@ GEM
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
     childprocess (3.0.0)
+    classifier-reborn (2.2.0)
+      fast-stemmer (~> 1.0)
     concurrent-ruby (1.1.9)
     connection_pool (2.2.5)
     crass (1.0.6)
@@ -86,9 +88,11 @@ GEM
     factory_bot_rails (6.2.0)
       factory_bot (~> 6.2.0)
       railties (>= 5.0.0)
+    fast-stemmer (1.0.2)
     ffi (1.15.3)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
+    gsl (2.1.0.3)
     heroicon (0.3.0)
       rails (>= 5.2)
     i18n (1.8.10)
@@ -175,7 +179,7 @@ GEM
     rb-fsevent (0.11.0)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    redis (4.2.5)
+    redis (4.3.1)
     regexp_parser (2.1.1)
     rspec-core (3.10.1)
       rspec-support (~> 3.10.0)
@@ -258,7 +262,9 @@ DEPENDENCIES
   bootsnap (>= 1.4.4)
   byebug
   capybara (>= 3.26)
+  classifier-reborn (~> 2.2)
   factory_bot_rails (~> 6.2)
+  gsl (~> 2.1, >= 2.1.0.3)
   heroicon (~> 0.3.0)
   jbuilder (~> 2.7)
   kaminari (~> 1.2, >= 1.2.1)
@@ -284,7 +290,7 @@ DEPENDENCIES
   webpacker (~> 5.4)
 
 RUBY VERSION
-   ruby 2.7.3p183
+   ruby 2.7.4p191
 
 BUNDLED WITH
    2.1.4
