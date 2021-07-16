@@ -87,6 +87,23 @@
   <% end %>
 </div>
 
+<% if admin? %>
+  <p>
+    <%= @package.category_scores %>
+  </p>
+  <% @cats.each do |c| %>
+    <div class="inline-block">
+      <%= c %>
+      <%= button_to(
+      (@package.manual_categories || []).include?(c) ? '+' : '',
+      package_toggle_cat_path(package_id: @package.id),
+      params: { cat: c },
+      class: "bg-blue-300 w-10"
+      )%>
+    </div>
+  <% end %>
+
+<% end %>
 
 
 <%= t('published_at') %>: <%= l @package.published_at.to_date %> <br>

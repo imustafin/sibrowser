@@ -26,6 +26,30 @@ class PackagesController < ApplicationController
     )
 
     @page_description = package_description(@package)
+
+    if helpers.admin?
+      @cats = SibrowserConfig::CATEGORIES
+    end
+  end
+
+  def toggle_cat
+    return head(:forbidden) unless helpers.admin?
+
+    p = Package.find(params[:package_id])
+
+    cat = params[:cat]
+    cur = p.manual_categories || []
+    if cur.include?(cat)
+      cur -= [cat]
+    else
+      cur += [cat]
+    end
+
+    p.manual_categories = cur
+
+    p.save!
+
+    redirect_to action: :show, id: params[:package_id]
   end
 
   private

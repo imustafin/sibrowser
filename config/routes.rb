@@ -31,7 +31,9 @@ Rails.application.routes.draw do
   scope '(:locale)', constraints: { locale: Languages.map(&:last).map(&:to_s) } do
     root 'packages#index'
 
-    resources :packages, only: [:index, :show]
+    resources :packages, only: [:index, :show] do
+      post :toggle_cat
+    end
 
     resources :authors, only: [:show], constraints: { id: /.+/ }
 
