@@ -82,14 +82,13 @@ class Package < ApplicationRecord
 
   scope :by_tag, ->(tag) { where('LOWER(tags::text)::jsonb @> to_jsonb(LOWER(?)::text)', tag) }
 
-  def categories
-    scores = category_scores.sort_by(&:last).reverse
-    return [] if scores.empty?
+  scope :by_category, ->(cat) { where("(categories->>?) IS NOT NULL", cat)}
 
-    best = scores.first.last
-
-    threshold = best * 0.8
-
-    scores.reject { |x| x.last < threshold }.to_h
-  end
+  scope :reorder_by_category, ->(cat) {
+    if SibrowserConfig::CATEGORIES.include?(cat)
+      reorder(Arel.sql("categories->>'#{cat}' DESC"))
+    else
+      self
+    end
+  }
 end

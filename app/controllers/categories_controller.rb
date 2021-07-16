@@ -3,7 +3,7 @@ class CategoriesController < ApplicationController
 
   def index
     @categories = SibrowserConfig::CATEGORIES
-      .map { |c| [c, category_count(c)] }
+      .map { |c| [c, Package.by_category(c).count] }
       .sort_by(&:last)
       .reverse
 
@@ -15,21 +15,11 @@ class CategoriesController < ApplicationController
 
     ps = table_packages
 
-    ps = table_packages.select { |p| p.categories.include?(@category) }
+    ps = table_packages.by_category(@category)
 
-    def ps.total_pages
-      1
-    end
+    ps = ps.reorder_by_category(@category)
 
-    def ps.current_page
-      1
-    end
-
-    def ps.limit_value
-      10
-    end
-
-    @package_count = category_count(@category)
+    @package_count = Package.by_category(@category).count
 
     @packages = ps
 
@@ -37,9 +27,4 @@ class CategoriesController < ApplicationController
     @page_description = t('description_category', category: @category, package_count: @package_count)
   end
 
-  private
-
-  def category_count(category)
-    Package.select { |p| p.categories.include?(category) }.count
-  end
 end

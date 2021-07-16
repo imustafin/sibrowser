@@ -9,6 +9,19 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+-- Name: actual_categories(jsonb); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.actual_categories(scores jsonb) RETURNS jsonb
+    LANGUAGE sql IMMUTABLE
+    AS $$
+        WITH rr AS (SELECT * FROM jsonb_each(scores)),
+          good AS (SELECT * FROM rr WHERE rr.value::float > 0.8 * (SELECT MAX(value::float) FROM rr))
+        SELECT COALESCE(jsonb_object_agg(key, value), '{}') FROM good
+      $$;
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -44,7 +57,8 @@ CREATE TABLE public.packages (
     structure jsonb,
     tags jsonb,
     searchable tsvector GENERATED ALWAYS AS (((((((setweight(to_tsvector('russian'::regconfig, (COALESCE(name, ''::character varying))::text), 'A'::"char") || setweight(to_tsvector('russian'::regconfig, (COALESCE(filename, ''::character varying))::text), 'A'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(authors, '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(tags, '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(jsonb_path_query_array(structure, '$[*]."name"'::jsonpath), '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(jsonb_path_query_array(structure, '$[*]."themes"[*]."name"'::jsonpath), '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(post_text, ''::text)), 'C'::"char"))) STORED,
-    category_scores jsonb
+    category_scores jsonb,
+    categories jsonb GENERATED ALWAYS AS (public.actual_categories(category_scores)) STORED
 );
 
 
@@ -202,6 +216,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210712210249'),
 ('20210714194116'),
 ('20210714194426'),
-('20210715131534');
+('20210715131534'),
+('20210716002417');
 
 
