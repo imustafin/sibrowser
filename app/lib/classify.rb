@@ -13,6 +13,10 @@ class Classify
 
         cats = tags.map { |t| tags_to_cats[t] || [] }.flatten.uniq
 
+        cats += p.manual_categories || []
+
+        cats = cats.uniq
+
         puts [p.id, package_to_text(p), cats].to_json
       end
     end
