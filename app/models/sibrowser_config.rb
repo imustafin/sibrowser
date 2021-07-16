@@ -6,7 +6,8 @@ class SibrowserConfig < ApplicationRecord
     'games',
     'movies',
     'music',
-    'ero'
+    'mix',
+    'thematic'
   ].freeze
 
   def self.instance
