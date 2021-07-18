@@ -41,17 +41,25 @@ class PackagesController < ApplicationController
     mc = p.manual_categories || {}
     mc = [] unless mc.is_a?(Hash)
 
-    if mc.dig(params[:round], params[:theme], params[:question]) == params[:cat]
+    if params[:question].present? && mc.dig(params[:round], params[:theme], params[:question]) == params[:cat]
       new_cat = nil
     else
       new_cat = params[:cat]
     end
 
+    question_ids = params[:question]
+
+    if params[:question].present?
+      question_ids = [params[:question]]
+    else
+      r = p.structure[params[:round].to_i]
+      t = r['themes'][params[:theme].to_i]['questions']
+      question_ids = (0...t.length).map(&:to_s)
+    end
+
     upd = {
       params[:round] => {
-        params[:theme] => {
-          params[:question] => new_cat
-        }
+        params[:theme] => question_ids.map { |id| [id, new_cat] }.to_h
       }
     }
 

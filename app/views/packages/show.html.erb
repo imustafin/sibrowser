@@ -100,6 +100,21 @@
         <tr>
           <td></td>
           <td class="w-32"><%= theme['name'] %></td>
+          <td></td>
+          <td>
+            <% @cats.each do |c| %>
+            <div class="inline-block w-20">
+              <%= c %>
+              <%= button_to(
+              '',
+              package_set_cat_path(package_id: @package.id),
+              params: { round: round_id, theme: theme_id, question: nil, cat: c },
+              class: 'bg-blue-300 w-10'
+              )%>
+            </div>
+
+            <% end %>
+          </td>
         </tr>
         <% theme['questions'].each_with_index do |question, question_id| %>
           <tr class="border-2 border-black">
