@@ -3,11 +3,17 @@ class SibrowserConfig < ApplicationRecord
   CATEGORIES = [
     'anime',
     'gachi',
-    'games',
-    'movies',
-    'music',
-    'mix',
-    'thematic'
+    'gam',
+    'fic',
+    'mus',
+    'pzl',
+    'meme',
+    'exact',
+    'hum',
+    'food',
+    'inet',
+    'ero',
+    'unk'
   ].freeze
 
   def self.instance

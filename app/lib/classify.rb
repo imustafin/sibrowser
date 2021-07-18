@@ -13,6 +13,7 @@ class Classify
             theme['questions'].each_with_index do |question, question_id|
               text = [round['name'], theme['name'], question['question_text'], *question['answers']].reject(&:blank?).join('. ')
               cat = (p.manual_categories || {}).dig(round_id.to_s, theme_id.to_s, question_id.to_s)
+              cat = nil unless SibrowserConfig::CATEGORIES.include?(cat)
 
               puts [text, cat, p.id, round_id, theme_id, question_id].to_json
             end
