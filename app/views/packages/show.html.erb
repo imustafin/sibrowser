@@ -91,19 +91,18 @@
   <p>
     <%= @package.category_scores %>
   </p>
-  <table class="border-2 border-black">
+  <table class="border-2 border-black w-full">
     <% @package.structure.each_with_index do |round, round_id| %>
-      <tr>
-        <td class="w-32"><%= round['name'] %></td>
+      <tr class="h-10 bg-indigo-400">
+        <td><%= round['name'] %></td>
+        <td></td>
       </tr>
       <% round['themes'].each_with_index do |theme, theme_id| %>
-        <tr>
-          <td></td>
-          <td class="w-32"><%= theme['name'] %></td>
-          <td></td>
+        <tr class="h-10 bg-indigo-200 font-bold">
+          <td><%= round['name'] %> <%= theme['name'] %></td>
           <td>
             <% @cats.each do |c| %>
-            <div class="inline-block w-20">
+            <div class="inline-block w-14">
               <%= c %>
               <%= button_to(
               '',
@@ -118,15 +117,13 @@
         </tr>
         <% theme['questions'].each_with_index do |question, question_id| %>
           <tr class="border-2 border-black">
-            <td></td>
-            <td></td>
             <td class="w-96">
               <%= question['question_text'] %>
               <br>
               <%= question['answers'].join(' ') %></td>
             <td>
               <% @cats.each do |c| %>
-                <div class="inline-block w-20">
+                <div class="inline-block w-14">
                   <%= c %>
                   <%= button_to(
                   (@package.manual_categories&.dig(round_id.to_s, theme_id.to_s, question_id.to_s) == c) ? '+' : '',
