@@ -8,16 +8,16 @@ class Classify
       group.each do |p|
         next unless p.structure
 
-        text = package_to_text(p)
-        tags = p.tags.map(&:downcase).map(&:strip)
+        p.structure.each_with_index do |round, round_id|
+          round['themes'].each_with_index do |theme, theme_id|
+            theme['questions'].each_with_index do |question, question_id|
+              text = [round['name'], theme['name'], question['question_text'], *question['answers']].reject(&:blank?).join('. ')
+              cat = (p.manual_categories || {}).dig(round_id.to_s, theme_id.to_s, question_id.to_s)
 
-        cats = tags.map { |t| tags_to_cats[t] || [] }.flatten.uniq
-
-        cats += p.manual_categories || []
-
-        cats = cats.uniq
-
-        puts [p.id, package_to_text(p), cats].to_json
+              puts [text, cat, p.id, round_id, theme_id, question_id].to_json
+            end
+          end
+        end
       end
     end
   end
