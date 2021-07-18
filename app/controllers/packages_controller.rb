@@ -32,21 +32,31 @@ class PackagesController < ApplicationController
     end
   end
 
-  def toggle_cat
+  def set_cat
     return head(:forbidden) unless helpers.admin?
 
     p = Package.find(params[:package_id])
 
-    cat = params[:cat]
-    cur = p.manual_categories || []
-    if cur.include?(cat)
-      cur -= [cat]
+
+    mc = p.manual_categories || {}
+    mc = [] unless mc.is_a?(Hash)
+
+    if mc.dig(params[:round], params[:theme], params[:question]) == params[:cat]
+      new_cat = nil
     else
-      cur += [cat]
+      new_cat = params[:cat]
     end
 
-    p.manual_categories = cur
+    upd = {
+      params[:round] => {
+        params[:theme] => {
+          params[:question] => new_cat
+        }
+      }
+    }
 
+    mc = mc.deep_merge(upd)
+    p.manual_categories = mc
     p.save!
 
     redirect_to action: :show, id: params[:package_id]

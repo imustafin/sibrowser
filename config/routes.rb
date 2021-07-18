@@ -32,7 +32,7 @@ Rails.application.routes.draw do
     root 'packages#index'
 
     resources :packages, only: [:index, :show] do
-      post :toggle_cat
+      post :set_cat
     end
 
     resources :authors, only: [:show], constraints: { id: /.+/ }
