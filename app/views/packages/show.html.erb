@@ -93,12 +93,12 @@
   </p>
   <table class="border-2 border-black w-full">
     <% @package.structure.each_with_index do |round, round_id| %>
-      <tr class="h-10 bg-indigo-400">
+      <tr class="h-10 bg-indigo-500 text-white">
         <td><%= round['name'] %></td>
         <td></td>
       </tr>
       <% round['themes'].each_with_index do |theme, theme_id| %>
-        <tr class="h-10 bg-indigo-200 font-bold">
+        <tr class="h-10 bg-indigo-300 font-bold">
           <td><%= round['name'] %> <%= theme['name'] %></td>
           <td>
             <% @cats.each do |c| %>
@@ -116,7 +116,9 @@
           </td>
         </tr>
         <% theme['questions'].each_with_index do |question, question_id| %>
-          <tr class="border-2 border-black">
+          <tr class="border-2 border-black
+ <%= (SibrowserConfig::CATEGORIES.include?(@package.manual_categories&.dig(round_id.to_s, theme_id.to_s, question_id.to_s))) ? 'bg-indigo-200' : '' %>
+                     ">
             <td class="w-96">
               <%= question['question_text'] %>
               <br>
