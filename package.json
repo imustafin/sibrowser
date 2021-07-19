@@ -10,7 +10,7 @@
     "postcss": "^7",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "turbolinks": "^5.2.0",
-    "webpack": "^4.46.0",
+    "webpack": "^5.45.1",
     "webpack-cli": "^4.7.2"
   },
   "version": "0.1.0",
