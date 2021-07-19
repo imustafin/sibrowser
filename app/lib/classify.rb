@@ -11,7 +11,7 @@ class Classify
         p.structure.each_with_index do |round, round_id|
           round['themes'].each_with_index do |theme, theme_id|
             theme['questions'].each_with_index do |question, question_id|
-              text = [round['name'], theme['name'], question['question_text'], *question['answers']].reject(&:blank?).join('. ')
+              text = [question['question_text'], *question['answers']].reject(&:blank?).join('. ')
               cat = (p.manual_categories || {}).dig(round_id.to_s, theme_id.to_s, question_id.to_s)
               cat = nil unless SibrowserConfig::CATEGORIES.include?(cat)
 
