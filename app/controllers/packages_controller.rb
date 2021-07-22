@@ -67,7 +67,9 @@ class PackagesController < ApplicationController
     p.manual_categories = mc
     p.save!
 
-    redirect_to action: :show, id: params[:package_id]
+    anchor = [params[:round], params[:theme], params[:question]].reject(&:blank?).join('_')
+
+    redirect_to action: :show, id: params[:package_id], anchor: anchor
   end
 
   private
