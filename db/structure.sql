@@ -15,11 +15,21 @@ SET row_security = off;
 
 CREATE FUNCTION public.actual_categories(scores jsonb) RETURNS jsonb
     LANGUAGE sql IMMUTABLE
-    AS $$
-        WITH rr AS (SELECT * FROM jsonb_each(scores)),
-          good AS (SELECT * FROM rr WHERE rr.value::float > 0.8 * (SELECT MAX(value::float) FROM rr))
-        SELECT COALESCE(jsonb_object_agg(key, value), '{}') FROM good
-      $$;
+    AS $_$
+        WITH cats AS (
+          SELECT
+            jsonb_array_elements_text(jsonb_path_query_array(scores, '$.*.*.*')) AS cat
+        ),
+        with_counts AS (SELECT cat, COUNT(*) FROM cats GROUP BY cat ORDER BY COUNT(*) DESC),
+        with_ratios AS (
+          SELECT cat,
+                count / GREATEST((SELECT SUM(count) FROM with_counts), 1) AS ratio
+          FROM with_counts
+        )
+
+        SELECT jsonb_object_agg(cat, ratio) FROM with_ratios
+          WHERE (ratio > 0.8 * (SELECT MAX(ratio) FROM with_ratios))
+      $_$;
 
 
 SET default_tablespace = '';
@@ -58,8 +68,9 @@ CREATE TABLE public.packages (
     tags jsonb,
     searchable tsvector GENERATED ALWAYS AS (((((((setweight(to_tsvector('russian'::regconfig, (COALESCE(name, ''::character varying))::text), 'A'::"char") || setweight(to_tsvector('russian'::regconfig, (COALESCE(filename, ''::character varying))::text), 'A'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(authors, '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(tags, '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(jsonb_path_query_array(structure, '$[*]."name"'::jsonpath), '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(jsonb_path_query_array(structure, '$[*]."themes"[*]."name"'::jsonpath), '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(post_text, ''::text)), 'C'::"char"))) STORED,
     category_scores jsonb,
-    categories jsonb GENERATED ALWAYS AS (public.actual_categories(category_scores)) STORED,
-    manual_categories jsonb
+    manual_categories jsonb,
+    predicted_categories jsonb,
+    categories jsonb GENERATED ALWAYS AS (public.actual_categories(predicted_categories)) STORED
 );
 
 
@@ -219,6 +230,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210714194426'),
 ('20210715131534'),
 ('20210716002417'),
-('20210716152440');
+('20210716152440'),
+('20210725194413'),
+('20210725195147');
 
 

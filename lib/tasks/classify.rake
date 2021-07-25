@@ -37,9 +37,29 @@ namespace :classify do
 
   desc "Sets category_scores, done on backend"
   task update: :environment do
+    puts "UPDATE"
+    cur_package = nil
+    h = nil
+
     STDIN.each do |line|
       line = JSON.parse(line)
-      Package.where(id: line.first).update_all(category_scores: line.last.to_h)
+      package = line['package']
+      if package != cur_package
+        Package.where(id: cur_package).update_all(predicted_categories: h) if cur_package
+
+        cur_package = package
+        h = {}
+      end
+
+      h.deep_merge!(
+        line['round'].to_s => {
+          line['theme'].to_s => {
+            line['question'].to_s => line['cat']
+          }
+        }
+      )
     end
+
+    Package.where(id: cur_package).update_all(predicted_categories: h)
   end
 end

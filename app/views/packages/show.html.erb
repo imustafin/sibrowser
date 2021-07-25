@@ -131,7 +131,10 @@
                 <div class="inline-block w-14">
                   <%= c %>
                   <%= button_to(
-                  (@package.manual_categories&.dig(round_id.to_s, theme_id.to_s, question_id.to_s) == c) ? '+' : '',
+                  (
+                    ((@package.manual_categories&.dig(round_id.to_s, theme_id.to_s, question_id.to_s) == c) ? '+' : '') +
+                    ((@package.predicted_categories&.dig(round_id.to_s, theme_id.to_s, question_id.to_s) == c) ? 'p': '')
+                  ),
                   package_set_cat_path(package_id: @package.id),
                   params: { round: round_id, theme: theme_id, question: question_id, cat: c },
                   class: 'bg-blue-300 w-10'
