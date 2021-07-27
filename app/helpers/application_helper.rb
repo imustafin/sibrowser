@@ -55,7 +55,7 @@ module ApplicationHelper
 
   def category_link(category, **kwargs)
     locale = request.path_parameters[:locale]
-    params = { locacle: locale, id: category }
+    params = { locale: locale, id: category }
     link_to category, category_path(params), **kwargs
   end
 
