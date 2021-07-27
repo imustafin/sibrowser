@@ -25,6 +25,8 @@ class CategoriesController < ApplicationController
 
     @page_title = t('title_category', category: @category)
     @page_description = t('description_category', category: @category, package_count: @package_count)
+
+    set_meta_tags noindex: any_sorting? || params['page'].present?
   end
 
 end
