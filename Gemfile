@@ -67,6 +67,3 @@ gem 'rails-i18n', '~> 6.0'
 gem 'sidekiq', '~> 6.2', '>= 6.2.1'
 gem 'pg_search', '~> 2.3', '>= 2.3.5'
 gem 'meta-tags', '~> 2.14'
-
-gem 'classifier-reborn', '~> 2.2'
-gem 'gsl', '~> 2.1', '>= 2.1.0.3'

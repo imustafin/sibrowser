@@ -23,26 +23,6 @@ class Classify
     end
   end
 
-  def initialize(existing = nil)
-    @classifier = existing || ClassifierReborn::LSI.new(auto_rebuild: false)
-  end
-
-  def add(text, cats)
-    @classifier.add_item(text, *cats) unless cats.empty?
-  end
-
-  def classify(text)
-    @classifier.scored_categories(text)
-  end
-
-  def build
-    @classifier.build_index
-  end
-
-  def dump
-    Marshal.dump(@classifier)
-  end
-
   def self.package_to_text(p)
     text = ''
 

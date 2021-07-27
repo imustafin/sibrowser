@@ -7,7 +7,7 @@ RUN curl -sSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get -yq dist-upgrade && \
   DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
   postgresql-client-13 \
-  libgsl0-dev && \
+  && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
   truncate -s 0 /var/log/*log
