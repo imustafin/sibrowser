@@ -5,6 +5,7 @@ module.exports = {
     content: [
       './app/views/**/*.*',
       './app/helpers/**/*.rb',
+      './app/components/**/*.*',
     ],
   },
   darkMode: false, // or 'media' or 'class'

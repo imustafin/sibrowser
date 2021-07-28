@@ -42,6 +42,8 @@ module ApplicationHelper
   end
 
   def tag_link(tag, **kwargs)
+    return nil unless tag.present?
+
     locale = request.path_parameters[:locale]
     params = { locale: locale, id: tag }
     link_to tag, tag_path(params), **kwargs

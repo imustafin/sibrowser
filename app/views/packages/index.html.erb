@@ -23,6 +23,10 @@
   <%= text_field_tag(:q, params[:q], class: 'p-2') %>
   <%= submit_tag(t('search'), name: nil, class: button_class(type: :small)) %>
 <% end %>
-<div class="w-full overflow-x-auto">
-  <%= render 'components/packages_table', packages: @packages %>
+
+<div class="w-full grid auto-rows-max gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 pb-1">
+  <% @packages.each do |package| %>
+    <%= render PackageCardComponent.new(package: package) %>
+  <% end %>
 </div>
+<%= paginate @packages %>

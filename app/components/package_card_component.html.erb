@@ -1,0 +1,54 @@
+<div class="w-full h-full border-solid border border-indigo-200 bg-indigo-50 p-2 flex flex-col">
+  <h2 class="py-1">
+    <% (@package.authors || []).each do |author| %>
+      <%= helpers.heroicon 'user', options: { class: 'w-3 h-3 inline' } %>
+      <%= helpers.author_link author, class: 'font-bold' %>
+    <% end %>
+    <%= time_tag @package.published_at.to_date %>
+  </h2>
+  <h1 class="text-xl font-bold">
+    <%= helpers.package_link @package %>
+  </h1>
+
+  <div>
+    <% (@package.categories || []).sort_by(&:last).reverse.each do |(category, ratio)| %>
+    <span>
+      <%= helpers.category_link category, class: 'font-bold' %>
+      <%= number_to_percentage(ratio * 100, precision: 0) %>
+    </span>
+    <% end %>
+  </div>
+
+  <div>
+    <% (@package.tags || []).each do |tag| %>
+      <%= helpers.tag_link tag, class: 'font-bold' %>
+    <% end %>
+  </div>
+
+
+  <% if @package.post_text.present? %>
+    <%= simple_format(@package.post_text, class: 'pt-4 text-gray-700') %>
+  <% end %>
+
+  <% if @package.question_distribution.present? %>
+    <p class="pt-4">
+      <%= t('total_questions') %>: <%= @package.question_distribution[:total] %>
+    </p>
+    <% @package.question_distribution[:types].each do |type, count| %>
+      <span class="mr-4 inline-block">
+        <div class="<%= ApplicationHelper::TYPE_COLORS[type] %> w-4 h-4 inline-block bottom-0"></div>
+        <span class="font-bold">
+          <%= t type %>
+        </span>
+        <span class="text-gray-700">
+          <%=
+          number_to_percentage(
+          count.to_f / @package.question_distribution[:total] * 100,
+          precision: 0
+          )
+          %>
+        </span>
+      </span>
+    <% end %>
+  <% end %>
+</div>
