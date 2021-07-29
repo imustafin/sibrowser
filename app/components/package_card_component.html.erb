@@ -7,11 +7,12 @@
     <% end %>
     <%= time_tag @package.published_at.to_date, class: 'inline-block' %>
   </h2>
+
   <h1 class="text-xl font-bold">
     <%= helpers.package_link @package %>
   </h1>
 
-  <div>
+  <div class="pt-2">
     <% (@package.tags || []).each do |tag| %>
       <%= render TagLinkComponent.new(tag: tag) %>
     <% end %>
@@ -21,7 +22,7 @@
   </div>
 
   <% if @package.post_text.present? %>
-    <%= simple_format(@package.post_text, class: 'pt-4 text-gray-700') %>
+    <%= simple_format(@package.post_text.truncate(150, separator: /\s/), class: 'pt-4 text-gray-700') %>
   <% end %>
 
   <% if @package.question_distribution.present? %>
