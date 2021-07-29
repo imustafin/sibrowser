@@ -1,3 +1,7 @@
+<h1 class="text-2xl font-bold text-center pb-2">
+  <%= t('packages') %>
+</h1>
+
 <p>
   <%= t('packages_for_sigame',
         link: link_to('SIGame', 'https://vladimirkhil.com/si/game', class: 'font-bold')).html_safe
@@ -6,7 +10,7 @@
         link: link_to(t('khil'), 'https://vladimirkhil.com/', class: 'font-bold')).html_safe
   %>
 </p>
-<p>
+<p class="pb-2">
   <%= t('on_this_site_packages',
         link: link_to(
           'Пакеты, созданные своими руками',
@@ -16,13 +20,6 @@
       ).html_safe
   %>
 </p>
-<h1 class="text-2xl font-bold text-center pb-2 pt-4">
-  <%= t('packages') %>
-</h1>
-<%= form_tag(packages_path, method: :get, class: 'mb-2') do %>
-  <%= text_field_tag(:q, params[:q], class: 'p-2') %>
-  <%= submit_tag(t('search'), name: nil, class: button_class(type: :small)) %>
-<% end %>
 
 <div class="w-full grid auto-rows-max gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 pb-1">
   <% @packages.each do |package| %>
