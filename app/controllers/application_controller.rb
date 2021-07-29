@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
     if I18n.locale != I18n.default_locale
       { locale: I18n.locale }
     else
-      {}
+      { locale: nil }
     end
   end
 
