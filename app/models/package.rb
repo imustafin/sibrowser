@@ -1,7 +1,7 @@
 class Package < ApplicationRecord
   include PgSearch::Model
 
-  VERSION = 3
+  VERSION = 4
 
   validates :name, presence: true
   validates :source_link, presence: true

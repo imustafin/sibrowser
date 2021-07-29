@@ -45,7 +45,7 @@ RSpec.describe Si::Package do
     subject(:package) { described_class.new(file) }
 
     it 'has authors' do
-      expect(package.authors).to eq(['Axel_Trevors & Time2Hack'])
+      expect(package.authors).to eq(['Axel_Trevors', 'Time2Hack'])
     end
 
     it 'has tags' do
@@ -64,6 +64,15 @@ RSpec.describe Si::Package do
           question_types: ['text', 'image']
         )
       end
+    end
+  end
+
+  context 'in Khardkor_po_Tolkinu.siq' do
+    let(:file) { File.open(file_fixture('Khardkor_po_Tolkinu.siq')) }
+    subject(:package) { described_class.new(file) }
+
+    it 'rejects empty tag element' do
+      expect(package.tags).to be_empty
     end
   end
 end

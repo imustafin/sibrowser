@@ -50,7 +50,7 @@ module Si
     end
 
     def tags
-      package.css('> tags tag').map(&:text)
+      package.css('> tags tag').map(&:text).reject(&:empty?)
     end
   end
 end
