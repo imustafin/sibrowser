@@ -35,14 +35,6 @@ module ApplicationHelper
     render partial: 'components/distribution', locals: dist
   end
 
-  def tag_link(tag, **kwargs)
-    return nil unless tag.present?
-
-    locale = request.path_parameters[:locale]
-    params = { locale: locale, id: tag }
-    link_to tag, tag_path(params), **kwargs
-  end
-
   def package_link(package, **kwargs)
     locale = request.path_parameters[:locale]
     params = { locale: locale, id: package.id }

@@ -30,7 +30,9 @@
       </td>
       <td class="text-center">
         <% if package.tags.present? %>
-          <%= safe_join(package.tags.reject(&:empty?).map { |t| tag_link t, class: 'font-bold' }, ', ') %>
+          <% package.tags.reject(&:empty?).each do |tag| %>
+            <%= render TagLinkComponent.new(tag: tag) %>
+          <% end %>
         <% end %>
       </td>
       <td class="text-center">

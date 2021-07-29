@@ -12,17 +12,13 @@
   </h1>
 
   <div>
+    <% (@package.tags || []).each do |tag| %>
+      <%= render TagLinkComponent.new(tag: tag) %>
+    <% end %>
     <% (@package.categories || []).sort_by(&:last).reverse.each do |category| %>
       <%= render CategoryLinkComponent.new(category: category) %>
     <% end %>
   </div>
-
-  <div>
-    <% (@package.tags || []).each do |tag| %>
-      <%= helpers.tag_link tag, class: 'font-bold' %>
-    <% end %>
-  </div>
-
 
   <% if @package.post_text.present? %>
     <%= simple_format(@package.post_text, class: 'pt-4 text-gray-700') %>

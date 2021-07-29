@@ -17,7 +17,7 @@
   <% @tags.each do |t| %>
     <tr>
       <td class="py-4 text-center">
-        <%= tag_link t.tag, class: 'font-bold' %>
+        <%= link_to t.tag, tag_path(t.tag), class: 'font-bold' %>
       </td>
       <% if admin? %>
         <% @cats.each do |c| %>
