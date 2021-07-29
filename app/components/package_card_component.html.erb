@@ -12,11 +12,8 @@
   </h1>
 
   <div>
-    <% (@package.categories || []).sort_by(&:last).reverse.each do |(category, ratio)| %>
-    <span>
-      <%= helpers.category_link category, class: 'font-bold' %>
-      <%= number_to_percentage(ratio * 100, precision: 0) %>
-    </span>
+    <% (@package.categories || []).sort_by(&:last).reverse.each do |category| %>
+      <%= render CategoryLinkComponent.new(category: category) %>
     <% end %>
   </div>
 

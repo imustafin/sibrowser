@@ -12,7 +12,7 @@
   <% @categories.each do |c| %>
     <tr>
       <td class="py-4 text-center">
-        <%= category_link c.first, class: 'font-bold' %>
+        <%= link_to c.first, category_path(c.first), class: 'font-bold' %>
       </td>
       <td class="text-center">
         <%= c.last %>

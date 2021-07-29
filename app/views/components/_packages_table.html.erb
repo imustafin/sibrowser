@@ -34,12 +34,8 @@
         <% end %>
       </td>
       <td class="text-center">
-        <% unless admin? %>
-          <%= safe_join((package.categories || {}).sort_by(&:last).reverse.map { |c| category_link c.first, class: 'font-bold' }, ', ') %>
-        <% else %>
-          <% (package.categories || {}).sort_by(&:last).reverse.each do |k, v| %>
-            <%= k %>&nbsp;<%= v.round(2) %> <br>
-          <% end %>
+        <% (package.categories || {}).sort_by(&:last).reverse.each do |category| %>
+          <%= render CategoryLinkComponent.new(category: category) %>
         <% end %>
       </td>
       <td>
