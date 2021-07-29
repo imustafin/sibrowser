@@ -1,5 +1,5 @@
 <h1 class="text-2xl font-bold text-center">
-  <%= @author %>
+  <%= render AuthorLinkComponent.new(author: @author) %>
 </h1>
 
 <p>
@@ -7,7 +7,9 @@
   <% if @other_authors.present? %>
     <br>
     <%= t('author_text_coauthors') %>
-    <%= safe_join(@other_authors.map { |a| author_link a, class: 'font-bold' }, ', ') %>
+    <% @other_authors.each do |other| %>
+      <%= render AuthorLinkComponent.new(author: other) %>
+    <% end %>
   <% end %>
 </p>
 

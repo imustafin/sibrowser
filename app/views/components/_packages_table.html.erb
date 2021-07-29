@@ -23,7 +23,9 @@
       </td>
       <td class="text-center">
         <% if package.authors.present? %>
-          <%= safe_join(package.authors.map { |a| author_link a, class: 'font-bold' }, ', ') %>
+          <% package.authors.each do |author| %>
+            <%= render AuthorLinkComponent.new(author: author) %>
+          <% end %>
         <% end %>
       </td>
       <td class="text-center">
