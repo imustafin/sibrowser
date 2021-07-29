@@ -19,7 +19,7 @@
         <%= l package.published_at.to_date %>
       </td>
       <td class="text-center">
-        <%= package_link package, class: 'font-bold' %>
+        <%= link_to package.name, package, class: 'font-bold' %>
       </td>
       <td class="text-center">
         <% if package.authors.present? %>

@@ -35,12 +35,6 @@ module ApplicationHelper
     render partial: 'components/distribution', locals: dist
   end
 
-  def package_link(package, **kwargs)
-    locale = request.path_parameters[:locale]
-    params = { locale: locale, id: package.id }
-    link_to package.name, package_path(params), **kwargs
-  end
-
   def admin?
     session[:admin]
   end
