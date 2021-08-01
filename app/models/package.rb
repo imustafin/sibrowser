@@ -92,5 +92,12 @@ class Package < ApplicationRecord
     end
   }
 
-  scope :for_display, ->(page) { order(published_at: :desc, id: :desc).page(page).per(12) }
+  scope :visible, -> { order(published_at: :desc, id: :desc) }
+
+  scope :visible_paged, ->(page) {
+    visible
+      .order(published_at: :desc, id: :desc)
+      .page(page)
+      .per(12)
+  }
 end

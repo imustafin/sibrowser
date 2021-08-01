@@ -1,9 +1,6 @@
 class PackagesController < ApplicationController
-  include PackagesTable
-  helper_method :package_description, :first_index
-
   def index
-    @packages = Package.for_display(params[:page])
+    @packages = Package.visible_paged(params[:page])
 
     # Do this after order(sort_column) to first order by sort_column, then by search rank
     @packages = @packages.search_freetext(params[:q]) if params[:q].present?
@@ -12,7 +9,7 @@ class PackagesController < ApplicationController
       @page_title = t('title_packages_page', page: params['page'])
     end
 
-    set_meta_tags noindex: any_sorting? || params[:q].present? || params['page'].present?
+    set_meta_tags noindex: params[:q].present? || params['page'].present?
   end
 
   def show
@@ -24,7 +21,7 @@ class PackagesController < ApplicationController
       authors: @package.authors.present? ? " (#{@package.authors.join(', ')})" : ''
     )
 
-    @page_description = package_description(@package)
+    @page_description = helpers.package_description(@package)
 
     if helpers.admin?
       @cats = SibrowserConfig::CATEGORIES
@@ -69,32 +66,5 @@ class PackagesController < ApplicationController
     anchor = [params[:round], params[:theme], params[:question]].reject(&:blank?).join('_')
 
     redirect_to action: :show, id: params[:package_id], anchor: anchor
-  end
-
-  private
-
-  def package_description(package, for_html=false)
-    ans = ''
-
-    if package.question_distribution.present?
-      total = package.question_distribution[:total]
-      type_strings = package.question_distribution[:types].map do |type, count|
-        t(type) + ': ' + helpers.number_to_percentage(count.to_f / total * 100, precision: 0)
-      end
-
-      ans += type_strings.join(', ')
-    end
-
-    if package.post_text.present?
-      text = package.post_text
-      text = simple_format(text) if for_html
-      ans += '. ' + text.squish
-    end
-
-    ans
-  end
-
-  def first_index
-    (@packages.current_page - 1) * (@packages.limit_value) + 1
   end
 end

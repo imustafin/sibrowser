@@ -1,6 +1,4 @@
 class CategoriesController < ApplicationController
-  include PackagesTable
-
   def index
     @categories = SibrowserConfig::CATEGORIES
       .map { |c| [c, Package.by_category(c).count] }
@@ -13,20 +11,17 @@ class CategoriesController < ApplicationController
   def show
     @category = params[:id]
 
-    ps = table_packages
+    @packages = Package
+      .visible_paged(params[:page])
+      .by_category(@category)
+      .reorder_by_category(@category)
 
-    ps = table_packages.by_category(@category)
-
-    ps = ps.reorder_by_category(@category)
-
-    @package_count = Package.by_category(@category).count
-
-    @packages = ps
+    @package_count = @packages.total_count
 
     @page_title = t('title_category', category: @category)
     @page_description = t('description_category', category: @category, package_count: @package_count)
 
-    set_meta_tags noindex: any_sorting? || params['page'].present?
+    set_meta_tags noindex: params['page'].present?
   end
 
 end

@@ -1,9 +1,7 @@
 class TagsController < ApplicationController
-  include PackagesTable
-
   def index
     @tags = Package
-      .from(Package.select('jsonb_array_elements_text(tags) AS tag, id'))
+      .from(Package.visible.select('jsonb_array_elements_text(tags) AS tag, id'))
       .where("tag <> ''")
       .group('lower(tag)')
       .order('COUNT(tag) DESC', 'MIN(subquery.id) DESC')
@@ -21,18 +19,14 @@ class TagsController < ApplicationController
   def show
     @tag = params[:id]
 
-    ps = table_packages
+    @packages = Package.visible_paged(params[:page]).by_tag(@tag)
 
-    ps = ps.by_tag(@tag)
-
-    @package_count = Package.by_tag(@tag).count
-
-    @packages = ps
+    @package_count = @packages.total_count
 
     @page_title = t('title_tag', tag: @tag)
     @page_description = t('description_tag', tag: @tag, package_count: @package_count)
 
-    set_meta_tags noindex: any_sorting? || params['page'].present?
+    set_meta_tags noindex: params['page'].present?
   end
 
   def toggle_cat

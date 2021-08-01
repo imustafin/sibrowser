@@ -6,4 +6,4 @@
   <%= t('category_packages') %>
 </h2>
 
-<%= render 'components/packages_table', packages: @packages %>
+<%= render PackageCardsComponent.new(packages: @packages) %>
