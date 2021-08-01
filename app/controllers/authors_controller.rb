@@ -1,22 +1,16 @@
 class AuthorsController < ApplicationController
-  include PackagesTable
-
   def show
     @author = params[:id]
 
-    ps = table_packages
+    @packages = Package.visible_paged(params[:page]).by_author(@author)
 
-    ps = ps.by_author(@author)
-
-    @package_count = Package.by_author(@author).count
-    @other_authors = Package.by_author(@author)
+    @package_count = @packages.total_count
+    @other_authors = Package.visible.by_author(@author)
       .pluck(:authors)
       .flatten
       .uniq(&:downcase)
       .delete_if { |x| x.downcase == @author.downcase }
       .sort
-
-    @packages = ps
 
     @page_title = t('title_author', name: @author)
     @page_description = t('description_author', name: @author, package_count: @package_count)
@@ -24,6 +18,6 @@ class AuthorsController < ApplicationController
       @page_description += ' ' + t('description_author_coauthors', names: @other_authors.join(', '))
     end
 
-    set_meta_tags noindex: any_sorting? || params['page'].present?
+    set_meta_tags noindex: params['page'].present?
   end
 end

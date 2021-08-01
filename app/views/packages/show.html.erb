@@ -13,11 +13,9 @@
     </h2>
   <% end %>
 
-  <% if @package.tags.present? %>
-    <h3 class="text-l text-center">
-      <%= @package.tags.join(', ') %>
-    </h3>
-  <% end %>
+  <div class="text-center pt-1">
+    <%= render KeywordLinksComponent.new(tags: @package.tags || [], categories: @package.categories || {}) %>
+  </div>
 
   <p>
     <%= t('sigame_package',

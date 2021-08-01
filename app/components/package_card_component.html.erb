@@ -18,16 +18,9 @@
     <%= link_to @package.name, @package, itemprop: 'url' %>
   </h1>
 
-  <ul class="pt-2" itemprop="keywords">
-    <% tags_cats = (@package.tags || []).map { |t| render TagLinkComponent.new(tag: t) } \
-         + (@package.categories || []).sort_by(&:last).reverse.map { |c| render CategoryLinkComponent.new(category: c) } %>
-    <% tags_cats.each_with_index do |x, i| %>
-      <li class="inline">
-        <%= x %>
-        <% if i < tags_cats.size - 1 %><span class="hidden">, </span><% end %>
-      </li>
-    <% end %>
-  </ul>
+  <div class="pt-2">
+    <%= render KeywordLinksComponent.new(tags: @package.tags || [], categories: @package.categories || {}) %>
+  </div>
 
   <p class="pt-4 text-gray-700">
     <% if @package.post_text.present? %>

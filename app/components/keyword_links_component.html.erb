@@ -1,0 +1,10 @@
+<ul itemprop="keywords">
+  <% tags_cats = @tags.map { |t| render TagLinkComponent.new(tag: t) } \
+      + @categories.sort_by(&:last).reverse.map { |c| render CategoryLinkComponent.new(category: c) } %>
+  <% tags_cats.each_with_index do |x, i| %>
+  <li class="inline">
+    <%= x %>
+    <% if i < tags_cats.size - 1 %><span class="hidden">, </span><% end %>
+  </li>
+  <% end %>
+</ul>
