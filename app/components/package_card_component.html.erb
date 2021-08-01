@@ -1,15 +1,20 @@
-<div class="w-full h-full border-solid border border-indigo-200 bg-indigo-50 p-2 flex flex-col">
+<article
+  class="w-full h-full border-solid border border-indigo-200 bg-indigo-50 p-2 flex flex-col"
+  itemscope
+  itemtype="http://schema.org/Article"
+  itemprop="itemListElement"
+>
   <h2 class="py-1">
     <% (@package.authors || []).each do |author| %>
       <span class="pr-2">
         <%= render AuthorLinkComponent.new(author: author) %>
       </span>
     <% end %>
-    <%= time_tag @package.published_at.to_date, class: 'inline-block' %>
+    <%= time_tag @package.published_at.to_date, class: 'inline-block', itemprop: 'datePublished' %>
   </h2>
 
-  <h1 class="text-xl font-bold">
-    <%= link_to @package.name, @package %>
+  <h1 class="text-xl font-bold" itemprop="name headline">
+    <%= link_to @package.name, @package, itemprop: 'url' %>
   </h1>
 
   <div class="pt-2">
@@ -21,9 +26,13 @@
     <% end %>
   </div>
 
-  <% if @package.post_text.present? %>
-    <%= simple_format(@package.post_text.truncate(150, separator: /\s/), class: 'pt-4 text-gray-700') %>
-  <% end %>
+  <p class="pt-4 text-gray-700">
+    <% if @package.post_text.present? %>
+      <%= simple_format(@package.post_text.truncate(150, separator: /\s/), itemprop: 'description') %>
+    <% else %>
+      <%= simple_format(helpers.package_description(@package, true), itemprop: 'description') %>
+    <% end %>
+  </p>
 
   <% if @package.question_distribution.present? %>
     <p class="pt-4">
@@ -46,4 +55,4 @@
       </span>
     <% end %>
   <% end %>
-</div>
+</article>
