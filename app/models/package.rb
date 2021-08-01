@@ -91,4 +91,6 @@ class Package < ApplicationRecord
       self
     end
   }
+
+  scope :for_display, ->(page) { order(published_at: :desc, id: :desc).page(page).per(12) }
 end

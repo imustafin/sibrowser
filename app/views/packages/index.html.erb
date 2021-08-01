@@ -21,13 +21,5 @@
   %>
 </p>
 
-<div
-  class="w-full grid auto-rows-max gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 pb-1"
-  itemscope
-  itemtype="https://schema.org/ItemList"
->
-  <% @packages.each_with_index do |package, i| %>
-    <%= render PackageCardComponent.new(package: package) %>
-  <% end %>
-</div>
+<%= render PackageCardsComponent.new(packages: @packages, first_index: first_index) %>
 <%= paginate @packages %>

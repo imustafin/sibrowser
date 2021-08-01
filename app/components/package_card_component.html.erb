@@ -4,6 +4,7 @@
   itemtype="http://schema.org/Article"
   itemprop="itemListElement"
 >
+  <meta itemprop="position" content="<%= @position %>">
   <h2 class="py-1">
     <% (@package.authors || []).each do |author| %>
       <span class="pr-2">

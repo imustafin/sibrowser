@@ -1,14 +1,12 @@
 class PackagesController < ApplicationController
   include PackagesTable
-  helper_method :package_description
+  helper_method :package_description, :first_index
 
   def index
-    ps = table_packages.per(12)
+    @packages = Package.for_display(params[:page])
 
     # Do this after order(sort_column) to first order by sort_column, then by search rank
-    ps = ps.search_freetext(params[:q]) if params[:q].present?
-
-    @packages = ps
+    @packages = @packages.search_freetext(params[:q]) if params[:q].present?
 
     if params['page']
       @page_title = t('title_packages_page', page: params['page'])
@@ -94,5 +92,9 @@ class PackagesController < ApplicationController
     end
 
     ans
+  end
+
+  def first_index
+    (@packages.current_page - 1) * (@packages.limit_value) + 1
   end
 end
