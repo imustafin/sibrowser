@@ -1,5 +1,6 @@
 class PackagesController < ApplicationController
   include PackagesTable
+  helper_method :package_description
 
   def index
     ps = table_packages.per(12)
@@ -74,7 +75,7 @@ class PackagesController < ApplicationController
 
   private
 
-  def package_description(package)
+  def package_description(package, for_html=false)
     ans = ''
 
     if package.question_distribution.present?
@@ -87,7 +88,9 @@ class PackagesController < ApplicationController
     end
 
     if package.post_text.present?
-      ans += '. ' + package.post_text.squish
+      text = package.post_text
+      text = simple_format(text) if for_html
+      ans += '. ' + text.squish
     end
 
     ans

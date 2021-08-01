@@ -1,4 +1,8 @@
-<%= link_to author_path(@author), class: 'inline-flex items-baseline font-bold' do %>
-  <%= helpers.heroicon 'user', options: { class: 'inline align-middle', style: 'height: 0.8em;' } %>
-  <%= @author %>
-<% end %>
+<span itemscope itemtype="http://schema.org/Person" itemprop="author">
+  <%= link_to author_path(@author), class: 'inline-flex items-baseline font-bold', itemprop: 'url' do %>
+    <%= helpers.heroicon 'user', options: { class: 'inline align-middle', style: 'height: 0.8em;' } %>
+    <span itemprop="name">
+      <%= @author %>
+    </span>
+  <% end %>
+</span>

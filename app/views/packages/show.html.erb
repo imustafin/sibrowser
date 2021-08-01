@@ -1,177 +1,185 @@
-<h1 class="text-4xl font-bold text-center">
-  <%= @package.name %>
-</h1>
+<article itemscope itemtype="http://schema.org/Article">
+  <h1 class="text-4xl font-bold text-center" itemprop="name headline">
+    <%= @package.name %>
+  </h1>
 
-<% if @package.authors.present? %>
-  <h2 class="text-2xl font-bold text-center">
-    <% @package.authors.each do |author| %>
-      <span class="pr-2">
-        <%= render AuthorLinkComponent.new(author: author) %>
-      </span>
-    <% end %>
-  </h2>
-<% end %>
-
-<% if @package.tags.present? %>
-  <h3 class="text-l text-center">
-    <%= @package.tags.join(', ') %>
-  </h3>
-<% end %>
-
-<p>
-  <%= t('sigame_package',
-        link: link_to('SIGame', 'https://vladimirkhil.com/si/game', class: 'font-bold')).html_safe
-  %>
-  <%= t('sigame_author',
-        link: link_to(t('khil'), 'https://vladimirkhil.com/', class: 'font-bold')).html_safe
-  %>
-</p>
-
-<div class="mb-8">
-  <% if @package.post_text.present? %>
-    <h3 class="text-xl mb-2 text-center">
-      <%= t('original_message') %>
-    </h3>
-    <%= simple_format(@package.post_text) %>
-  <% end %>
-
-  <% if @package.question_distribution.present? %>
-    <h3 class="text-xl mb-2 mt-4 text-center">
-      <%= t :questions %> <br>
-    </h3>
-
-    <p class="mb-2">
-      <%= t :total_questions %>: <%= @package.question_distribution[:total] %>
-    </p>
-    <div class="w-full h-8 mb-2">
-      <%= distribution(@package.question_distribution) %>
-    </div>
-    <% @package.question_distribution[:types].each do |type, count| %>
-    <span class="mr-4 inline-block">
-      <div class="<%= ApplicationHelper::TYPE_COLORS[type] %> w-4 h-4 inline-block bottom-0"></div>
-      <span class="font-bold">
-        <%= t type %>
-      </span>
-      <span class="text-gray-700">
-        <%=
-          number_to_percentage(
-            count.to_f / @package.question_distribution[:total] * 100,
-            precision: 0
-          )
-        %>
-      </span>
-    </span>
-    <% end %>
-  <% end %>
-
-  <% if @package.structure.present? %>
-    <h3 class="text-xl mb-4 text-center">
-      <%= t('rounds') %>
-    </h3>
-
-    <ul
-      class="mb-2 grid justify-items-center auto-rows-max gap-10"
-      style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));"
-    >
-      <% @package.structure.each do |round| %>
-      <li class="border-4 border-indigo-400 min-h-full min-w-full" style="max-width: 240px">
-        <h4 class="text-center block font-bold">
-          <%= round[:name] %>
-        </h4>
-        <ul class="m-4">
-          <% round['themes'].each do |theme| %>
-          <li class="mb-2">
-            <%= theme['name'] %>
-          </li>
-          <% end %>
-        </ul>
-      </li>
+  <% if @package.authors.present? %>
+    <h2 class="text-2xl font-bold text-center">
+      <% @package.authors.each do |author| %>
+        <span class="pr-2">
+          <%= render AuthorLinkComponent.new(author: author) %>
+        </span>
       <% end %>
-    </ul>
+    </h2>
   <% end %>
-</div>
 
-<% if admin? %>
+  <% if @package.tags.present? %>
+    <h3 class="text-l text-center">
+      <%= @package.tags.join(', ') %>
+    </h3>
+  <% end %>
+
   <p>
-    <%= @package.category_scores %>
+    <%= t('sigame_package',
+          link: link_to('SIGame', 'https://vladimirkhil.com/si/game', class: 'font-bold')).html_safe
+    %>
+    <%= t('sigame_author',
+          link: link_to(t('khil'), 'https://vladimirkhil.com/', class: 'font-bold')).html_safe
+    %>
   </p>
-  <table class="border-2 border-black w-full">
-    <% @package.structure.each_with_index do |round, round_id| %>
-      <tr class="h-10 bg-indigo-500 text-white">
-        <td><%= round['name'] %></td>
-        <td></td>
-      </tr>
-      <% round['themes'].each_with_index do |theme, theme_id| %>
-        <tr class="h-10 bg-indigo-300 font-bold" id="<%= [round_id, theme_id].join('_') %>">
-          <td><%= round['name'] %> <%= theme['name'] %></td>
-          <td>
-            <% @cats.each do |c| %>
-            <div class="inline-block w-14">
-              <%= c %>
-              <%= button_to(
-              '',
-              package_set_cat_path(package_id: @package.id),
-              params: { round: round_id, theme: theme_id, question: nil, cat: c },
-              class: 'bg-blue-300 w-10'
-              )%>
-            </div>
 
+  <div class="mb-8">
+    <% if @package.post_text.present? %>
+      <h3 class="text-xl mb-2 text-center">
+        <%= t('original_message') %>
+      </h3>
+      <span itemprop="description">
+        <%= simple_format(@package.post_text) %>
+      </span>
+    <% else %>
+      <span itemprop="description">
+        <%= package_description(@package, true) %>
+      </span>
+    <% end %>
+
+    <% if @package.question_distribution.present? %>
+      <h3 class="text-xl mb-2 mt-4 text-center">
+        <%= t :questions %> <br>
+      </h3>
+
+      <p class="mb-2">
+        <%= t :total_questions %>: <%= @package.question_distribution[:total] %>
+      </p>
+      <div class="w-full h-8 mb-2">
+        <%= distribution(@package.question_distribution) %>
+      </div>
+      <% @package.question_distribution[:types].each do |type, count| %>
+      <span class="mr-4 inline-block">
+        <div class="<%= ApplicationHelper::TYPE_COLORS[type] %> w-4 h-4 inline-block bottom-0"></div>
+        <span class="font-bold">
+          <%= t type %>
+        </span>
+        <span class="text-gray-700">
+          <%=
+            number_to_percentage(
+              count.to_f / @package.question_distribution[:total] * 100,
+              precision: 0
+            )
+          %>
+        </span>
+      </span>
+      <% end %>
+    <% end %>
+
+    <% if @package.structure.present? %>
+      <h3 class="text-xl mb-4 text-center">
+        <%= t('rounds') %>
+      </h3>
+
+      <ul
+        class="mb-2 grid justify-items-center auto-rows-max gap-10"
+        style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));"
+      >
+        <% @package.structure.each do |round| %>
+        <li class="border-4 border-indigo-400 min-h-full min-w-full" style="max-width: 240px">
+          <h4 class="text-center block font-bold">
+            <%= round[:name] %>
+          </h4>
+          <ul class="m-4">
+            <% round['themes'].each do |theme| %>
+            <li class="mb-2">
+              <%= theme['name'] %>
+            </li>
             <% end %>
-          </td>
+          </ul>
+        </li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+
+  <% if admin? %>
+    <p>
+      <%= @package.category_scores %>
+    </p>
+    <table class="border-2 border-black w-full">
+      <% @package.structure.each_with_index do |round, round_id| %>
+        <tr class="h-10 bg-indigo-500 text-white">
+          <td><%= round['name'] %></td>
+          <td></td>
         </tr>
-        <% theme['questions'].each_with_index do |question, question_id| %>
-          <tr
-            class="border-2 border-black
- <%= (SibrowserConfig::CATEGORIES.include?(@package.manual_categories&.dig(round_id.to_s, theme_id.to_s, question_id.to_s))) ? 'bg-indigo-200' : '' %>
-                     "
-            id="<%= [round_id, theme_id, question_id].join('_') %>"
-          >
-            <td class="w-96">
-              <%= question['question_text'] %>
-              <br>
-              <%= question['answers'].join(' ') %></td>
+        <% round['themes'].each_with_index do |theme, theme_id| %>
+          <tr class="h-10 bg-indigo-300 font-bold" id="<%= [round_id, theme_id].join('_') %>">
+            <td><%= round['name'] %> <%= theme['name'] %></td>
             <td>
               <% @cats.each do |c| %>
-                <div class="inline-block w-14">
-                  <%= c %>
-                  <%= button_to(
-                  (
-                    ((@package.manual_categories&.dig(round_id.to_s, theme_id.to_s, question_id.to_s) == c) ? '+' : '') +
-                    ((@package.predicted_categories&.dig(round_id.to_s, theme_id.to_s, question_id.to_s) == c) ? 'p': '')
-                  ),
-                  package_set_cat_path(package_id: @package.id),
-                  params: { round: round_id, theme: theme_id, question: question_id, cat: c },
-                  class: 'bg-blue-300 w-10'
-                  )%>
-                </div>
+              <div class="inline-block w-14">
+                <%= c %>
+                <%= button_to(
+                '',
+                package_set_cat_path(package_id: @package.id),
+                params: { round: round_id, theme: theme_id, question: nil, cat: c },
+                class: 'bg-blue-300 w-10'
+                )%>
+              </div>
+
               <% end %>
             </td>
           </tr>
+          <% theme['questions'].each_with_index do |question, question_id| %>
+            <tr
+              class="border-2 border-black
+  <%= (SibrowserConfig::CATEGORIES.include?(@package.manual_categories&.dig(round_id.to_s, theme_id.to_s, question_id.to_s))) ? 'bg-indigo-200' : '' %>
+                      "
+              id="<%= [round_id, theme_id, question_id].join('_') %>"
+            >
+              <td class="w-96">
+                <%= question['question_text'] %>
+                <br>
+                <%= question['answers'].join(' ') %></td>
+              <td>
+                <% @cats.each do |c| %>
+                  <div class="inline-block w-14">
+                    <%= c %>
+                    <%= button_to(
+                    (
+                      ((@package.manual_categories&.dig(round_id.to_s, theme_id.to_s, question_id.to_s) == c) ? '+' : '') +
+                      ((@package.predicted_categories&.dig(round_id.to_s, theme_id.to_s, question_id.to_s) == c) ? 'p': '')
+                    ),
+                    package_set_cat_path(package_id: @package.id),
+                    params: { round: round_id, theme: theme_id, question: question_id, cat: c },
+                    class: 'bg-blue-300 w-10'
+                    )%>
+                  </div>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
         <% end %>
       <% end %>
-    <% end %>
-  </table>
-<% end %>
+    </table>
+  <% end %>
 
 
-<%= t('published_at') %>: <%= l @package.published_at.to_date %> <br>
+  <%= t('published_at') %>: <%= time_tag(@package.published_at.to_date, itemprop: 'datePublished') %> <br>
 
-<%= t('added_to_sibrowser') %>: <%= l @package.created_at.to_date %> <br>
+  <%= t('added_to_sibrowser') %>: <%= time_tag(@package.created_at.to_date) %> <br>
 
-<% if @package.created_at.to_date != @package.updated_at.to_date %>
-  <%= t('updated_in_sibrowser') %>: <%= l @package.updated_at.to_date %> <br>
-<% end %>
+  <% if @package.created_at.to_date != @package.updated_at.to_date %>
+    <%= t('updated_in_sibrowser') %>: <%= time_tag(@package.updated_at.to_date) %> <br>
+  <% end %>
 
-<% if @package.filename != @package.name + '.siq' %>
-  <%= t('filename') %>: <%= @package.filename %> <br>
-<% end %>
+  <% if @package.filename != @package.name + '.siq' %>
+    <%= t('filename') %>: <%= @package.filename %> <br>
+  <% end %>
 
 
-<div class="flex justify-center mt-8 mb-4">
-  <a
-    class="<%= button_class %>"
-    href="<%= @package.source_link %>"
-  >
-    <%= t('download_from_source') %>
-  </a>
-</div>
+  <div class="flex justify-center mt-8 mb-4">
+    <a
+      class="<%= button_class %>"
+      href="<%= @package.source_link %>"
+    >
+      <%= t('download_from_source') %>
+    </a>
+  </div>
+</article>
