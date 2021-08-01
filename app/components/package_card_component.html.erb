@@ -17,14 +17,16 @@
     <%= link_to @package.name, @package, itemprop: 'url' %>
   </h1>
 
-  <div class="pt-2">
-    <% (@package.tags || []).each do |tag| %>
-      <%= render TagLinkComponent.new(tag: tag) %>
+  <ul class="pt-2" itemprop="keywords">
+    <% tags_cats = (@package.tags || []).map { |t| render TagLinkComponent.new(tag: t) } \
+         + (@package.categories || []).sort_by(&:last).reverse.map { |c| render CategoryLinkComponent.new(category: c) } %>
+    <% tags_cats.each_with_index do |x, i| %>
+      <li class="inline">
+        <%= x %>
+        <% if i < tags_cats.size - 1 %><span class="hidden">, </span><% end %>
+      </li>
     <% end %>
-    <% (@package.categories || []).sort_by(&:last).reverse.each do |category| %>
-      <%= render CategoryLinkComponent.new(category: category) %>
-    <% end %>
-  </div>
+  </ul>
 
   <p class="pt-4 text-gray-700">
     <% if @package.post_text.present? %>
