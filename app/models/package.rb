@@ -60,7 +60,10 @@ class Package < ApplicationRecord
         create!(params)
       else
         # Same logic as in .skip_updating?
-        if params[:published_at] < model.published_at || model.version < VERSION || model.structure.blank?
+        if params[:published_at] < model.published_at \
+            || model.version < VERSION \
+            || model.structure.blank? \
+            || model.disappeared_at
           model.update(params)
           model.save!
         end
@@ -75,6 +78,7 @@ class Package < ApplicationRecord
       .where('published_at <= ?', new_published_at) # The older post can have a more relevant original_text
       .where('version >= ?', VERSION) # same version is compatible, greater version should not happen
       .where('structure IS NOT NULL') # parse if structure was deleted when upgrading
+      .where(disappeared_at: nil) # good version should be present
       .exists?
   end
 

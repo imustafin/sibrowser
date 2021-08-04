@@ -4,7 +4,7 @@ class Classify
 
     packages = []
 
-    Package.find_in_batches do |group|
+    Package.visible.find_in_batches do |group|
       group.each do |p|
         next unless p.structure
 

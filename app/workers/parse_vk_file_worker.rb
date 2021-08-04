@@ -1,6 +1,9 @@
 class ParseVkFileWorker
   include Sidekiq::Worker
 
+  class UnknownVkError < StandardError
+  end
+
   def download_vk(url)
     redirects_finished = false
 
@@ -21,9 +24,32 @@ class ParseVkFileWorker
       resp.read_body(tempfile)
     end
 
+    tempfile.rewind
+
     tempfile
   end
 
+  def vk_error?(file)
+    start = file.read(50)
+    file.rewind
+
+    return false unless start.start_with?('<!DOCTYPE html>')
+
+    doc = Nokogiri::HTML(file)
+
+    error_body = doc.xpath('//div[@class="message_page_body"]/text()').first&.text&.squish
+
+    messages = [
+      'Файл недоступен или удалён',
+
+      'Пользователь, который загрузил файл, заблокирован.',
+      'The owner of this file has been blocked.'
+    ]
+
+    raise UnknownVkError, error_body if messages.exclude?(error_body)
+
+    true
+  end
 
   def perform(params)
     file_date = Time.at(params['file_date'])
@@ -36,6 +62,22 @@ class ParseVkFileWorker
     siq = download_vk(url)
 
     logger.info "Body length #{siq.length}, parsing"
+
+    if vk_error?(siq)
+      Package.update_or_create!(
+        vk_document_id: params['file_id'],
+        filename: params['filename'],
+        source_link: params['source_link'],
+        published_at: file_date,
+        disappeared_at: Time.now,
+        structure: nil,
+        name: params['filename']
+      )
+
+      logger.info 'Vk file unavailable'
+
+      return
+    end
 
     si_package = Si::Package.new(siq)
 
@@ -54,6 +96,7 @@ class ParseVkFileWorker
       structure: si_package.structure,
       tags: si_package.tags,
       vk_document_id: params['file_id'],
+      disappeared_at: nil
     )
 
     siq.close!
