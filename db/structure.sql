@@ -70,7 +70,8 @@ CREATE TABLE public.packages (
     category_scores jsonb,
     manual_categories jsonb,
     predicted_categories jsonb,
-    categories jsonb GENERATED ALWAYS AS (public.actual_categories(predicted_categories)) STORED
+    categories jsonb GENERATED ALWAYS AS (public.actual_categories(predicted_categories)) STORED,
+    disappeared_at timestamp without time zone
 );
 
 
@@ -185,6 +186,13 @@ CREATE INDEX authors_icase_index ON public.packages USING gin (((lower((authors)
 
 
 --
+-- Name: index_packages_on_disappeared_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_packages_on_disappeared_at ON public.packages USING btree (disappeared_at);
+
+
+--
 -- Name: index_packages_on_searchable; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -232,6 +240,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210716002417'),
 ('20210716152440'),
 ('20210725194413'),
-('20210725195147');
+('20210725195147'),
+('20210804172614');
 
 
