@@ -58,5 +58,6 @@ en:
   category_packages: Packages in this Category
   title_category: "%{category} — SIGame Package Category"
   description_category: Total packages in category %{category} — %{package_count}
+  author: Author
 
 

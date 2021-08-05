@@ -35,7 +35,7 @@ Rails.application.routes.draw do
       post :set_cat
     end
 
-    resources :authors, only: [:show], constraints: { id: /.+/ }
+    resources :authors, only: [:index, :show], constraints: { id: /.+/ }
 
     resources :tags, only: [:index, :show], constraints: { id: /.+/ } do
       post :toggle_cat

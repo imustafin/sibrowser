@@ -1,4 +1,15 @@
 class AuthorsController < ApplicationController
+  def index
+    @authors = Package
+      .from(Package.visible.select('jsonb_array_elements_text(authors) AS author, id'))
+      .group('lower(author)')
+      .order('COUNT(author) DESC', 'MIN(subquery.id) DESC')
+      .select('MIN(author) AS author', 'COUNT(author) AS count')
+      .page(params[:page]).per(10)
+
+    @page_title = t(:authors)
+  end
+
   def show
     @author = params[:id]
 

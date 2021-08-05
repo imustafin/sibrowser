@@ -35,16 +35,17 @@
   </head>
 
   <body class="bg-indigo-300 text-black-20 min-h-screen flex flex-col justify-between">
-    <header class="px-4 flex min-h-full bg-indigo-800 text-white font-bold items-center flex-wrap pt-4">
-      <div class="flex space-x-8 items-center pb-4">
+    <header class="px-2 sm:px-4 flex min-h-full bg-indigo-800 text-white font-bold items-center flex-wrap pt-4">
+      <div class="flex space-x-2 sm:space-x-8 items-center pb-4">
         <%= link_to t(:site_name), root_path, class: 'font-black font-mono' %>
+        <%= link_to t(:authors), authors_path %>
         <%= link_to t(:tags), tags_path %>
         <%= link_to t(:categories), categories_path %>
         <% if admin? %>
           <%= button_to "Logout", logout_path, method: :post, class: 'bg-red-700' %>
         <% end %>
       </div>
-      <%= form_tag(packages_path, method: :get, class: 'inline-block flex w-full md:w-2/4 lg:w-1/3 ml-auto pb-4') do %>
+      <%= form_tag(packages_path, method: :get, class: 'inline-block flex w-full flex-grow md:flex-grow-0 lg:w-1/3 ml-auto pb-4') do %>
         <%= text_field_tag(:q, params[:q], class: 'p-2 text-black w-full') %>
         <%= submit_tag(t('search'), name: nil, class: button_class(type: :small)) %>
       <% end %>
