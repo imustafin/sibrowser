@@ -1,0 +1,36 @@
+<nav class="bg-indigo-200 p-3 w-full">
+  <ol
+    class="flex text-grey-dark"
+    itemscope
+    itemtype="https://schema.org/BreadcrumbList"
+  >
+    <% @parts.each_with_index do |part, i| %>
+        <% if i < @parts.size - 1 %>
+          <li
+            itemprop="itemListElement"
+            itemscope
+            itemtype="https://schema.org/ListItem"
+          >
+            <%= link_to part.last, class: 'font-bold', itemprop: 'item' do %>
+              <span itemprop="name">
+                  <%= part.first %>
+              </span>
+            <% end %>
+            <meta itemprop="position" content="<%= i + 1 %>" />
+          </li>
+          <span class="mx-2">
+            /
+          </span>
+        <% else %>
+          <li
+            itemprop="itemListElement"
+            itemscope
+            itemtype="https://schema.org/ListItem"
+          >
+            <span itemprop="name"><%= part %></span>
+            <meta itemprop="position" content="<%= i + 1 %>" />
+          </li>
+        <% end %>
+    <% end %>
+  </ol>
+</nav>

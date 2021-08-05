@@ -26,6 +26,13 @@ class PackagesController < ApplicationController
     if helpers.admin?
       @cats = SibrowserConfig::CATEGORIES
     end
+
+    @breadcrumbs = {
+      parts: [
+        [t(:packages), packages_path],
+        @package.name
+      ]
+    }
   end
 
   def set_cat

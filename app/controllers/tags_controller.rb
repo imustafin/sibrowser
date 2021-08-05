@@ -27,6 +27,13 @@ class TagsController < ApplicationController
     @page_description = t('description_tag', tag: @tag, package_count: @package_count)
 
     set_meta_tags noindex: params['page'].present?
+
+    @breadcrumbs = {
+      parts: [
+        [t(:tags), tags_path],
+        @tag
+      ]
+    }
   end
 
   def toggle_cat

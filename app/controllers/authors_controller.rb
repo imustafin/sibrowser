@@ -30,5 +30,12 @@ class AuthorsController < ApplicationController
     end
 
     set_meta_tags noindex: params['page'].present?
+
+    @breadcrumbs = {
+      parts: [
+        [t(:authors), authors_path],
+        @author
+      ]
+    }
   end
 end
