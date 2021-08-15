@@ -59,3 +59,5 @@ ru:
   title_category: "%{category} — Категория пакетов для SIGame"
   description_category: Всего пакетов в категории %{category} — %{package_count}
   author: Автор
+  author_not_found_pre: Мы не знаем никаких пакетов, созданных автором %{author}.
+  author_not_found_table: "Другие авторы с похожими именами, которых вы могли искать:"

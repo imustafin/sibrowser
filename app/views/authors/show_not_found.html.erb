@@ -1,0 +1,13 @@
+<h1 class="text-2xl font-bold text-center">
+  <%= render AuthorLinkComponent.new(author: @author, author_itemprop: false) %>
+</h1>
+
+<p>
+  <%= raw t('author_not_found_pre', author: render(AuthorLinkComponent.new(author: @author, author_itemprop: false))) %>
+</p>
+
+<p class="mb-2">
+  <%= t('author_not_found_table') %>
+</p>
+
+<%= render AuthorsTableComponent.new(authors: @similar_authors, pagination: false) %>
