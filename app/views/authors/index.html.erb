@@ -2,25 +2,4 @@
   <%= t('authors') %>
 </h1>
 
-<table class="w-full">
-  <thead>
-    <tr class="bg-indigo-600 text-white">
-      <th class="text-center py-4 px-3"><%= t('author') %></th>
-      <th class="text-center py-4 px-3"><%= t('package_count') %></th>
-    </tr>
-  </thead>
-  <% @authors.each do |a| %>
-    <tr>
-      <td class="py-4 text-center">
-        <%= link_to a.author, author_path(a.author), class: 'font-bold' %>
-      </td>
-      <td class="text-center">
-        <%= a.count %>
-      </td>
-    </tr>
-  <% end %>
-</table>
-
-<div class="mt-4">
-  <%= paginate @authors %>
-</div>
+<%= render AuthorsTableComponent.new(authors: @authors) %>
