@@ -10,6 +10,20 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
+
+
+--
 -- Name: actual_categories(jsonb); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -241,6 +255,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210716152440'),
 ('20210725194413'),
 ('20210725195147'),
-('20210804172614');
+('20210804172614'),
+('20210815193621');
 
 
