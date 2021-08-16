@@ -1,5 +1,5 @@
 # sibrowser
-SIGame Pack Browser. See it live at <https://www.sibrowser.ru/>.
+SIGame Package Browser. See it live at <https://www.sibrowser.ru/>.
 
 ## Development
 Run docker-compose:
