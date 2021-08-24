@@ -14,7 +14,12 @@ namespace :classify do
 
   desc "Print params for classification, done on backend"
   task print_params: :environment do
-    Classify.print_params
+    Classify.print_params(true)
+  end
+
+  desc "Print params for classification for unclassified packages"
+  task print_params_unclassified: :environment do
+    Classify.print_params(false)
   end
 
   desc "Builds new model with packages from stdin"

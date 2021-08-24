@@ -1,10 +1,13 @@
 class Classify
-  def self.print_params
+  def self.print_params(all)
     tags_to_cats = SibrowserConfig.instance.tags_to_cats || {}
 
     packages = []
 
-    Package.visible.find_in_batches do |group|
+    ds = Package.visible
+    ds = ds.where(predicted_categories: nil) unless all
+
+    ds.find_in_batches do |group|
       group.each do |p|
         next unless p.structure
 
