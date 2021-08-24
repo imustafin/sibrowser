@@ -5,7 +5,7 @@
     "@rails/actioncable": "^6.1.4",
     "@rails/activestorage": "^6.1.4",
     "@rails/ujs": "^6.1.4",
-    "@rails/webpacker": "5.4.0",
+    "@rails/webpacker": "5.4.2",
     "autoprefixer": "^10",
     "postcss": "^8",
     "tailwindcss": "^2.2.7",
