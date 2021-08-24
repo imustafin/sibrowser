@@ -60,11 +60,11 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'kaminari', '~> 1.2', '>= 1.2.1'
 
-gem 'tailwindcss-rails', '~> 0.3.3'
+gem 'tailwindcss-rails', '~> 0.4.2'
 gem 'rubyzip', '~> 2.3'
 gem 'heroicon', '~> 0.3.0'
 gem 'rails-i18n', '~> 6.0'
-gem 'sidekiq', '~> 6.2', '>= 6.2.1'
+gem 'sidekiq', '~> 6.2'
 gem 'pg_search', '~> 2.3', '>= 2.3.5'
 gem 'meta-tags', '~> 2.15'
 
