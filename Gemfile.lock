@@ -221,7 +221,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    tailwindcss-rails (0.4.2)
+    tailwindcss-rails (0.4.3)
       rails (>= 6.0.0)
     thor (1.1.0)
     tilt (2.0.10)
@@ -279,7 +279,7 @@ DEPENDENCIES
   selenium-webdriver
   sidekiq (~> 6.2)
   spring
-  tailwindcss-rails (~> 0.4.2)
+  tailwindcss-rails (~> 0.4.3)
   turbolinks (~> 5)
   tzinfo-data
   view_component (~> 2.38)
