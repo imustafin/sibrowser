@@ -108,7 +108,7 @@
         </tr>
         <% round['themes'].each_with_index do |theme, theme_id| %>
           <tr class="h-10 bg-indigo-300 font-bold" id="<%= [round_id, theme_id].join('_') %>">
-            <td><%= round['name'] %> <%= theme['name'] %></td>
+            <td><%= round['name'] %> <br> >> <%= theme['name'] %></td>
             <td>
               <% @cats.each do |c| %>
               <div class="inline-block w-14">
