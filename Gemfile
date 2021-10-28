@@ -68,4 +68,4 @@ gem 'sidekiq', '~> 6.2'
 gem 'pg_search', '~> 2.3', '>= 2.3.5'
 gem 'meta-tags', '~> 2.15'
 
-gem 'view_component', '~> 2.39', require: 'view_component/engine'
+gem 'view_component', '~> 2.42', require: 'view_component/engine'
