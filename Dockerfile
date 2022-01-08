@@ -1,16 +1,6 @@
-FROM ruby:2.7.4-buster AS sibrowser_base
+FROM ruby:3.1.0-bullseye AS sibrowser_base
 
-# From https://evilmartians.com/chronicles/ruby-on-whales-docker-for-ruby-rails-development
-RUN curl -sSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
-  && echo 'deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main' $PG_MAJOR > /etc/apt/sources.list.d/pgdg.list
-
-RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get -yq dist-upgrade && \
-  DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
-  postgresql-client-13 \
-  && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-  truncate -s 0 /var/log/*log
+RUN apt-get update && apt-get -y install postgresql-client-13
 
 # INSTALL NODE
 # https://github.com/nodejs/docker-node/blob/8b68fca7a5089bd8795ae85b55617314e966487b/16/buster/Dockerfile

@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.7.4'
+ruby '3.1.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> 6.1.4'
@@ -57,3 +57,7 @@ gem 'pg_search', '~> 2.3'
 gem 'meta-tags', '~> 2.16'
 
 gem 'view_component', '~> 2.47'
+
+gem 'net-smtp', '~> 0.3.1', require: false
+gem 'net-imap', '~> 0.2.3', require: false
+gem 'net-pop', '~> 0.1.1', require: false

@@ -30,7 +30,6 @@ services:
     tty: true
     volumes:
       - .:/app:cached
-      - bundle:/usr/local/bundle
     depends_on:
       - pg
     command: /bin/bash
@@ -39,6 +38,3 @@ services:
 
   redis:
     image: redis:4
-
-volumes:
-  bundle:
