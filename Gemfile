@@ -8,7 +8,7 @@ gem 'rails', '~> 6.1.4'
 # Use postgres as the database for Active Record
 gem 'pg', '~> 1.2', '>= 1.2.3'
 # Use Puma as the app server
-gem 'puma', '~> 5.4'
+gem 'puma', '~> 5.5'
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
 gem 'webpacker', '~> 5.4'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
@@ -54,7 +54,7 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
-gem 'kaminari', '~> 1.2', '>= 1.2.1'
+gem 'kaminari', '~> 1.2'
 
 gem 'tailwindcss-rails', '~> 2.0', '>= 2.0.4'
 gem 'rubyzip', '~> 2.3'
@@ -62,6 +62,6 @@ gem 'heroicon', '~> 0.4.0'
 gem 'rails-i18n', '~> 6.0'
 gem 'sidekiq', '~> 6.2'
 gem 'pg_search', '~> 2.3', '>= 2.3.5'
-gem 'meta-tags', '~> 2.15'
+gem 'meta-tags', '~> 2.16'
 
 gem 'view_component', '~> 2.47'
