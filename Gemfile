@@ -52,7 +52,7 @@ gem 'tailwindcss-rails', '~> 2.0', '>= 2.0.4'
 gem 'rubyzip', '~> 2.3'
 gem 'heroicon', '~> 0.4.0'
 gem 'rails-i18n', '~> 6.0'
-gem 'sidekiq', '~> 6.2'
+gem 'sidekiq', '~> 6.3'
 gem 'pg_search', '~> 2.3', '>= 2.3.5'
 gem 'meta-tags', '~> 2.16'
 
