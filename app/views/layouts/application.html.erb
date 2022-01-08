@@ -15,9 +15,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
 
-    <%= stylesheet_link_tag 'inter-font', 'data-turbolinks-track': 'reload' %>
-    <%= stylesheet_link_tag 'tailwind', 'data-turbolinks-track': 'reload' %>
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
 
@@ -63,7 +62,7 @@
       </div>
     </main>
     <footer>
-      <div class="px-4 md:mt-4 flex flex-col justify-center items-center bg-white min-h-16 bg-indigo-800 text-white gap-4 py-4">
+      <div class="px-4 md:mt-4 flex flex-col justify-center items-center min-h-16 bg-indigo-800 text-white gap-4 py-4">
         <span class="block">
           <%= t('made_by') %>
           <a href="https://imustafin.tatar/<%= I18n.locale %>" class="font-bold">

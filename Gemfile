@@ -9,8 +9,6 @@ gem 'rails', '~> 6.1.4'
 gem 'pg', '~> 1.2', '>= 1.2.3'
 # Use Puma as the app server
 gem 'puma', '~> 5.4'
-# Use SCSS for stylesheets
-gem 'sass-rails', '>= 6'
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
 gem 'webpacker', '~> 5.4'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
@@ -60,7 +58,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'kaminari', '~> 1.2', '>= 1.2.1'
 
-gem 'tailwindcss-rails', '~> 0.4.3'
+gem 'tailwindcss-rails', '~> 2.0', '>= 2.0.4'
 gem 'rubyzip', '~> 2.3'
 gem 'heroicon', '~> 0.4.0'
 gem 'rails-i18n', '~> 6.0'

@@ -42,3 +42,5 @@ yarn-debug.log*
 .env
 
 /classification
+/app/assets/builds/*
+!/app/assets/builds/.keep
