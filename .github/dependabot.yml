@@ -3,12 +3,6 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "daily"
-    rebase-strategy: "disabled"
-
   - package-ecosystem: "bundler"
     directory: "/"
     schedule:
