@@ -1,0 +1,19 @@
+<div data-controller="packages_paginated--component">
+  <%= paginate @packages %>
+  <div class="fixed bg-white right-12">
+    <%= paginate @packages %>
+  </div>
+  <div
+    class="w-full space-y-4 pb-1:
+    itemscope
+    itemtype="https://schema.org/ItemList"
+  >
+    <meta itemprop="numberOfItems" content="<%= @packages.total_count %>">
+    <% @packages.each_with_index do |package, i| %>
+      <%= render PackageCardComponent.new(package: package, position: @first_index + i) %>
+    <% end %>
+  </div>
+  <div
+    data-controller-target="afterLast"
+  ></div>
+</div>

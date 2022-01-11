@@ -102,6 +102,6 @@ class Package < ApplicationRecord
     visible
       .order(published_at: :desc, id: :desc)
       .page(page)
-      .per(12)
+      .per(5)
   }
 end
