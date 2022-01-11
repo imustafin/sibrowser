@@ -1,6 +1,9 @@
 <div data-controller="packages_paginated--component">
-  <%= paginate @packages %>
-  <div class="fixed bg-white right-12">
+  <div data-packages_paginated--component-target="beforeFloating"></div>
+  <div
+    data-packages_paginated--component-target="pagination"
+    class="sticky w-fit transition top-2 float-right mb-2"
+  >
     <%= paginate @packages %>
   </div>
   <div
@@ -13,7 +16,5 @@
       <%= render PackageCardComponent.new(package: package, position: @first_index + i) %>
     <% end %>
   </div>
-  <div
-    data-controller-target="afterLast"
-  ></div>
+  <div data-packages_paginated--component-target="afterLast"></div>
 </div>
