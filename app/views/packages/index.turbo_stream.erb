@@ -1,0 +1,13 @@
+<turbo-stream action="append" target="packages">
+  <template>
+    <% @packages.each_with_index do |package, i| %>
+      <%= render PackageCardComponent.new(package: package, position: i) %>
+    <% end %>
+  </template>
+</turbo-stream>
+
+<turbo-stream action="update" target="pagination">
+  <template>
+    <%= paginate @packages %>
+  </template>
+</turbo-stream>

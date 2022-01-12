@@ -2,12 +2,14 @@
   <div data-packages_paginated--component-target="beforeFloating"></div>
   <div
     data-packages_paginated--component-target="pagination"
+    id="pagination"
     class="sticky w-fit transition top-2 float-right mb-2"
   >
     <%= paginate @packages %>
   </div>
   <div
-    class="w-full space-y-4 pb-1:
+    id="packages"
+    class="w-full space-y-4
     itemscope
     itemtype="https://schema.org/ItemList"
   >
@@ -16,5 +18,17 @@
       <%= render PackageCardComponent.new(package: package, position: @first_index + i) %>
     <% end %>
   </div>
-  <div data-packages_paginated--component-target="afterLast"></div>
+  <div
+    data-packages_paginated--component-target="afterLast"
+    class="
+      flex m-auto justify-center items-center w-fit
+      animate-pulse
+      bg-indigo-200 py-2 px-8 rounded-md
+      my-4
+      invisible
+    "
+  >
+    <%= heroicon "wifi", options: { class: "h-8 mr-4" } %>
+    <%= t :loading %>
+  </div>
 </div>

@@ -32,11 +32,32 @@ export default class extends Controller {
   }
 
   afterLastIntersects(intersection) {
+    const isIntersecting = intersection.isIntersecting;
+    const afterLast = this.afterLastTarget;
 
+    if (isIntersecting) {
+      const next = this.paginationTarget.querySelector('[rel=next]');
+      if (!next) {
+        afterLast.classList.toggle('hidden', true); // don't come here ever again
+        return;
+      }
+
+      afterLast.classList.toggle('invisible', false);
+
+      const href = next.href;
+      fetch(href, {
+        headers: {
+          Accept: "text/vnd.turbo-stream.html",
+        }
+      })
+        .then(r => r.text())
+        .then(html => Turbo.renderStreamMessage(html))
+        .then(_ => afterLast.classList.toggle('invisible', true));
+    }
   }
 
   beforeFloatingIntersects(intersection) {
-    const inter = intersection.isIntersecting;
-    this.paginationTarget.classList.toggle('bg-white', !inter);
+    const isIntersecting = intersection.isIntersecting;
+    this.paginationTarget.classList.toggle('bg-white', !isIntersecting);
   }
 }

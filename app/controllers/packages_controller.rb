@@ -10,6 +10,11 @@ class PackagesController < ApplicationController
     end
 
     set_meta_tags noindex: params[:q].present? || params['page'].present?
+
+    respond_to do |f|
+      f.turbo_stream
+      f.html
+    end
   end
 
   def show
