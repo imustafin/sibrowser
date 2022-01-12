@@ -3,9 +3,9 @@
   <div
     data-packages_paginated--component-target="pagination"
     id="pagination"
-    class="sticky w-fit transition top-2 float-right mb-2"
+    class="sticky w-fit transition top-2 float-right py-2 px-2"
   >
-    <%= paginate @packages %>
+    <%= paginate @packages, window: 1, theme: "infinite" %>
   </div>
   <div
     id="packages"

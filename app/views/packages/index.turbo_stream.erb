@@ -15,6 +15,6 @@
 
 <turbo-stream action="update" target="pagination">
   <template>
-    <%= paginate @packages %>
+    <%= paginate @packages, window: 1, theme: "infinite" %>
   </template>
 </turbo-stream>
