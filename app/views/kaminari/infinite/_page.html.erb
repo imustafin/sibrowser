@@ -7,10 +7,12 @@
     per_page:      number of items to fetch per page
     remote:        data-remote
 -%>
-<span class="pr-4 text-center <%= 'font-normal underline' if page.current? %>">
-  <%= link_to_unless page.current?,
-    page,
-    url,
-    remote: remote,
-    rel: page.rel
-  %></span>
+<% if page.inside_window? %>
+  <span class="pr-4 text-center <%= 'font-normal underline' if page.current? %>">
+    <%= link_to_unless page.current?,
+      page,
+      url,
+      remote: remote,
+      rel: page.rel
+    %></span>
+<% end %>
