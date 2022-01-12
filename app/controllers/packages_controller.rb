@@ -11,6 +11,8 @@ class PackagesController < ApplicationController
 
     set_meta_tags noindex: params[:q].present? || params['page'].present?
 
+    @only_pagination = params.delete(:only_pagination)
+
     respond_to do |f|
       f.turbo_stream
       f.html

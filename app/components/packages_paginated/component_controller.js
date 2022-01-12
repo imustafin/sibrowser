@@ -5,22 +5,28 @@ export default class extends Controller {
     "pagination",
     "afterLast",
     "beforeFloating",
+    "firstBeforeFirst",
   ]
 
-  connect() {
-    this.createObserver();
-  }
-
-  createObserver() {
-    const observer = new IntersectionObserver(es => this.handleIntersect(es), {
+  initialize() {
+    this.observer = new IntersectionObserver(es => this.handleIntersect(es), {
       threshold: [0, 1],
     });
+  }
 
-    observer.observe(this.afterLastTarget);
-    observer.observe(this.beforeFloatingTarget);
+  connect() {
+    this.observer.observe(this.afterLastTarget);
+    this.observer.observe(this.beforeFloatingTarget);
+    this.observer.observe(this.firstBeforeFirstTarget);
+  }
+
+  registerBeforeFirst(element) {
+    this.observer.observe(element);
   }
 
   handleIntersect(entries) {
+    let minPageStart = Number.MAX_SAFE_INTEGER;
+
     entries.forEach(entry => {
       if (entry.target === this.afterLastTarget) {
         this.afterLastIntersects(entry);
@@ -28,7 +34,31 @@ export default class extends Controller {
       if (entry.target === this.beforeFloatingTarget) {
         this.beforeFloatingIntersects(entry);
       }
+
+      if (entry.isIntersecting
+          && entry.target.dataset.pageNumber) {
+        const page = parseInt(entry.target.dataset.pageNumber);
+        minPageStart = Math.min(minPageStart, page);
+      }
     });
+
+    if (minPageStart !== Number.MAX_SAFE_INTEGER) {
+      this.updatePagination(minPageStart);
+    }
+  }
+
+  updatePagination(page) {
+    const url = new URL(window.location);
+    url.searchParams.set('page', page);
+    url.searchParams.set('only_pagination', true);
+
+    fetch(url, {
+      headers: {
+        Accept: "text/vnd.turbo-stream.html",
+      }
+    })
+      .then(r => r.text())
+      .then(html => Turbo.renderStreamMessage(html))
   }
 
   afterLastIntersects(intersection) {
@@ -44,8 +74,9 @@ export default class extends Controller {
 
       afterLast.classList.toggle('invisible', false);
 
-      const href = next.href;
-      fetch(href, {
+      const url = new URL(next.href);
+      url.searchParams.delete('only_pagination');
+      fetch(url, {
         headers: {
           Accept: "text/vnd.turbo-stream.html",
         }

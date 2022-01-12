@@ -14,6 +14,11 @@
     itemtype="https://schema.org/ItemList"
   >
     <meta itemprop="numberOfItems" content="<%= @packages.total_count %>">
+    <div
+      data-packages_paginated--component-target="firstBeforeFirst"
+      data-page-number="<%= @packages.current_page %>"
+    >
+    </div>
     <% @packages.each_with_index do |package, i| %>
       <%= render PackageCardComponent.new(package: package, position: @first_index + i) %>
     <% end %>

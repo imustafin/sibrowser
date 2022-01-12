@@ -1,10 +1,17 @@
-<turbo-stream action="append" target="packages">
-  <template>
-    <% @packages.each_with_index do |package, i| %>
-      <%= render PackageCardComponent.new(package: package, position: i) %>
-    <% end %>
-  </template>
-</turbo-stream>
+<% unless @only_pagination %>
+  <turbo-stream action="append" target="packages">
+    <template>
+      <div
+        data-controller="packages_paginated--before_first"
+        data-page-number="<%= @packages.current_page %>"
+      >
+      </div>
+      <% @packages.each_with_index do |package, i| %>
+        <%= render PackageCardComponent.new(package: package, position: i) %>
+      <% end %>
+    </template>
+  </turbo-stream>
+<% end %>
 
 <turbo-stream action="update" target="pagination">
   <template>
