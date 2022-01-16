@@ -23,6 +23,8 @@ services:
       REDIS_URL: redis://redis:6379
       ADMIN_LOGIN: admin
       ADMIN_PASSWORD: admin
+      HEROKU_TOKEN:
+      HEROKU_APP_NAME:
 
     tmpfs:
       - /tmp
