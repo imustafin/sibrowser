@@ -211,7 +211,7 @@ GEM
     stimulus-rails (1.0.2)
       railties (>= 6.0.0)
     strscan (3.0.1)
-    tailwindcss-rails (2.0.4)
+    tailwindcss-rails (2.0.5)
       railties (>= 6.0.0)
     thor (1.2.1)
     timeout (0.2.0)
@@ -256,7 +256,7 @@ DEPENDENCIES
   sidekiq (~> 6.3)
   sprockets-rails (~> 3.4, >= 3.4.2)
   stimulus-rails (~> 1.0, >= 1.0.2)
-  tailwindcss-rails (~> 2.0, >= 2.0.4)
+  tailwindcss-rails (~> 2.0)
   turbo-rails (~> 1.0)
   tzinfo-data
   view_component (~> 2.48)
