@@ -88,7 +88,7 @@ GEM
       rails (>= 5.2)
     i18n (1.8.11)
       concurrent-ruby (~> 1.0)
-    importmap-rails (1.0.1)
+    importmap-rails (1.0.2)
       actionpack (>= 6.0.0)
       railties (>= 6.0.0)
     io-wait (0.2.1)
@@ -133,7 +133,7 @@ GEM
       net-protocol
       timeout
     nio4r (2.5.8)
-    nokogiri (1.13.0)
+    nokogiri (1.13.1)
       mini_portile2 (~> 2.7.0)
       racc (~> 1.4)
     pg (1.2.3)
@@ -241,7 +241,7 @@ DEPENDENCIES
   byebug
   factory_bot_rails (~> 6.2)
   heroicon (~> 0.4.0)
-  importmap-rails (~> 1.0, >= 1.0.1)
+  importmap-rails (~> 1.0)
   kaminari (~> 1.2)
   meta-tags (~> 2.16)
   pg (~> 1.2, >= 1.2.3)
