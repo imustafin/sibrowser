@@ -7,7 +7,7 @@
       >
       </div>
       <% @packages.each_with_index do |package, i| %>
-        <%= render PackageCardComponent.new(package: package, position: i) %>
+        <%= render PackageCard::Component.new(package: package, position: i) %>
       <% end %>
     </template>
   </turbo-stream>

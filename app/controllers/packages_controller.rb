@@ -42,6 +42,20 @@ class PackagesController < ApplicationController
     }
   end
 
+  def direct_download
+    package = Package.find(params[:package_id])
+
+    url = package.vk_download_url
+
+    unless url
+      render html: "No download link", status: 404, layout: true
+    else
+      package.increment!(:download_count)
+
+      redirect_to url, allow_other_host: true
+    end
+  end
+
   def set_cat
     return head(:forbidden) unless helpers.admin?
 

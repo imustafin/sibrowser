@@ -80,7 +80,8 @@ CREATE TABLE public.packages (
     categories jsonb GENERATED ALWAYS AS (public.actual_categories(predicted_categories)) STORED,
     disappeared_at timestamp without time zone,
     vk_owner_id character varying,
-    vk_download_url character varying
+    vk_download_url character varying,
+    download_count integer DEFAULT 0 NOT NULL
 );
 
 
@@ -252,6 +253,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210725195147'),
 ('20210804172614'),
 ('20210815193621'),
-('20220119170220');
+('20220119170220'),
+('20220119181737');
 
 
