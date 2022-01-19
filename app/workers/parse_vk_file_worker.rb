@@ -51,6 +51,13 @@ class ParseVkFileWorker
     true
   end
 
+  def clean_url(url)
+    uri = URI.parse(url)
+    params = URI.decode_www_form(uri.query).to_h.slice('hash')
+    uri.query = URI.encode_www_form(params)
+    uri.to_s
+  end
+
   def perform(params)
     file_date = Time.at(params['file_date'])
     return if Package.skip_updating?(params['file_id'], file_date)
@@ -63,15 +70,19 @@ class ParseVkFileWorker
 
     logger.info "Body length #{siq.length}, parsing"
 
+    vk_download_url = clean_url(url)
+
     if vk_error?(siq)
       Package.update_or_create!(
         vk_document_id: params['file_id'],
+        vk_owner_id: params["owner_id"],
         filename: params['filename'],
         source_link: params['source_link'],
         published_at: file_date,
         disappeared_at: Time.now,
         structure: nil,
-        name: params['filename']
+        name: params['filename'],
+        vk_download_url:
       )
 
       logger.info 'Vk file unavailable'
@@ -96,7 +107,9 @@ class ParseVkFileWorker
       structure: si_package.structure,
       tags: si_package.tags,
       vk_document_id: params['file_id'],
-      disappeared_at: nil
+      vk_owner_id: params["owner_id"],
+      disappeared_at: nil,
+      vk_download_url:
     )
 
     siq.close!

@@ -1,11 +1,18 @@
 class Package < ApplicationRecord
   include PgSearch::Model
 
-  VERSION = 4
+  # CHANGELOG
+  #
+  # 5
+  # * Add vk_owner_id
+  #   VK identifies docs by (vk_owner_id, vk_document_id),
+  #   so search by the whole pair
+  # * Add vk_download_url
+  VERSION = 5
 
   validates :name, presence: true
   validates :source_link, presence: true
-  validates :vk_document_id, presence: true, uniqueness: true
+  validates :vk_document_id, presence: true
   validates :version, presence: true
 
   pg_search_scope :search_freetext,

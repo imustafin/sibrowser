@@ -17,13 +17,6 @@ CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
-
-
---
 -- Name: actual_categories(jsonb); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -85,7 +78,9 @@ CREATE TABLE public.packages (
     manual_categories jsonb,
     predicted_categories jsonb,
     categories jsonb GENERATED ALWAYS AS (public.actual_categories(predicted_categories)) STORED,
-    disappeared_at timestamp without time zone
+    disappeared_at timestamp without time zone,
+    vk_owner_id character varying,
+    vk_download_url character varying
 );
 
 
@@ -256,6 +251,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210725194413'),
 ('20210725195147'),
 ('20210804172614'),
-('20210815193621');
+('20210815193621'),
+('20220119170220');
 
 

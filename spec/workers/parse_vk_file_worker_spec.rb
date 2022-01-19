@@ -18,4 +18,13 @@ RSpec.describe ParseVkFileWorker do
       expect(instance.vk_error?(file)).to be_falsey
     end
   end
+
+  describe '#clean_url', focus: true do
+    it 'preserves only hash' do
+      initial = 'https://vk.com/doc1922_297?hash=5cc&dl=A:16473:fa06f4&api=1&no_preview=1'
+
+      expect(instance.clean_url(initial))
+        .to eq('https://vk.com/doc1922_297?hash=5cc')
+    end
+  end
 end

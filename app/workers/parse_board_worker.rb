@@ -30,7 +30,8 @@ class ParseBoardWorker
             post_text: i['text'],
             file_url: doc['url'],
             file_date: i['date'],
-            file_id: doc['id']
+            file_id: doc['id'],
+            owner_id: doc['owner_id']
           )
         end
       end
