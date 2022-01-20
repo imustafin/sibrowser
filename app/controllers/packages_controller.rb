@@ -51,6 +51,11 @@ class PackagesController < ApplicationController
       render html: "No download link", status: 404, layout: true
     else
       package.increment!(:download_count)
+      package.broadcast_update_to(
+        :download_counts,
+        target: helpers.dom_id(package, :download_count),
+        html: package.download_count
+      )
 
       redirect_to url, allow_other_host: true
     end

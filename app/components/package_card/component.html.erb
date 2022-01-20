@@ -61,7 +61,9 @@
        do
       %>
         <%= heroicon "document-download", options: { class: "h-6 mr-2 inline" } %>
-        <%= @package.download_count %>
+        <span id="<%= dom_id(@package, :download_count) %>">
+          <%= @package.download_count %>
+        </span>
       <% end %>
     <% end %>
     <%= link_to t('source'), @package.source_link, target: '_blank',
