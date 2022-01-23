@@ -20,7 +20,19 @@ class PackagesController < ApplicationController
   end
 
   def show
-    @package = Package.find(params[:id])
+    id = params[:id]
+    @package = Package.find_by(id:)
+
+    unless @package
+      superseder = Package.superseders(id).first
+
+      if superseder
+        redirect_to superseder, status: :moved_permanently
+        return
+      end
+
+      raise ActionController::RoutingError, "Couldn't find Package '#{id}'"
+    end
 
     @page_title = t(
       'title_package',

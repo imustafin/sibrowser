@@ -81,7 +81,8 @@ CREATE TABLE public.packages (
     disappeared_at timestamp without time zone,
     vk_owner_id character varying,
     vk_download_url character varying,
-    download_count integer DEFAULT 0 NOT NULL
+    download_count integer DEFAULT 0 NOT NULL,
+    superseded_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL
 );
 
 
@@ -210,6 +211,13 @@ CREATE INDEX index_packages_on_searchable ON public.packages USING gin (searchab
 
 
 --
+-- Name: index_packages_on_superseded_ids; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_packages_on_superseded_ids ON public.packages USING gin (superseded_ids);
+
+
+--
 -- Name: index_packages_on_vk_document_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -254,6 +262,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210804172614'),
 ('20210815193621'),
 ('20220119170220'),
-('20220119181737');
+('20220119181737'),
+('20220123162121');
 
 

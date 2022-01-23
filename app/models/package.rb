@@ -111,4 +111,11 @@ class Package < ApplicationRecord
       .page(page)
       .per(5)
   }
+
+  scope :superseders, ->(id) { where("superseded_ids @> ARRAY[?]::bigint[]", [id]) }
+
+  def supersede(p)
+    superseded_ids << p.id
+    p.destroy!
+  end
 end
