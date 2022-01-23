@@ -170,12 +170,18 @@
     <%= t('updated_in_sibrowser') %>: <%= time_tag(@package.updated_at.to_date) %> <br>
   <% end %>
 
+  <%= turbo_stream_from :download_counts %>
   <div class="flex justify-center mt-8 mb-4">
-    <a
-      class="<%= button_class %>"
-      href="<%= @package.source_link %>"
-    >
-      <%= t('download_from_source') %>
-    </a>
+    <%= link_to package_direct_download_path(@package),
+     target: '_blank',
+     class: button_class + "mr-4 flex" \
+       do
+    %>
+      <%= heroicon "document-download", options: { class: "h-6 mr-2 inline" } %>
+      <span id="<%= dom_id(@package, :download_count) %>">
+        <%= @package.download_count %>
+      </span>
+    <% end %>
+    <%= link_to t("source"), @package.source_link, target: "_blank", class: button_class %>
   </div>
 </article>
