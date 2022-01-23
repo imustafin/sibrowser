@@ -13,6 +13,7 @@ class Package < ApplicationRecord
   validates :name, presence: true
   validates :source_link, presence: true
   validates :vk_document_id, presence: true
+  validates :vk_owner_id, presence: true
   validates :version, presence: true
 
   pg_search_scope :search_freetext,
@@ -59,7 +60,10 @@ class Package < ApplicationRecord
 
   def self.update_or_create!(params)
     transaction do
-      model = find_by(vk_document_id: params[:vk_document_id])
+      model = find_by(
+        vk_document_id: params[:vk_document_id],
+        vk_owner_id: params[:vk_owner_id]
+      )
 
       params = params.merge(version: VERSION)
 
@@ -80,8 +84,8 @@ class Package < ApplicationRecord
 
   # Skip updating if there is a record
   # which was published not after this new date and has compatible version
-  def self.skip_updating?(new_vk_document_id, new_published_at)
-    where(vk_document_id: new_vk_document_id)
+  def self.skip_updating?(new_vk_document_id, new_vk_owner_id, new_published_at)
+    where(vk_document_id: new_vk_document_id, vk_owner_id: new_vk_owner_id)
       .where('published_at <= ?', new_published_at) # The older post can have a more relevant original_text
       .where('version >= ?', VERSION) # same version is compatible, greater version should not happen
       .where('structure IS NOT NULL') # parse if structure was deleted when upgrading

@@ -79,7 +79,7 @@ CREATE TABLE public.packages (
     predicted_categories jsonb,
     categories jsonb GENERATED ALWAYS AS (public.actual_categories(predicted_categories)) STORED,
     disappeared_at timestamp without time zone,
-    vk_owner_id character varying,
+    vk_owner_id character varying NOT NULL,
     vk_download_url character varying,
     download_count integer DEFAULT 0 NOT NULL,
     superseded_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL
@@ -218,10 +218,10 @@ CREATE INDEX index_packages_on_superseded_ids ON public.packages USING gin (supe
 
 
 --
--- Name: index_packages_on_vk_document_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_packages_on_vk_document_id_and_vk_owner_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_packages_on_vk_document_id ON public.packages USING btree (vk_document_id);
+CREATE UNIQUE INDEX index_packages_on_vk_document_id_and_vk_owner_id ON public.packages USING btree (vk_document_id, vk_owner_id);
 
 
 --
@@ -263,6 +263,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210815193621'),
 ('20220119170220'),
 ('20220119181737'),
-('20220123162121');
+('20220123162121'),
+('20220123200144');
 
 

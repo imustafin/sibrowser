@@ -38,5 +38,6 @@ module Sibrowser
     # Sweep importmap cache for components
     config.importmap.cache_sweepers << Rails.root.join('app/components')
 
+    Sidekiq.strict_args!
   end
 end

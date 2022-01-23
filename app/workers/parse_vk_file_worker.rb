@@ -61,7 +61,11 @@ class ParseVkFileWorker
 
   def perform(params)
     file_date = Time.at(params['file_date'])
-    return if Package.skip_updating?(params['file_id'], file_date)
+    return if Package.skip_updating?(
+      params['file_id'],
+      params['owner_id'],
+      file_date
+    )
 
     url = params['file_url']
 
