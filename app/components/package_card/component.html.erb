@@ -15,9 +15,14 @@
       <%= time_tag @package.published_at.to_date, class: 'inline-block', itemprop: 'datePublished' %>
     </h2>
 
-    <h1 class="text-xl font-bold" itemprop="name headline">
-      <%= link_to @package.name, @package, itemprop: 'url' %>
-    </h1>
+    <%= link_to @package, itemprop: "url" do %>
+      <h1 class="text-xl font-bold" itemprop="name headline">
+        <%= @package.name %>
+      </h1>
+      <span class="text-l font-mono font-semibold" itemprop="alternateName">
+        (<%= @package.filename %>)
+      </span>
+    <% end %>
 
     <div class="pt-2">
       <%= render KeywordLinksComponent.new(tags: @package.tags || [], categories: @package.categories || {}) %>
