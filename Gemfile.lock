@@ -220,8 +220,8 @@ GEM
       sentry-ruby-core (= 5.0.1)
     sentry-ruby-core (5.0.1)
       concurrent-ruby
-    sentry-sidekiq (5.0.0)
-      sentry-ruby-core (~> 5.0.0)
+    sentry-sidekiq (5.0.1)
+      sentry-ruby-core (~> 5.0.1)
       sidekiq (>= 3.0)
     sidekiq (6.4.0)
       connection_pool (>= 2.2.2)
