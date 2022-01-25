@@ -81,8 +81,8 @@ CREATE TABLE public.packages (
     disappeared_at timestamp without time zone,
     vk_owner_id character varying NOT NULL,
     vk_download_url character varying,
-    download_count integer DEFAULT 0 NOT NULL,
-    superseded_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL
+    superseded_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
+    downloads jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -264,6 +264,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220119170220'),
 ('20220119181737'),
 ('20220123162121'),
-('20220123200144');
+('20220123200144'),
+('20220125171004');
 
 

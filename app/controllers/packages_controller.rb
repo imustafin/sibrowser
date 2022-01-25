@@ -62,7 +62,11 @@ class PackagesController < ApplicationController
     unless url
       render html: "No download link", status: 404, layout: true
     else
-      package.increment!(:download_count)
+      package.with_lock do
+        package.add_download
+        package.save!
+      end
+
       package.broadcast_update_to(
         :download_counts,
         target: helpers.dom_id(package, :download_count),

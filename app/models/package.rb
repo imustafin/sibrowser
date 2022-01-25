@@ -122,4 +122,14 @@ class Package < ApplicationRecord
     superseded_ids << p.id
     p.destroy!
   end
+
+  def download_count
+    downloads.values.sum
+  end
+
+  def add_download
+    today = (Date.today - (Date.new(1970))).to_i.to_s
+    downloads[today] ||= 0
+    downloads[today] += 1
+  end
 end
