@@ -60,4 +60,9 @@ tt:
   description_category: "%{category} категориядәге пакет саны — %{package_count}"
   author: Ясаучы
   author_not_found_pre: Без %{author} ясаган бернинди пакетны белмибез.
-  author_not_found_table: "Сез эләгән охшаш исемле ясаучылар:"
+  author_not_found_table: "Сез эзләгән охшаш исемле ясаучылар:"
+
+  total_download_stats:
+    pre: "SIBrowser пакетларны %{count} тапкыр йөкләргә булышкан."
+    total: ''
+    from_them: 'Аларның: %{month} бу айда, %{week} бу атнада һәм %{day} бүген!'

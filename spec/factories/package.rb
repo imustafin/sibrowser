@@ -8,6 +8,7 @@ FactoryBot.define do
     source_link { 'https://example.com/package.siq' }
     version { Package::VERSION }
     vk_document_id
+    vk_owner_id { vk_document_id }
 
     factory :package_one_theme do
       transient do

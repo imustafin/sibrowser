@@ -119,4 +119,68 @@ RSpec.describe Package, type: :model do
       expect(described_class.search_freetext('банан')).to include(p)
     end
   end
+
+  describe '#add_download', :focus do
+    it 'adds new key if no downloads today', :aggregate_failures do
+      p = build(:package, downloads: { '1' => 10 })
+
+      travel_to Time.zone.local(2022, 1, 25, 23, 12) do
+        expect { p.add_download }
+          .to change { p.download_count }.from(10).to(11)
+
+        expect(p.downloads).to match_array({
+          '1' => 10,
+          '19017' => 1
+        })
+      end
+    end
+  end
+
+  describe '#download_count', focus: true do
+    it 'gives 0 for empty downloads' do
+      p = build(:package)
+
+      expect(p.download_count).to be 0
+    end
+
+    it 'gives sum of downloads' do
+      p = build(:package, downloads: { '1' => 1, '2' => 20 })
+
+      expect(p.download_count).to be 21
+    end
+  end
+
+  describe '.download_stats', focus: true do
+    it 'gives year, month, week, day download counts' do
+      travel_to Time.zone.local(2022, 2, 8) do
+        p = create(:package, downloads: {
+          '19031' => 1,  # Tue, 08 Feb 2022  <- today
+          '19030' => 2,  # Mon, 07 Feb 2022 ^- this week
+          '19029' => 4,  # Sun, 06 Feb 2022
+          '19024' => 8,  # Tue, 01 Feb 2022 ^- this month
+          '19023' => 16, # Mon, 31 Jan 2022
+          '18993' => 32, # Sat, 01 Jan 2022 ^- this year
+          '18992' => 64 # Fri, 31 Dec 2021
+        })
+
+        expect(described_class.download_stats).to match_array({
+          day: 1,
+          week: 1 + 2,
+          month: 1 + 2 + 4 + 8,
+          year: 1 + 2 + 4 + 8 + 16 + 32,
+          total: 1 + 2 + 4 + 8 + 16 + 32 + 64
+        })
+      end
+    end
+
+    it 'gives all zeros if no packages' do
+      expect(described_class.download_stats).to match_array({
+        day: 0,
+        week: 0,
+        month: 0,
+        year: 0,
+        total: 0
+      })
+    end
+  end
 end

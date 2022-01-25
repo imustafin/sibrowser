@@ -1,5 +1,6 @@
 class PackagesController < ApplicationController
   def index
+    @download_stats = Package.download_stats
     @packages = Package.visible_paged(params[:page])
 
     # Do this after order(sort_column) to first order by sort_column, then by search rank
