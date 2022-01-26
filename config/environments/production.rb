@@ -24,6 +24,15 @@ Rails.application.configure do
   # Apache or NGINX already handles this.
   config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
 
+  # Gzip compression for non-static responses
+  if config.public_file_server.enabled
+    # Let AD::Static return gzipped files, then deflate non-static responses
+    config.middleware.insert_after ActionDispatch::Static, Rack::Deflater
+  else
+    # AD::Static is not loaded in this case, so just use Deflater
+    config.middleware.use Rack::Deflater
+  end
+
   config.public_file_server.headers = {
     'Cache-Control' => 'public, max-age=31536000'
   }
