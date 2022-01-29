@@ -16,7 +16,7 @@ module Vk
   def self.base_configs
     {
       access_token: service,
-      v: '5.130',
+      v: '5.131',
     }
   end
 
@@ -31,5 +31,9 @@ module Vk
 
   def self.board_get_comments(params)
     request('board.getComments', params)
+  end
+
+  def self.groups_get_by_id(params)
+    request('groups.getById', params)
   end
 end
