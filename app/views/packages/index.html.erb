@@ -26,4 +26,10 @@
   <%= t('total_download_stats.from_them', **@download_stats) %>
 </p>
 
+<p class="pb-2">
+  <%= t 'join_vk.msg_html',
+        count: vk_members_count,
+        link: link_to(t('join_vk.link'), vk_link, class: 'font-bold') %>
+</p>
+
 <%= render PackagesPaginated::Component.new(packages: @packages) %>

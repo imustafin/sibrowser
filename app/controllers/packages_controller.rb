@@ -1,4 +1,6 @@
 class PackagesController < ApplicationController
+  helper_method :vk_link, :vk_members_count
+
   def index
     @download_stats = Package.download_stats
     @packages = Package.visible_paged(params[:page])
@@ -17,6 +19,27 @@ class PackagesController < ApplicationController
     respond_to do |f|
       f.turbo_stream
       f.html
+    end
+  end
+
+  VK_SCREEN_NAME = 'sibrowser'.freeze
+
+  def vk_link
+    "https://vk.com/#{VK_SCREEN_NAME}"
+  end
+
+  def vk_members_count
+    Rails.cache.fetch('vk_members_count', expires_in: 1.hour) do
+      logger.info 'Fetching vk members count'
+
+      members_count = 'members_count'
+
+      vk_info = Vk.groups_get_by_id({
+        group_id: VK_SCREEN_NAME,
+        fields: members_count
+      })['response'].first
+
+      vk_info[members_count]
     end
   end
 

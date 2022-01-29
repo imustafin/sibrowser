@@ -148,8 +148,8 @@ class Package < ApplicationRecord
 
     selects = binds
       .keys
-      .map
-      .with_index { |k, i| "COALESCE(SUM(j.value::integer) FILTER (WHERE j.key::integer >= $#{i + 1}), 0) AS #{k}" }
+      .map.with_index \
+        { |k, i| "COALESCE(SUM(j.value::integer) FILTER (WHERE j.key::integer >= $#{i + 1}), 0) AS #{k}" }
       .then { |sels| sels + ["COALESCE(SUM(j.value::integer), 0) AS total"] }
       .join(', ')
 

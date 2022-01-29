@@ -68,3 +68,7 @@ en:
       one: '%{count} time.'
       other: '%{count} times.'
     from_them: 'Out of them: %{month} this month, %{week} this week and %{day} today!'
+
+  join_vk:
+    msg_html: 'Join our %{link} and read the latest news! There are already %{count} of us.'
+    link: 'VK Community'
