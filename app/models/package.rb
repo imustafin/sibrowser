@@ -143,18 +143,27 @@ class Package < ApplicationRecord
       day: date_to_download_key(d),
       week: date_to_download_key(d.beginning_of_week),
       month: date_to_download_key(d.beginning_of_month),
-      year: date_to_download_key(d.beginning_of_year)
+      year: date_to_download_key(d.beginning_of_year),
+      total: nil
     }
 
-    selects = binds
-      .keys
-      .map.with_index \
-        { |k, i| "COALESCE(SUM(j.value::integer) FILTER (WHERE j.key::integer >= $#{i + 1}), 0) AS #{k}" }
-      .then { |sels| sels + ["COALESCE(SUM(j.value::integer), 0) AS total"] }
-      .join(', ')
+    j = Arel::Table.new(:j)
 
-    sql = "SELECT #{selects} FROM packages, jsonb_each(downloads) AS j WHERE downloads <> '{}'"
+    selects = binds.map do |k, v|
+      arel_cast(j[:value], :integer)
+        .sum
+        .then { |s| v ? s.filter(arel_cast(j[:key], :integer).gteq(v)) : s }
+        .then { |s| s.coalesce(s, 0) }
+        .as(k.to_s)
+    end
 
-    connection.exec_query(sql, 'SQL', binds.values, prepare: true).first.to_h.symbolize_keys
+    all
+      .from("#{table_name}, jsonb_each(downloads) j")
+      .select(*selects)
+      .as_json
+      .first
+      .to_h
+      .symbolize_keys
+      .except(:id)
   end
 end

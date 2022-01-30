@@ -1,8 +1,7 @@
 class PackagesController < ApplicationController
-  helper_method :vk_link, :vk_members_count
+  helper_method :vk_link, :vk_members_count, :download_stats
 
   def index
-    @download_stats = Package.download_stats
     @packages = Package.visible_paged(params[:page])
 
     # Do this after order(sort_column) to first order by sort_column, then by search rank
@@ -20,6 +19,10 @@ class PackagesController < ApplicationController
       f.turbo_stream
       f.html
     end
+  end
+
+  def download_stats
+    @download_stats ||= Package.download_stats
   end
 
   VK_SCREEN_NAME = 'sibrowser'.freeze
