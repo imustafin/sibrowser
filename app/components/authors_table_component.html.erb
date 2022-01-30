@@ -3,6 +3,7 @@
     <tr class="bg-indigo-600 text-white">
       <th class="text-center py-4 px-3"><%= t('author') %></th>
       <th class="text-center py-4 px-3"><%= t('package_count') %></th>
+      <th class="text-center py-4 px-3"><%= t('.total_downloads') %></th>
     </tr>
   </thead>
   <% @authors.each do |a| %>
@@ -12,6 +13,9 @@
     </td>
     <td class="text-center">
       <%= a.count %>
+    </td>
+    <td class="text-center">
+      <%= a.total_downloads %>
     </td>
   </tr>
   <% end %>

@@ -1,9 +1,20 @@
 class Author
   def self.base
     Package
-      .from(Package.visible.select('jsonb_array_elements_text(authors) AS author, id'))
+      .from(
+        Package.visible.select(
+          'id',
+          'jsonb_array_elements_text(authors) AS author',
+          "jsonb_path_query(downloads, '$[*].*') AS download"
+        )
+      )
       .group('lower(author)')
-      .select('MIN(author) AS author', 'COUNT(author) AS count')
+      .select(
+        'MAX(author) AS author', # Capitals are greater
+        'COUNT(author) AS count',
+        'COALESCE(SUM(download::integer), 0) AS total_downloads'
+      )
+      .where('author IS NOT NULL')
   end
 
   def self.all
