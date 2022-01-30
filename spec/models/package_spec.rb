@@ -7,6 +7,7 @@ RSpec.describe Package, type: :model do
         expect {
           described_class.update_or_create!(
             vk_document_id: 1,
+            vk_owner_id: 1,
             name: 'qwe',
             source_link: 'qweqwe',
             version: described_class::VERSION
@@ -17,39 +18,40 @@ RSpec.describe Package, type: :model do
     end
 
     context 'with existing' do
-      before(:each) do
-        described_class.create(
+      let(:base_params) do
+        {
           vk_document_id: 1,
-          published_at: Time.at(10),
-          post_text: 'original',
-          name: 'qwe',
-          source_link: 'qweqwe',
-          version: described_class::VERSION
-        )
+          vk_owner_id: 1,
+          post_text: 'original'
+        }
       end
 
-      it 'does not update if newer' do
+      def create_base
+        create(:package_one_theme, **base_params, published_at: Time.zone.at(10))
+      end
+
+      it 'does not update if new is newer' do
+        base = create_base
+
         described_class.update_or_create!(
-          vk_document_id: 1,
-          published_at: Time.at(100),
+          **base_params,
+          published_at: Time.zone.at(100),
           post_text: 'newer',
-          name: 'qwe',
-          source_link: 'qweqwe',
         )
 
-        expect(described_class.find_by(vk_document_id: 1).post_text).to eq('original')
+        expect(base.reload.post_text).to eq('original')
       end
 
-      it 'updates if older' do
+      it 'updates if new is older' do
+        base = create_base
+
         described_class.update_or_create!(
-          vk_document_id: 1,
-          published_at: Time.at(1),
+          **base_params,
+          published_at: Time.zone.at(1),
           post_text: 'older',
-          name: 'qwe',
-          source_link: 'qweqwe',
         )
 
-        expect(described_class.find_by(vk_document_id: 1).post_text).to eq('older')
+        expect(base.reload.post_text).to eq('older')
       end
     end
   end
@@ -120,7 +122,7 @@ RSpec.describe Package, type: :model do
     end
   end
 
-  describe '#add_download', :focus do
+  describe '#add_download' do
     it 'adds new key if no downloads today', :aggregate_failures do
       p = build(:package, downloads: { '1' => 10 })
 
@@ -136,7 +138,7 @@ RSpec.describe Package, type: :model do
     end
   end
 
-  describe '#download_count', focus: true do
+  describe '#download_count' do
     it 'gives 0 for empty downloads' do
       p = build(:package)
 
@@ -150,7 +152,7 @@ RSpec.describe Package, type: :model do
     end
   end
 
-  describe '.download_stats', focus: true do
+  describe '.download_stats' do
     it 'gives year, month, week, day download counts' do
       travel_to Time.zone.local(2022, 2, 8) do
         p = create(:package, downloads: {
