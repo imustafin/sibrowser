@@ -72,3 +72,7 @@ en:
   join_vk:
     msg_html: 'Join our %{link} and read the latest news! There are already %{count} of us.'
     link: 'VK Community'
+
+  author_show:
+    downloads: 'Downloads'
+    downloads_description: The number of downloads of this author's packages in the last 30 days per day

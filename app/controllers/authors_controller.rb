@@ -1,4 +1,6 @@
 class AuthorsController < ApplicationController
+  helper_method :plot_data
+
   def index
     @authors = Author.all.page(params[:page]).per(10)
 
@@ -36,7 +38,20 @@ class AuthorsController < ApplicationController
     end
 
     set_meta_tags noindex: params['page'].present?
+  end
 
+  def plot_data
+    start = Date.today - 30
+
+    dates = Package
+      .by_author(params[:id])
+      .download_counts
+      .where('date >= ?', start)
+      .to_h { |x| [x.date, x.count] }
+
+    (start..Date.today).map do |date|
+      [date, dates[date] || 0]
+    end
   end
 
   def not_found

@@ -70,3 +70,7 @@ tt:
   join_vk:
     msg_html: 'Безнең %{link} кушыл һәм соңгы яңалыкларны укы! Без инде %{count}.'
     link: 'VK берләшмәсегә'
+
+  author_show:
+    downloads: Йөкләүләр
+    downloads_description: Соңгы 30 көндә авторның пакет йөкләү көндәлек саны

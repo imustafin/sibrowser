@@ -14,6 +14,21 @@
 </p>
 
 <h2 class="text-xl mb-2 mt-4 text-center">
+  <%= t('author_show.downloads') %>
+</h2>
+
+<%= t('author_show.downloads_description') %>
+
+<div class="pb-2">
+  <%= line_chart plot_data,
+   dataset: {
+     tension: 0,
+   }
+  %>
+</div>
+
+
+<h2 class="text-xl mb-2 mt-4 text-center">
   <%= t('author_packages') %>
 </h2>
 
