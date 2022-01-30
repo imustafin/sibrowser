@@ -166,4 +166,16 @@ class Package < ApplicationRecord
       .symbolize_keys
       .except(:id)
   end
+
+  scope :download_counts, -> {
+    date_expr = Arel.sql("DATE '1970-01-01' + (j.key::integer - 1)")
+
+    Package
+      .select('date, SUM(count) AS count')
+      .from(
+        from('packages, jsonb_each(downloads) j')
+        .select("#{date_expr} AS date, COALESCE(j.value::integer, 0) AS count")
+      )
+      .group(:date)
+  }
 end

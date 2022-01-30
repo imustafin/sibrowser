@@ -185,4 +185,43 @@ RSpec.describe Package, type: :model do
       })
     end
   end
+
+  describe '.download_counts', focus: true do
+    it 'aggregates downloads per day' do
+
+      create(:package, downloads: { '1' => 1 })
+      create(:package, downloads: { '1' => 2 })
+      create(:package, downloads: { '2' => 4 })
+      create(:package, downloads: { '3' => 8 })
+
+      expect(Package.all.download_counts).to contain_exactly(
+        have_attributes(date: Date.new(1970, 1, 1), count: 3),
+        have_attributes(date: Date.new(1970, 1, 2), count: 4),
+        have_attributes(date: Date.new(1970, 1, 3), count: 8)
+      )
+    end
+
+    it 'can by date after' do
+      create(:package, downloads: { '1' => 1 })
+      create(:package, downloads: { '10' => 1 })
+
+      expect(Package.all.download_counts.where('date = ?', Date.new(1970, 1, 10)))
+        .to contain_exactly(
+          have_attributes(date: Date.new(1970, 1, 10), count: 1)
+        )
+    end
+
+    it 'can filter by packages first' do
+      a = create(:package, downloads: { '1' => 1 })
+      b = create(:package, downloads: { '2' => 2 })
+
+      expect(Package.where(id: a.id).download_counts).to contain_exactly(
+        have_attributes(date: Date.new(1970, 1, 1), count: 1)
+      )
+    end
+
+    it 'is empty when no downloads' do
+      expect(Package.download_counts).to be_empty
+    end
+  end
 end
