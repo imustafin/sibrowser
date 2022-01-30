@@ -28,32 +28,26 @@
       <%= render KeywordLinksComponent.new(tags: @package.tags || [], categories: @package.categories || {}) %>
     </div>
 
-    <p class="pt-4 text-gray-700">
-      <% if @package.post_text.present? %>
-        <%= simple_format(@package.post_text.truncate(150, separator: /\s/), itemprop: 'description') %>
-      <% else %>
-        <%= simple_format(helpers.package_description(@package, true), itemprop: 'description') %>
-      <% end %>
-    </p>
+    <%= simple_format \
+      @package.post_text.present? \
+        ? @package.post_text.truncate(150, separator: /\s/) \
+        : helpers.package_description(@package, true),
+      itemprop: 'description',
+      class: 'pt-4'
+    %>
 
     <% if @package.question_distribution.present? %>
-      <p class="pt-4">
+      <p class="pt-4 text-gray-700">
         <%= t('total_questions') %>: <%= @package.question_distribution[:total] %>
       </p>
       <% @package.question_distribution[:types].each do |type, count| %>
-        <span class="mr-4 inline-block">
+        <span class="mr-4 inline-block text-gray-700">
           <div class="<%= ApplicationHelper::TYPE_COLORS[type] %> w-4 h-4 inline-block bottom-0"></div>
-          <span class="font-bold">
-            <%= t type %>
-          </span>
-          <span class="text-gray-700">
-            <%=
-            number_to_percentage(
+          <%= t type %>
+          <%= number_to_percentage \
             count.to_f / @package.question_distribution[:total] * 100,
             precision: 0
-            )
-            %>
-          </span>
+          %>
         </span>
       <% end %>
     <% end %>
