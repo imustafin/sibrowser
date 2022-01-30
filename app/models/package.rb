@@ -168,7 +168,7 @@ class Package < ApplicationRecord
   end
 
   scope :download_counts, -> {
-    date_expr = Arel.sql("DATE '1970-01-01' + (j.key::integer - 1)")
+    date_expr = Arel.sql("DATE '1970-01-01' + j.key::integer")
 
     Package
       .select('date, SUM(count) AS count')

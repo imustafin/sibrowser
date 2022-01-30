@@ -189,10 +189,10 @@ RSpec.describe Package, type: :model do
   describe '.download_counts', focus: true do
     it 'aggregates downloads per day' do
 
-      create(:package, downloads: { '1' => 1 })
-      create(:package, downloads: { '1' => 2 })
-      create(:package, downloads: { '2' => 4 })
-      create(:package, downloads: { '3' => 8 })
+      create(:package, downloads: { '0' => 1 })
+      create(:package, downloads: { '0' => 2 })
+      create(:package, downloads: { '1' => 4 })
+      create(:package, downloads: { '2' => 8 })
 
       expect(Package.all.download_counts).to contain_exactly(
         have_attributes(date: Date.new(1970, 1, 1), count: 3),
@@ -203,7 +203,7 @@ RSpec.describe Package, type: :model do
 
     it 'can by date after' do
       create(:package, downloads: { '1' => 1 })
-      create(:package, downloads: { '10' => 1 })
+      create(:package, downloads: { '9' => 1 })
 
       expect(Package.all.download_counts.where('date = ?', Date.new(1970, 1, 10)))
         .to contain_exactly(
@@ -212,8 +212,8 @@ RSpec.describe Package, type: :model do
     end
 
     it 'can filter by packages first' do
-      a = create(:package, downloads: { '1' => 1 })
-      b = create(:package, downloads: { '2' => 2 })
+      a = create(:package, downloads: { '0' => 1 })
+      b = create(:package, downloads: { '1' => 2 })
 
       expect(Package.where(id: a.id).download_counts).to contain_exactly(
         have_attributes(date: Date.new(1970, 1, 1), count: 1)
@@ -222,6 +222,19 @@ RSpec.describe Package, type: :model do
 
     it 'is empty when no downloads' do
       expect(Package.download_counts).to be_empty
+    end
+
+    it 'has correct today date' do
+      travel_to Time.zone.local(2022, 1, 31, 0, 11) do
+        p = create(:package)
+        p.add_download
+        p.save!
+
+        expect(Package.where(id: p.id).download_counts).to contain_exactly(
+          have_attributes(date: Date.new(2022, 1, 31), count: 1)
+        )
+      end
+
     end
   end
 end
