@@ -1,26 +1,28 @@
 class PackagesController < ApplicationController
-  helper_method :vk_link, :vk_members_count, :download_stats
+  include PackagesPagination
+
+  helper_method :vk_link, :vk_members_count, :download_stats, :packages
 
   def index
-    @packages = Package.visible_paged(params[:page])
-
-    # Do this after order(sort_column) to first order by sort_column, then by search rank
-    @packages = @packages.search_freetext(params[:q]) if params[:q].present?
+    return packages_pagination(packages) if request.format.turbo_stream?
 
     if params['page']
       @page_title = t('title_packages_page', page: params['page'])
     end
 
     set_meta_tags noindex: params[:q].present? || params['page'].present?
-
-    @only_pagination = params.delete(:only_pagination)
-
-    respond_to do |f|
-      f.turbo_stream
-      f.html
-    end
   end
 
+  def packages
+    @packages ||= begin
+      p = Package.visible_paged(params[:page])
+
+      # Do this after order(sort_column) to first order by sort_column, then by search rank
+      p = p.search_freetext(params[:q]) if params[:q].present?
+
+      p
+    end
+  end
   def download_stats
     @download_stats ||= Package.download_stats
   end

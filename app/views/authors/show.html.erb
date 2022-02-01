@@ -1,9 +1,9 @@
 <h1 class="text-2xl font-bold text-center">
-  <%= render AuthorLinkComponent.new(author: @author, author_itemprop: false) %>
+  <%= render AuthorLinkComponent.new(author:, author_itemprop: false) %>
 </h1>
 
 <p>
-  <%= t('author_text', package_count: @package_count) %>
+  <%= t('author_text', package_count: all_packages_count) %>
   <% if @other_authors.present? %>
     <br>
     <%= t('author_text_coauthors') %>
@@ -32,4 +32,4 @@
   <%= t('author_packages') %>
 </h2>
 
-<%= render PackageCardsComponent.new(packages: @packages) %>
+<%= render PackagesPaginated::Component.new(packages: all_packages) %>

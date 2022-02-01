@@ -1,5 +1,7 @@
 class AuthorsController < ApplicationController
-  helper_method :plot_data
+  include PackagesPagination
+
+  helper_method :plot_data, :author, :all_packages, :package_count, :all_packages_count
 
   def index
     @authors = Author.all.page(params[:page]).per(10)
@@ -8,36 +10,44 @@ class AuthorsController < ApplicationController
   end
 
   def show
-    @author = params[:id]
-
-    @packages = Package.visible_paged(params[:page]).by_author(@author)
+    return packages_pagination(all_packages) if request.format.turbo_stream?
 
     @breadcrumbs = {
       parts: [
         [t(:authors), authors_path],
-        @author
+        author
       ]
     }
 
-    @page_title = t('title_author', name: @author)
+    @page_title = t('title_author', name: author)
 
-    return not_found unless @packages.exists?
+    return not_found unless all_packages.exists?
 
-
-    @package_count = @packages.total_count
-    @other_authors = Package.visible.by_author(@author)
+    @other_authors = Package.visible.by_author(author)
       .pluck(:authors)
       .flatten
       .uniq(&:downcase)
-      .delete_if { |x| x.downcase == @author.downcase }
+      .delete_if { |x| x.downcase == author.downcase }
       .sort
 
-    @page_description = t('description_author', name: @author, package_count: @package_count)
+    @page_description = t('description_author', name: author, package_count: all_packages_count)
     if @other_authors.present?
       @page_description += ' ' + t('description_author_coauthors', names: @other_authors.join(', '))
     end
 
     set_meta_tags noindex: params['page'].present?
+  end
+
+  def all_packages_count
+    all_packages.total_count
+  end
+
+  def author
+    params[:id]
+  end
+
+  def all_packages
+    Package.visible_paged(params[:page]).by_author(author)
   end
 
   def plot_data
@@ -56,7 +66,7 @@ class AuthorsController < ApplicationController
 
   def not_found
     @similar_authors = Author
-      .similar(@author)
+      .similar(author)
       .limit(5)
 
     render :show_not_found, status: 404

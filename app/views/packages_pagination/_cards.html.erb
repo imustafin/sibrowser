@@ -1,0 +1,8 @@
+<div
+  data-controller="packages_paginated--before_first"
+  data-page-number="<%= packages.current_page %>"
+>
+</div>
+<% packages.each_with_index do |package, i| %>
+  <%= render PackageCard::Component.new(package:, position: i) %>
+<% end %>
