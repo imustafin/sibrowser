@@ -95,7 +95,7 @@ GEM
       moneta
       multi_json (>= 1.9.2)
       webrick
-    i18n (1.8.11)
+    i18n (1.9.1)
       concurrent-ruby (~> 1.0)
     importmap-rails (1.0.2)
       actionpack (>= 6.0.0)
@@ -213,9 +213,9 @@ GEM
       rspec-support (~> 3.10)
     rspec-support (3.10.3)
     rubyzip (2.3.2)
-    sentry-rails (5.0.1)
+    sentry-rails (5.0.2)
       railties (>= 5.0)
-      sentry-ruby-core (~> 5.0.1)
+      sentry-ruby-core (~> 5.0.2)
     sentry-ruby (5.0.2)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       sentry-ruby-core (= 5.0.2)
@@ -259,7 +259,7 @@ GEM
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    zeitwerk (2.5.3)
+    zeitwerk (2.5.4)
 
 PLATFORMS
   ruby
