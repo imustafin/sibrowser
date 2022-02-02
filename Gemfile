@@ -62,3 +62,5 @@ gem 'sentry-rails', '~> 5.0'
 gem 'sentry-sidekiq', '~> 5.0'
 
 gem 'chartkick', '~> 4.1', '>= 4.1.3'
+
+gem 'crawler_detect', '~> 1.2'

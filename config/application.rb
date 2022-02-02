@@ -40,5 +40,6 @@ module Sibrowser
 
     Sidekiq.strict_args!
 
+    config.middleware.use Rack::CrawlerDetect
   end
 end
