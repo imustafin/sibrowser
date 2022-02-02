@@ -25,7 +25,7 @@ class CategoriesController < ApplicationController
     @breadcrumbs = {
       parts: [
         [t(:categories), categories_path],
-        @category
+        category
       ]
     }
   end
