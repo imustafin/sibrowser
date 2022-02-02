@@ -1,4 +1,8 @@
 class TagsController < ApplicationController
+  include PackagesPagination
+
+  helper_method :tag_id, :packages
+
   def index
     @tags = Package
       .from(Package.visible.select('jsonb_array_elements_text(tags) AS tag, id'))
@@ -17,23 +21,29 @@ class TagsController < ApplicationController
   end
 
   def show
-    @tag = params[:id]
+    return packages_pagination(packages) if request.format.turbo_stream?
 
-    @packages = Package.visible_paged(params[:page]).by_tag(@tag)
+    package_count = packages.total_count
 
-    @package_count = @packages.total_count
-
-    @page_title = t('title_tag', tag: @tag)
-    @page_description = t('description_tag', tag: @tag, package_count: @package_count)
+    @page_title = t('title_tag', tag: tag_id)
+    @page_description = t('description_tag', tag: tag_id, package_count:)
 
     set_meta_tags noindex: params['page'].present?
 
     @breadcrumbs = {
       parts: [
         [t(:tags), tags_path],
-        @tag
+        tag_id
       ]
     }
+  end
+
+  def tag_id
+    params[:id]
+  end
+
+  def packages
+    Package.visible_paged(params[:page]).by_tag(tag_id)
   end
 
   def toggle_cat
