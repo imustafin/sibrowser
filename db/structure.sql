@@ -82,7 +82,9 @@ CREATE TABLE public.packages (
     vk_owner_id character varying NOT NULL,
     vk_download_url character varying,
     superseded_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
-    downloads jsonb DEFAULT '{}'::jsonb NOT NULL
+    downloads jsonb DEFAULT '{}'::jsonb NOT NULL,
+    category_text text,
+    category_ts tsvector GENERATED ALWAYS AS (to_tsvector('russian'::regconfig, category_text)) STORED
 );
 
 
@@ -265,6 +267,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220119181737'),
 ('20220123162121'),
 ('20220123200144'),
-('20220125171004');
+('20220125171004'),
+('20220209205234');
 
 
