@@ -3,73 +3,76 @@ module Classification
     def initialize(tag)
       @tag = tag
 
+      refresh = false
+      # refresh = true
+
+      if refresh
+        execute <<~SQL
+          DROP TABLE IF EXISTS idf;
+          DROP TABLE IF EXISTS package_tfidf;
+          DROP TABLE IF EXISTS best_sims;
+          DROP TABLE IF EXISTS magns;
+        SQL
+      end
+
       execute <<~SQL
-        CREATE TEMP TABLE idf(
-          lexeme text,
+        CREATE TABLE IF NOT EXISTS idf(
+          lexeme text PRIMARY KEY,
           df integer,
           idf float
         );
 
-        CREATE INDEX ON idf(lexeme);
-
-        CREATE TEMP TABLE tag_tfidf(
-          lexeme text,
-          tfidf float
-        );
-
-        CREATE TEMP TABLE package_len(
-          package_id bigint,
-          len int
-        );
-
-        CREATE INDEX ON package_len(package_id);
-
-        CREATE TEMP TABLE package_lexemes(
+        CREATE TABLE IF NOT EXISTS package_tfidf(
           package_id bigint,
           lexeme text,
-          occurences int,
-          freq float,
-          tfidf float
+          tfidf float,
+          occurs integer
         );
 
-        CREATE INDEX ON package_lexemes(package_id);
-        CREATE INDEX ON package_lexemes(lexeme);
+        CREATE TABLE IF NOT EXISTS magns(
+          id bigint PRIMARY KEY,
+          magn float
+        );
+
+        CREATE INDEX IF NOT EXISTS a ON package_tfidf(package_id);
+        CREATE INDEX IF NOT EXISTS b ON package_tfidf(lexeme);
+        CREATE INDEX IF NOT EXISTS c ON package_tfidf(package_id, lexeme);
+
+        CREATE TABLE IF NOT EXISTS best_sims(
+          package_id bigint PRIMARY KEY,
+          sim_td bigint,
+          sim float
+        );
       SQL
 
       @idf = Class.new(ApplicationRecord) do
         self.table_name = 'idf'
       end
 
-      @tag_tfidf = Class.new(ApplicationRecord) do
-        self.table_name = 'tag_tfidf'
-      end
-
       @package_tfidf = Class.new(ApplicationRecord) do
         self.table_name = 'package_tfidf'
       end
 
-      @package_len = Class.new(ApplicationRecord) do
-        self.table_name = 'package_len'
+      @best_sims = Class.new(ApplicationRecord) do
+        self.table_name = 'best_sims'
       end
 
-      @package_lexemes = Class.new(ApplicationRecord) do
-        self.table_name = 'package_lexemes'
+      @magns = Class.new(ApplicationRecord) do
+        self.table_name = 'magns'
       end
 
-      fill_idf
-      execute "ANALYZE idf;"
+      if refresh
+        fill_idf
+        execute "ANALYZE idf;"
 
-      # fill_tag_tfidf
+        fill_package_tfidf
+        execute "ANALYZE package_tfidf"
 
-      # fill_package_tfidf
+        fill_magns
+        execute "ANALYZE magns"
+      end
 
-      fill_package_len
-      execute "ANALYZE package_len;"
-
-      fill_package_lexemes
-      execute "ANALYZE package_lexemes"
-      set_package_lexemes_freq
-      set_package_lexemes_tfidf
+      fill_best_sims
     end
 
     # IDF for all lexemes
@@ -77,39 +80,25 @@ module Classification
       @idf
     end
 
-    # Average TF-IDF for lexemes of docs with this tag
-    def tag_tfidf
-      @tag_tfidf
-    end
-
-    def magn
-      @magn
+    def magns
+      @magns
     end
 
     def package_tfidf
       @package_tfidf
     end
 
-    def package_len
-      @package_len
-    end
-
-    def package_lexemes
-      @package_lexemes
-    end
-
     def fill_idf
       package_count = Package.count
-      occurences = 'SUM(array_length((ts).positions, 1))'
+      packages = 'COUNT(id)'
 
       data = Package
-        .from(Package.select(unnest_ts))
+        .from(Package.select('id', unnest_ts))
         .group('(ts).lexeme')
-        .having("#{occurences} > 1")
         .select(Arel.sql(<<~SQL))
           (ts).lexeme,
-          #{occurences},
-          log(#{package_count}::float / #{occurences})
+          #{packages},
+          log(#{package_count}::float / #{packages})
         SQL
 
 
@@ -119,22 +108,6 @@ module Classification
       SQL
 
       Rails.logger.info "Computed IDF for #{idf.count} lexemes"
-    end
-
-    def fill_tag_tfidf
-      data = Package
-        .from(Package.select(unnest_ts, length_ts).by_tag(@tag))
-        .group('(ts).lexeme')
-        .joins("INNER JOIN #{idf.table_name} ON (ts).lexeme = idf.lexeme")
-        .select(Arel.sql(<<~SQL))
-          (ts).lexeme,
-          MIN(idf.idf) * AVG(array_length((ts).positions, 1)::float / length_ts)
-        SQL
-
-      execute <<~SQL
-        INSERT INTO #{tag_tfidf.table_name}
-        #{data.to_sql}
-      SQL
     end
 
     def fill_magn
@@ -159,18 +132,35 @@ module Classification
     end
 
     def fill_package_tfidf
-      with_idf = Package
-        .from(Package.select('id', unnest_ts, length_ts))
+      lexemes = Package
+        .from("(#{Package.select('id', unnest_ts).to_sql}) lexemes_join")
         .joins("INNER JOIN #{idf.table_name} ON (ts).lexeme = idf.lexeme")
-        .select('id', 'ts', 'length_ts', 'idf')
+        .select('id', 'ts')
+
+      lengths = Package
+        .from(lexemes)
+        .group('id')
+        .select('id', 'SUM(array_length((ts).positions, 1)) AS length')
+
+      idfs = Package
+        .from(lexemes)
+        .joins("INNER JOIN #{idf.table_name} ON (ts).lexeme = idf.lexeme")
+        .select('id', '(ts).lexeme', 'idf')
+
+      tfs = Package
+        .from(lexemes)
+        .group('id', 'ts')
+        .select('id', '(ts).lexeme', 'SUM(array_length((ts).positions, 1)) AS occurs')
 
       data = Package
-        .from(with_idf)
-        .group('id', 'ts')
+        .from("(#{lengths.to_sql}) AS lengths")
+        .joins("INNER JOIN (#{idfs.to_sql}) idfs ON idfs.id = lengths.id")
+        .joins("INNER JOIN (#{tfs.to_sql}) tfs ON tfs.id = idfs.id AND tfs.lexeme = idfs.lexeme")
         .select(Arel.sql(<<~SQL))
-          id,
-          (ts).lexeme,
-          MIN(idf) * array_length((ts).positions, 1)::float / MIN(length_ts)
+          lengths.id,
+          idfs.lexeme,
+          idfs.idf * tfs.occurs / lengths.length,
+          tfs.occurs
         SQL
 
       execute <<~SQL
@@ -179,64 +169,45 @@ module Classification
       SQL
     end
 
-    def fill_package_len
+    def fill_magns
       data = Package
-        .select('id', length_ts)
+        .from("#{package_tfidf.table_name}")
+        .group('package_id')
+        .select('package_id AS id', 'SQRT(SUM(occurs)) AS magn')
 
       execute <<~SQL
-        INSERT INTO #{package_len.table_name}
+        INSERT INTO #{magns.table_name}
         #{data.to_sql}
       SQL
     end
 
-    def fill_package_lexemes
-      data = Package
-        .from(Package.select('id', unnest_ts))
-        .group('id', 'ts')
-        .select('id', '(ts).lexeme', 'SUM(array_length((ts).positions, 1))')
+    def fill_best_sims
+      right_lexemes = Package
+        .from(Package.by_tag(@tag).select('id'))
+        .joins("INNER JOIN #{package_tfidf.table_name} ON id = package_tfidf.package_id")
+        .select('id', 'package_tfidf.lexeme', 'package_tfidf.tfidf')
 
-      execute <<~SQL
-        INSERT INTO #{package_lexemes.table_name}
-        #{data.to_sql}
-      SQL
-    end
+      left_lexemes = Package
+        .from(Package.select('id'))
+        .joins("INNER JOIN #{package_tfidf.table_name} ON id = package_tfidf.package_id")
+        .select('id', 'package_tfidf.lexeme', 'package_tfidf.tfidf')
 
-    def set_package_lexemes_freq
-      execute <<~SQL
-        UPDATE package_lexemes
-        SET freq = occurences::float / len
-        FROM package_len
-        WHERE package_lexemes.package_id = package_len.package_id
-      SQL
-    end
+      ab = Package
+        .from("(#{left_lexemes.to_sql}) AS a")
+        .joins("INNER JOIN (#{right_lexemes.to_sql}) b ON a.lexeme = b.lexeme")
+        .joins("INNER JOIN #{magns.table_name} left_magn ON a.id = left_magn.id")
+        .joins("INNER JOIN #{magns.table_name} right_magn ON b.id = right_magn.id")
+        .group('a.id', 'b.id')
+        .select('a.id', 'b.id', '(SUM(a.tfidf * b.tfidf) / (MIN(left_magn.magn) * MIN(right_magn.magn))) AS sim')
 
-    def set_package_lexemes_tfidf
-      execute <<~SQL
-        UPDATE #{package_lexemes.table_name}
-        SET tfidf = freq * idf
-        FROM #{idf.table_name}
-        WHERE package_lexemes.lexeme = idf.lexeme
-      SQL
-    end
 
-    def tsv(s)
-      "to_tsvector('russian', jsonb_path_query_array(structure, '#{s}'))"
-    end
+      pp ab.order('sim DESC').limit(10).as_json
 
-    def ts_expr
-      <<~SQL
-        #{tsv('$[*].themes[*].questions[*].answers[*]')}
-        ||
-        #{tsv('$[*].themes[*].questions[*].question_text')}
-      SQL
+      raise
     end
 
     def unnest_ts
-      "unnest(#{ts_expr}) AS ts"
-    end
-
-    def length_ts
-      "length(#{ts_expr}) AS length_ts"
+      "unnest(category_ts) AS ts"
     end
 
     def execute(sql)
