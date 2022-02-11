@@ -51,7 +51,7 @@ gem 'sidekiq', '~> 6.4'
 gem 'pg_search', '~> 2.3'
 gem 'meta-tags', '~> 2.16'
 
-gem 'view_component', '~> 2.48'
+gem 'view_component', '~> 2.49'
 
 gem 'sprockets-rails', '~> 3.4', '>= 3.4.2'
 
