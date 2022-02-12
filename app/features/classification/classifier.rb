@@ -1,10 +1,8 @@
 module Classification
   class Classifier
-    def initialize(tag)
-      @tag = tag
-
+    def initialize
       refresh = false
-      # refresh = true
+      refresh = true
 
       if refresh
         execute <<~SQL
@@ -101,7 +99,6 @@ module Classification
           log(#{package_count}::float / #{packages})
         SQL
 
-
       execute <<~SQL
         INSERT INTO #{idf.table_name}
         #{data.to_sql}
@@ -173,7 +170,7 @@ module Classification
       data = Package
         .from("#{package_tfidf.table_name}")
         .group('package_id')
-        .select('package_id AS id', 'SQRT(SUM(occurs)) AS magn')
+        .select('package_id AS id', 'SQRT(SUM(tfidf ^ 2)) AS magn')
 
       execute <<~SQL
         INSERT INTO #{magns.table_name}
@@ -182,8 +179,10 @@ module Classification
     end
 
     def fill_best_sims
+      return
+
       right_lexemes = Package
-        .from(Package.by_tag(@tag).select('id'))
+        .from(Package.select('id'))
         .joins("INNER JOIN #{package_tfidf.table_name} ON id = package_tfidf.package_id")
         .select('id', 'package_tfidf.lexeme', 'package_tfidf.tfidf')
 
@@ -199,11 +198,6 @@ module Classification
         .joins("INNER JOIN #{magns.table_name} right_magn ON b.id = right_magn.id")
         .group('a.id', 'b.id')
         .select('a.id', 'b.id', '(SUM(a.tfidf * b.tfidf) / (MIN(left_magn.magn) * MIN(right_magn.magn))) AS sim')
-
-
-      pp ab.order('sim DESC').limit(10).as_json
-
-      raise
     end
 
     def unnest_ts
