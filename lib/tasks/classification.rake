@@ -41,4 +41,25 @@ namespace :classification do
 
     puts "\nDone"
   end
+
+  desc "Show unmapped tags"
+  task unmapped_tags: :environment do
+    mapped = Classification::TagMapper::CONFIG.values.flatten
+    all_tags = Package
+      .group('lower(jsonb_array_elements_text(tags))')
+      .order(Arel.sql('COUNT(*) ASC, lower(jsonb_array_elements_text(tags))'))
+      .pluck(Arel.sql('lower(jsonb_array_elements_text(tags)), COUNT(*)'))
+
+    unmapped = all_tags.reject { |(tag, _)| mapped.include?(tag) }
+
+    redundant = mapped.reject { |tag| all_tags.map(&:first).include?(tag) }
+    pp unmapped
+
+    unless redundant.empty?
+      puts "Listed but not present"
+      pp redundant
+    end
+  end
+
 end
+
