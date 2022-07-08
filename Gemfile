@@ -49,7 +49,7 @@ gem 'heroicon', '~> 0.4.0'
 gem 'rails-i18n', '~> 7.0'
 gem 'sidekiq', '~> 6.5'
 gem 'pg_search', '~> 2.3'
-gem 'meta-tags', '~> 2.16'
+gem 'meta-tags', '~> 2.17'
 
 gem 'view_component', '~> 2.57'
 
