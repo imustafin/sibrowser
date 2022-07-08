@@ -9,7 +9,7 @@ gem 'importmap-rails', '~> 1.0'
 gem 'pg', '~> 1.4'
 # Use Puma as the app server
 gem 'puma', '~> 5.6'
-gem 'turbo-rails', '~> 1.0'
+gem 'turbo-rails', '~> 1.1'
 gem 'stimulus-rails', '~> 1.0', '>= 1.0.2'
 # Use Redis adapter to run Action Cable in production
 gem 'redis', '~> 4.6'
