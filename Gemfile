@@ -12,7 +12,7 @@ gem 'puma', '~> 5.6'
 gem 'turbo-rails', '~> 1.1'
 gem 'stimulus-rails', '~> 1.0', '>= 1.0.2'
 # Use Redis adapter to run Action Cable in production
-gem 'redis', '~> 4.6'
+gem 'redis', '~> 4.7'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -61,6 +61,6 @@ gem 'sentry-ruby', '~> 5.1'
 gem 'sentry-rails', '~> 5.1'
 gem 'sentry-sidekiq', '~> 5.1'
 
-gem 'chartkick', '~> 4.1', '>= 4.1.3'
+gem 'chartkick', '~> 4.2'
 
 gem 'crawler_detect', '~> 1.2'
