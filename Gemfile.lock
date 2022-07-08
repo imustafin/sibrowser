@@ -99,7 +99,7 @@ GEM
       webrick
     i18n (1.10.0)
       concurrent-ruby (~> 1.0)
-    importmap-rails (1.0.2)
+    importmap-rails (1.1.2)
       actionpack (>= 6.0.0)
       railties (>= 6.0.0)
     io-wait (0.2.1)
@@ -275,7 +275,7 @@ DEPENDENCIES
   crawler_detect (~> 1.2)
   factory_bot_rails (~> 6.2)
   heroicon (~> 0.4.0)
-  importmap-rails (~> 1.0)
+  importmap-rails (~> 1.1)
   kaminari (~> 1.2)
   meta-tags (~> 2.16)
   pg (~> 1.4)
