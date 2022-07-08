@@ -17,6 +17,13 @@ CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
 
 
 --
+-- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
+
+
+--
 -- Name: actual_categories(jsonb); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -56,6 +63,50 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: best_sims; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.best_sims (
+    package_id bigint NOT NULL,
+    sim_td bigint,
+    sim double precision
+);
+
+
+--
+-- Name: idf; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.idf (
+    lexeme text NOT NULL,
+    df integer,
+    idf double precision
+);
+
+
+--
+-- Name: magns; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.magns (
+    id bigint NOT NULL,
+    magn double precision
+);
+
+
+--
+-- Name: package_tfidf; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.package_tfidf (
+    package_id bigint,
+    lexeme text,
+    tfidf double precision,
+    occurs integer
+);
+
+
+--
 -- Name: packages; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -84,7 +135,8 @@ CREATE TABLE public.packages (
     superseded_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
     downloads jsonb DEFAULT '{}'::jsonb NOT NULL,
     category_text text,
-    category_ts tsvector GENERATED ALWAYS AS (to_tsvector('russian'::regconfig, category_text)) STORED
+    category_ts tsvector GENERATED ALWAYS AS (to_tsvector('russian'::regconfig, category_text)) STORED,
+    file_size bigint
 );
 
 
@@ -168,6 +220,30 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
+-- Name: best_sims best_sims_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.best_sims
+    ADD CONSTRAINT best_sims_pkey PRIMARY KEY (package_id);
+
+
+--
+-- Name: idf idf_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.idf
+    ADD CONSTRAINT idf_pkey PRIMARY KEY (lexeme);
+
+
+--
+-- Name: magns magns_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.magns
+    ADD CONSTRAINT magns_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: packages packages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -192,10 +268,31 @@ ALTER TABLE ONLY public.sibrowser_configs
 
 
 --
+-- Name: a; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX a ON public.package_tfidf USING btree (package_id);
+
+
+--
 -- Name: authors_icase_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX authors_icase_index ON public.packages USING gin (((lower((authors)::text))::jsonb));
+
+
+--
+-- Name: b; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX b ON public.package_tfidf USING btree (lexeme);
+
+
+--
+-- Name: c; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX c ON public.package_tfidf USING btree (package_id, lexeme);
 
 
 --
@@ -224,6 +321,27 @@ CREATE INDEX index_packages_on_superseded_ids ON public.packages USING gin (supe
 --
 
 CREATE UNIQUE INDEX index_packages_on_vk_document_id_and_vk_owner_id ON public.packages USING btree (vk_document_id, vk_owner_id);
+
+
+--
+-- Name: package_tfidf_lexeme_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX package_tfidf_lexeme_idx ON public.package_tfidf USING btree (lexeme);
+
+
+--
+-- Name: package_tfidf_package_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX package_tfidf_package_id_idx ON public.package_tfidf USING btree (package_id);
+
+
+--
+-- Name: package_tfidf_package_id_lexeme_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX package_tfidf_package_id_lexeme_idx ON public.package_tfidf USING btree (package_id, lexeme);
 
 
 --
@@ -268,6 +386,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220123162121'),
 ('20220123200144'),
 ('20220125171004'),
-('20220209205234');
+('20220209205234'),
+('20220708185411');
 
 

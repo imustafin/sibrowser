@@ -3,12 +3,15 @@ class Package < ApplicationRecord
 
   # CHANGELOG
   #
+  # 6
+  # * Add file_size
+  #
   # 5
   # * Add vk_owner_id
   #   VK identifies docs by (vk_owner_id, vk_document_id),
   #   so search by the whole pair
   # * Add vk_download_url
-  VERSION = 5
+  VERSION = 6
 
   validates :name, presence: true
   validates :source_link, presence: true

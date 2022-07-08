@@ -72,8 +72,9 @@ class ParseVkFileWorker
     logger.info "Parsing #{params['filename']} with url #{url}"
 
     siq = download_vk(url)
+    file_size = siq.length
 
-    logger.info "Body length #{siq.length}, parsing"
+    logger.info "Body length #{file_size}, parsing"
 
     vk_download_url = clean_url(url)
 
@@ -87,7 +88,8 @@ class ParseVkFileWorker
         disappeared_at: Time.now,
         structure: nil,
         name: params['filename'],
-        vk_download_url:
+        vk_download_url:,
+        file_size: nil
       )
 
       logger.info 'Vk file unavailable'
@@ -114,7 +116,8 @@ class ParseVkFileWorker
       vk_document_id: params['file_id'],
       vk_owner_id: params["owner_id"],
       disappeared_at: nil,
-      vk_download_url:
+      vk_download_url:,
+      file_size:
     )
 
     siq.close!
