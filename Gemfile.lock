@@ -238,7 +238,7 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    stimulus-rails (1.0.2)
+    stimulus-rails (1.0.4)
       railties (>= 6.0.0)
     strscan (3.0.1)
     tailwindcss-rails (2.0.5)
@@ -293,7 +293,7 @@ DEPENDENCIES
   sentry-sidekiq (~> 5.1)
   sidekiq (~> 6.5)
   sprockets-rails (~> 3.4, >= 3.4.2)
-  stimulus-rails (~> 1.0, >= 1.0.2)
+  stimulus-rails (~> 1.0)
   tailwindcss-rails (~> 2.0)
   turbo-rails (~> 1.1)
   tzinfo-data
