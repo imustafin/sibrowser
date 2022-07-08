@@ -219,10 +219,10 @@ GEM
     sentry-rails (5.1.0)
       railties (>= 5.0)
       sentry-ruby-core (~> 5.1.0)
-    sentry-ruby (5.1.0)
+    sentry-ruby (5.1.1)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-      sentry-ruby-core (= 5.1.0)
-    sentry-ruby-core (5.1.0)
+      sentry-ruby-core (= 5.1.1)
+    sentry-ruby-core (5.1.1)
       concurrent-ruby
     sentry-sidekiq (5.1.0)
       sentry-ruby-core (~> 5.1.0)
@@ -250,7 +250,7 @@ GEM
       railties (>= 6.0.0)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
-    view_component (2.49.0)
+    view_component (2.57.1)
       activesupport (>= 5.0.0, < 8.0)
       method_source (~> 1.0)
     web-console (4.2.0)
@@ -296,11 +296,11 @@ DEPENDENCIES
   tailwindcss-rails (~> 2.0)
   turbo-rails (~> 1.0)
   tzinfo-data
-  view_component (~> 2.49)
+  view_component (~> 2.57)
   web-console (>= 4.1.0)
 
 RUBY VERSION
-   ruby 3.1.0p0
+   ruby 3.1.2p20
 
 BUNDLED WITH
-   2.1.4
+   2.3.17
