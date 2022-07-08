@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.1.0'
+ruby '3.1.2'
 
 gem 'rails', '~> 7.0'
 gem 'importmap-rails', '~> 1.0'
@@ -35,7 +35,7 @@ group :development do
   gem 'web-console', '>= 4.1.0'
   # Display performance information such as SQL time and flame graphs for each request in your browser.
   # Can be configured to work on production as well see: https://github.com/MiniProfiler/rack-mini-profiler/blob/master/README.md
-  gem 'rack-mini-profiler', '~> 2.3'
+  gem 'rack-mini-profiler', '~> 3.0'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
@@ -51,7 +51,7 @@ gem 'sidekiq', '~> 6.4'
 gem 'pg_search', '~> 2.3'
 gem 'meta-tags', '~> 2.16'
 
-gem 'view_component', '~> 2.49'
+gem 'view_component', '~> 2.57'
 
 gem 'sprockets-rails', '~> 3.4', '>= 3.4.2'
 
