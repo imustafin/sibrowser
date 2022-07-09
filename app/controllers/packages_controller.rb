@@ -34,6 +34,8 @@ class PackagesController < ApplicationController
   end
 
   def vk_members_count
+    return if Rails.env.development? && !ENV['DO_VK_MEMBERS_COUNT']
+
     Rails.cache.fetch('vk_members_count', expires_in: 1.hour) do
       logger.info 'Fetching vk members count'
 
