@@ -18,6 +18,11 @@
   <% end %>
 
   <div class="text-center pt-1">
+    <% if @package.too_big_for_online? %>
+      <div class="pb-1">
+        <%= render Packages::TooBigForOnlineTag::Component.new %>
+      </div>
+    <% end %>
     <%= render KeywordLinksComponent.new(tags: @package.tags || [], categories: @package.categories || {}) %>
   </div>
 

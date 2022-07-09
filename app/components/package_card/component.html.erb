@@ -25,19 +25,13 @@
       %>
     <% end %>
 
-    <% if @package.too_big_for_online? %>
-      <div class="pt-2">
-        <span
-          class="inline-block border-2 border-red-200 hover:border-red-400 bg-red-50 text-red-800 px-1 font-bold"
-          title="<%= t('package.too_big_for_online.description', max: helpers.number_to_human_size(Package::ONLINE_LIMIT)) %>"
-        >
-          <%= t('package.too_big_for_online.short') %>
-        </span>
-      </div>
-    <% end %>
-
     <div class="pt-2">
       <%= render KeywordLinksComponent.new(tags: @package.tags || [], categories: @package.categories || {}) %>
+      <% if @package.too_big_for_online? %>
+        <div class="pb-1">
+          <%= render Packages::TooBigForOnlineTag::Component.new %>
+        </div>
+      <% end %>
     </div>
 
     <%= simple_format \
