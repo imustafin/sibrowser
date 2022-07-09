@@ -1,0 +1,8 @@
+<span class="font-mono <%= @class %>">
+  <span itemprop="alternateName">
+    <%= @package.filename %>
+  </span>
+  <% if @package.file_size %>
+    (<span itemprop="contentSize"><%= helpers.number_to_human_size(@package.file_size) %></span>)
+  <% end %>
+</span>

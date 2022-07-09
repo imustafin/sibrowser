@@ -19,14 +19,10 @@
       <h1 class="text-xl font-bold" itemprop="name headline">
         <%= @package.name %>
       </h1>
-      <span class="text-l font-mono font-semibold">
-        <span itemprop="alternateName">
-          <%= @package.filename %>
-        </span>
-        <% if @package.file_size %>
-          (<span itemprop="contentSize"><%= helpers.number_to_human_size(@package.file_size) %></span>)
-        <% end %>
-      </span>
+      <%= render Packages::FileName::Component.new \
+        package: @package,
+        class: 'text-l font-semibold'
+      %>
     <% end %>
 
     <% if @package.too_big_for_online? %>
