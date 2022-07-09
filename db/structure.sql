@@ -46,6 +46,19 @@ CREATE FUNCTION public.actual_categories(scores jsonb) RETURNS jsonb
       $_$;
 
 
+--
+-- Name: sum_integer_values(jsonb); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.sum_integer_values(obj jsonb) RETURNS integer
+    LANGUAGE sql IMMUTABLE
+    AS $_$
+  SELECT COALESCE(sum(sub.item), 0) FROM (
+    SELECT jsonb_path_query(obj, '$.*')::integer AS item
+  ) sub
+$_$;
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -136,7 +149,8 @@ CREATE TABLE public.packages (
     downloads jsonb DEFAULT '{}'::jsonb NOT NULL,
     category_text text,
     category_ts tsvector GENERATED ALWAYS AS (to_tsvector('russian'::regconfig, category_text)) STORED,
-    file_size bigint
+    file_size bigint,
+    download_count integer GENERATED ALWAYS AS (public.sum_integer_values(downloads)) STORED
 );
 
 
@@ -303,6 +317,13 @@ CREATE INDEX index_packages_on_disappeared_at ON public.packages USING btree (di
 
 
 --
+-- Name: index_packages_on_download_count; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_packages_on_download_count ON public.packages USING btree (download_count);
+
+
+--
 -- Name: index_packages_on_searchable; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -387,6 +408,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220123200144'),
 ('20220125171004'),
 ('20220209205234'),
-('20220708185411');
+('20220708185411'),
+('20220709202101'),
+('20220709213054');
 
 

@@ -124,10 +124,10 @@ RSpec.describe Package, type: :model do
 
   describe '#add_download' do
     it 'adds new key if no downloads today', :aggregate_failures do
-      p = build(:package, downloads: { '1' => 10 })
+      p = create(:package, downloads: { '1' => 10 })
 
       travel_to Time.zone.local(2022, 1, 25, 23, 12) do
-        expect { p.add_download }
+        expect { p.add_download; p.save! }
           .to change { p.download_count }.from(10).to(11)
 
         expect(p.downloads).to match_array({
@@ -140,13 +140,13 @@ RSpec.describe Package, type: :model do
 
   describe '#download_count' do
     it 'gives 0 for empty downloads' do
-      p = build(:package)
+      p = create(:package)
 
       expect(p.download_count).to be 0
     end
 
     it 'gives sum of downloads' do
-      p = build(:package, downloads: { '1' => 1, '2' => 20 })
+      p = create(:package, downloads: { '1' => 1, '2' => 20 })
 
       expect(p.download_count).to be 21
     end

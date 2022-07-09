@@ -1,6 +1,9 @@
 class Package < ApplicationRecord
   include PgSearch::Model
 
+  # Load download_count
+  after_save :reload
+
   # CHANGELOG
   #
   # 6
@@ -124,10 +127,6 @@ class Package < ApplicationRecord
   def supersede(p)
     superseded_ids << p.id
     p.destroy!
-  end
-
-  def download_count
-    downloads.values.sum
   end
 
   def add_download

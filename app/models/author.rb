@@ -5,14 +5,14 @@ class Author
         Package.visible.select(
           'id',
           'jsonb_array_elements_text(authors) AS author',
-          "jsonb_path_query(downloads, '$[*].*') AS download"
+          'download_count'
         )
       )
       .group('lower(author)')
       .select(
         'MAX(author) AS author', # Capitals are greater
         'COUNT(author) AS count',
-        'COALESCE(SUM(download::integer), 0) AS total_downloads'
+        'SUM(download_count) AS total_downloads'
       )
       .where('author IS NOT NULL')
   end
