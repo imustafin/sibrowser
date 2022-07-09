@@ -76,3 +76,8 @@ en:
   author_show:
     downloads: 'Downloads'
     downloads_description: The number of downloads of this author's packages in the last 30 days per day
+
+  package:
+    too_big_for_online:
+      short: Too big for online
+      description: 'File size is too big for online (max: %{max})'

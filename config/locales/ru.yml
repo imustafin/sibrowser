@@ -77,3 +77,8 @@ ru:
   author_show:
     downloads: 'Скачивания'
     downloads_description: 'Количество скачиваний пакетов этого автора по дням за последние 30 дней'
+
+  package:
+    too_big_for_online:
+      short: Слишком большой для онлайна
+      description: 'Размер пакета слишком большой для игры онлайн (макс. %{max})'

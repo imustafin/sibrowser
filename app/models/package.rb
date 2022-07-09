@@ -181,4 +181,10 @@ class Package < ApplicationRecord
       )
       .group(:date)
   }
+
+  ONLINE_LIMIT = 100.megabytes
+
+  def too_big_for_online?
+    file_size && file_size > ONLINE_LIMIT
+  end
 end

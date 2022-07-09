@@ -19,9 +19,25 @@
       <h1 class="text-xl font-bold" itemprop="name headline">
         <%= @package.name %>
       </h1>
-      <span class="text-l font-mono font-semibold" itemprop="alternateName">
-        (<%= @package.filename %>)
+      <span class="text-l font-mono font-semibold">
+        <span itemprop="alternateName">
+          <%= @package.filename %>
+        </span>
+        <% if @package.file_size %>
+          (<span itemprop="contentSize"><%= helpers.number_to_human_size(@package.file_size) %></span>)
+        <% end %>
       </span>
+    <% end %>
+
+    <% if @package.too_big_for_online? %>
+      <div class="pt-2">
+        <span
+          class="inline-block border-2 border-red-200 hover:border-red-400 bg-red-50 text-red-800 px-1 font-bold"
+          title="<%= t('package.too_big_for_online.description', max: helpers.number_to_human_size(Package::ONLINE_LIMIT)) %>"
+        >
+          <%= t('package.too_big_for_online.short') %>
+        </span>
+      </div>
     <% end %>
 
     <div class="pt-2">
