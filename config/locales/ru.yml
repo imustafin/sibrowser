@@ -7,6 +7,8 @@ ru:
       previous: ‹
       first: «
   packages: Пакеты
+  packages_newest: Новые пакеты
+  packages_most_downloaded: Самые скачиваемые пакеты
   published_at: Опубликовано
   name: Название
   authors: Авторы
@@ -40,7 +42,7 @@ ru:
   site_name: SIBrowser
   default_title: SIBrowser — пакеты для Своей Игры (SIGame)
   title_package: "%{name}%{authors} — Пакет для SIGame"
-  title_packages_page: Пакеты — Страница %{page}
+  title_packages_page: — страница %{page}
   default_description: SIBrowser — коллекция пакетов для Своей Игры (SIGame).
   title_author: "%{name} — Автор пакетов для SIGame"
   description_author: Всего пакетов за авторством %{name} — %{package_count}.
@@ -82,3 +84,7 @@ ru:
     too_big_for_online:
       short: Слишком большой для онлайна
       description: 'Размер пакета слишком большой для игры онлайн (макс. %{max})'
+
+  packages_index:
+    most_new: По дате
+    most_downloaded: По скачиваниям

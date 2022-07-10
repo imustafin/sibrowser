@@ -7,6 +7,8 @@ tt:
       previous: ‹
       first: «
   packages: Пакетлар
+  packages_newest: Яңа пакетлар
+  packages_most_downloaded: Иң йөкләүгән пакетлар
   published_at: Бастырылган
   name: Исем
   authors: Ясаучылар
@@ -40,7 +42,7 @@ tt:
   site_name: SIBrowser
   default_title: SIBrowser — SIGame (Своя Игра) өчен пакетлар
   title_package: "%{name}%{authors} — SIGame өчен пакет"
-  title_packages_page: Пакетлар — Бит %{page}
+  title_packages_page: — бит %{page}
   default_description: SIBrowser — SIGame (Своя Игра) өчен пакетлар җыелмасы.
   title_author: "%{name} — SIGame пакетлар ясаучы"
   description_author: "%{name} %{package_count} SIGame өчен пакет ясаган."
@@ -79,3 +81,7 @@ tt:
     too_big_for_online:
       short: Онлайн уенга артык зур
       description: 'Пакет файлы онлайн уйнау өчен артык зур (%{max} макс.)'
+
+  packages_index:
+    most_new: Дата буенча
+    most_downloaded: Йөкләүләр буенча

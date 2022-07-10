@@ -1,25 +1,27 @@
 class PackagesController < ApplicationController
   include PackagesPagination
 
-  helper_method :vk_link, :vk_members_count, :download_stats, :packages
+  helper_method :vk_link, :vk_members_count, :download_stats, :packages, :page_header, :sort_column
 
   def index
     return packages_pagination(packages) if request.format.turbo_stream?
 
-    if params['page']
-      @page_title = t('title_packages_page', page: params['page'])
+
+    page = params['page']
+
+    if !page && sort_column == :published_at
+      set_meta_tags site: nil
+    else
+      @page_title = page_header
+      @page_title += ' ' + t('title_packages_page', page:) if page
     end
 
-    set_meta_tags noindex: params[:q].present? || params['page'].present?
+    set_meta_tags noindex: params[:q].present? || page.present?
   end
 
   def packages
     @packages ||= begin
-      sort_col = params[:sort]&.to_sym
-      # Allow only :download_count from params
-      sort_col = :published_at if sort_col != :download_count
-
-      p = Package.visible.order(sort_col => :desc, id: :desc)
+      p = Package.visible.order(sort_column => :desc, id: :desc)
 
       # Do this after order(sort_column) to first order by sort_column, then by search rank
       p = p.search_freetext(params[:q]) if params[:q].present?
@@ -27,6 +29,22 @@ class PackagesController < ApplicationController
       p = p.page(params[:page]).per(5)
 
       p
+    end
+  end
+
+  def sort_column
+    ans = params[:sort]&.to_sym
+    # Allow only :download_count from params
+    ans = :published_at if ans != :download_count
+
+    ans
+  end
+
+  def page_header
+    if sort_column == :download_count
+      t('packages_most_downloaded')
+    else
+      t('packages_newest')
     end
   end
 
