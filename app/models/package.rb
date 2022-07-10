@@ -113,7 +113,7 @@ class Package < ApplicationRecord
     end
   }
 
-  scope :visible, -> { where(disappeared_at: nil).order(published_at: :desc, id: :desc) }
+  scope :visible, -> { where(disappeared_at: nil) }
 
   scope :visible_paged, ->(page) {
     visible

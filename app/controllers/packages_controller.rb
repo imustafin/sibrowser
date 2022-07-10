@@ -15,14 +15,21 @@ class PackagesController < ApplicationController
 
   def packages
     @packages ||= begin
-      p = Package.visible_paged(params[:page])
+      sort_col = params[:sort]&.to_sym
+      # Allow only :download_count from params
+      sort_col = :published_at if sort_col != :download_count
+
+      p = Package.visible.order(sort_col => :desc, id: :desc)
 
       # Do this after order(sort_column) to first order by sort_column, then by search rank
       p = p.search_freetext(params[:q]) if params[:q].present?
 
+      p = p.page(params[:page]).per(5)
+
       p
     end
   end
+
   def download_stats
     @download_stats ||= Package.download_stats
   end
