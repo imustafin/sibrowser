@@ -5,7 +5,35 @@ module Si
     def initialize(buffer)
       Zip::File.open_buffer(buffer) do |zip|
         @content = Nokogiri::XML(zip.read('content.xml'))
+
+        if logo_file_path
+          logo_path = "Images/#{logo_file_path}"
+          tmp = Tempfile.new([File.basename(logo_file_path), File.extname(logo_file_path)])
+          @logo_file = tmp.path
+          tmp.unlink
+          zip.extract(logo_path, @logo_file)
+        end
       end
+    end
+
+    def logo_file
+      @logo_file
+    end
+
+    def logo_file_path
+      @logo_file_path ||= package['logo']&.delete_prefix('@')
+    end
+
+    def logo_bytes
+      return unless logo_file
+
+      @logo_compressed ||= ImageProcessing::Vips
+        .source(logo_file)
+        .resize_to_limit(500, 500)
+        .convert('jpg')
+        .saver(quality: 90)
+        .call
+        .read
     end
 
     def package

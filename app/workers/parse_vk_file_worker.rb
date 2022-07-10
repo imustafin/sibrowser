@@ -89,7 +89,8 @@ class ParseVkFileWorker
         structure: nil,
         name: params['filename'],
         vk_download_url:,
-        file_size: nil
+        file_size: nil,
+        logo_bytes: nil
       )
 
       logger.info 'Vk file unavailable'
@@ -117,7 +118,8 @@ class ParseVkFileWorker
       vk_owner_id: params["owner_id"],
       disappeared_at: nil,
       vk_download_url:,
-      file_size:
+      file_size:,
+      logo_bytes: si_package.logo_bytes
     )
 
     siq.close!

@@ -1,6 +1,9 @@
 FROM ruby:3.1.2-slim-bullseye AS sibrowser_base
 
-RUN apt-get update && apt-get -y install postgresql-client-13 build-essential libpq-dev
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+      postgresql-client-13 build-essential libpq-dev \
+      libvips
 
 WORKDIR /app
 

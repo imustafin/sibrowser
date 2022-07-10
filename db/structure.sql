@@ -150,7 +150,8 @@ CREATE TABLE public.packages (
     category_text text,
     category_ts tsvector GENERATED ALWAYS AS (to_tsvector('russian'::regconfig, category_text)) STORED,
     file_size bigint,
-    download_count integer GENERATED ALWAYS AS (public.sum_integer_values(downloads)) STORED
+    download_count integer GENERATED ALWAYS AS (public.sum_integer_values(downloads)) STORED,
+    logo_bytes bytea
 );
 
 
@@ -410,6 +411,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220209205234'),
 ('20220708185411'),
 ('20220709202101'),
-('20220709213054');
+('20220709213054'),
+('20220710205516');
 
 

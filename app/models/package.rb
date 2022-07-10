@@ -4,6 +4,8 @@ class Package < ApplicationRecord
   # Load download_count
   after_save :reload
 
+  self.ignored_columns = %i[logo_bytes]
+
   # CHANGELOG
   #
   # 6
