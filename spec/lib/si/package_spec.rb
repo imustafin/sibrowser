@@ -85,11 +85,20 @@ RSpec.describe Si::Package do
     end
 
     it 'has logo_width' do
-      expect(package.logo_width).to eq(500)
+      expect(package.logo_width).to eq(600)
     end
 
     it 'has logo_height' do
-      expect(package.logo_height).to eq(560)
+      expect(package.logo_height).to eq(600)
+    end
+  end
+
+  context 'in packet_ot_stasyana_2.siq' do
+    let(:file) { File.open(file_fixture('packet_ot_stasyana_2.siq')) }
+    subject(:package) { described_class.new(file) }
+
+    it 'has_logo_bytes' do
+      expect(package.logo_bytes).to be_present
     end
   end
 end

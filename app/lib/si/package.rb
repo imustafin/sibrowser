@@ -7,12 +7,16 @@ module Si
         @content = Nokogiri::XML(zip.read('content.xml'))
 
         if logo_file_path
-          logo_path = "Images/#{logo_file_path}"
-          tmp = Tempfile.new([File.basename(logo_file_path), File.extname(logo_file_path)])
-          logo_file = tmp.path
-          tmp.unlink
-          zip.extract(logo_path, logo_file)
-          convert_logo(logo_file)
+          begin
+            logo_path = "Images/#{Rack::Utils.escape(logo_file_path)}"
+            tmp = Tempfile.new([File.basename(logo_file_path), File.extname(logo_file_path)])
+            logo_file = tmp.path
+            tmp.unlink
+            zip.extract(logo_path, logo_file)
+            convert_logo(logo_file)
+          rescue e
+            Sentry.capture_exception(e)
+          end
         end
       end
     end
