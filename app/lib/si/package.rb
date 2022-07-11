@@ -36,8 +36,18 @@ module Si
     end
 
     def encode_zip_name(s)
-      # + should be encoded as +
-      s.split('+', -1).map { |x| ERB::Util.url_encode(x) }.join('+')
+      enc = ->(x) { ERB::Util.url_encode(x) }
+
+      ans = enc.call(s)
+
+
+      # These chars are not encoded
+      keep = '+()'
+      keep.chars.each do |c|
+        ans.gsub!(enc.call(c), c)
+      end
+
+      ans
     end
 
     IMAGE_EXT = 'webp'

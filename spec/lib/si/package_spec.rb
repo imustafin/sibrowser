@@ -128,4 +128,13 @@ RSpec.describe Si::Package do
       expect(package.logo_bytes).to be_present
     end
   end
+
+  context 'in Sazha.siq' do
+    let(:file) { File.open(file_fixture('Sazha.siq')) }
+    subject(:package) { described_class.new(file) }
+
+    it 'has logo_bytes' do
+      expect(package.logo_bytes).to be_present
+    end
+  end
 end

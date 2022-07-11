@@ -6,14 +6,8 @@ class Package < ApplicationRecord
 
   # CHANGELOG
   #
-  # 10
-  # * Don't report not found encoded names
-  #
-  # 9
-  # * Zip file names can be unencoded
-  #
   # 8
-  # * Zip file names encode + as is
+  # * Zip file names can be unencoded, some chars are never encoded
   #
   # 7
   # * Add webp image, width, height
@@ -26,7 +20,7 @@ class Package < ApplicationRecord
   #   VK identifies docs by (vk_owner_id, vk_document_id),
   #   so search by the whole pair
   # * Add vk_download_url
-  VERSION = 7
+  VERSION = 8
 
   validates :name, presence: true
   validates :source_link, presence: true
