@@ -14,7 +14,7 @@ module Si
             tmp.unlink
             zip.extract(logo_path, logo_file)
             convert_logo(logo_file)
-          rescue => e
+          rescue Errno::ENOENT => e
             Sentry.capture_exception(e)
           end
         end
@@ -26,7 +26,8 @@ module Si
     end
 
     def encode_zip_name(s)
-      ERB::Util.url_encode(s)
+      # + should be encoded as +
+      s.split('+', -1).map { |x| ERB::Util.url_encode(x) }.join('+')
     end
 
     IMAGE_EXT = 'webp'

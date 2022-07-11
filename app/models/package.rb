@@ -6,6 +6,9 @@ class Package < ApplicationRecord
 
   # CHANGELOG
   #
+  # 8
+  # * Zip file names encode + as is
+  #
   # 7
   # * Add webp image, width, height
   #

@@ -110,4 +110,13 @@ RSpec.describe Si::Package do
       expect(package.logo_bytes).to be_present
     end
   end
+
+  context 'in Meshanina_ot_Meladze_ch_9.siq' do
+    let(:file) { File.open(file_fixture('Meshanina_ot_Meladze_ch_9.siq')) }
+    subject(:package) { described_class.new(file) }
+
+    it 'has logo_bytes' do
+      expect(package.logo_bytes).to be_present
+    end
+  end
 end
