@@ -14,7 +14,7 @@ module Si
             tmp.unlink
             zip.extract(logo_path, logo_file)
             convert_logo(logo_file)
-          rescue e
+          rescue => e
             Sentry.capture_exception(e)
           end
         end
