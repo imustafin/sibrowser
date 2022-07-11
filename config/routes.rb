@@ -34,7 +34,7 @@ Rails.application.routes.draw do
     resources :packages, only: [:index, :show] do
       post :set_cat
       get :direct_download
-      get :logo, format: true, defaults: { format: 'jpg' }
+      get :logo, format: true, defaults: { format: Si::Package::IMAGE_EXT }
     end
 
     resources :authors, only: [:index, :show], constraints: { id: /.+/ }

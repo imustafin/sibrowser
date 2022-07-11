@@ -83,5 +83,13 @@ RSpec.describe Si::Package do
     it 'has logo_bytes' do
       expect(package.logo_bytes).to be_present
     end
+
+    it 'has logo_width' do
+      expect(package.logo_width).to eq(500)
+    end
+
+    it 'has logo_height' do
+      expect(package.logo_height).to eq(560)
+    end
   end
 end

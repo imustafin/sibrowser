@@ -76,50 +76,6 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
--- Name: best_sims; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.best_sims (
-    package_id bigint NOT NULL,
-    sim_td bigint,
-    sim double precision
-);
-
-
---
--- Name: idf; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.idf (
-    lexeme text NOT NULL,
-    df integer,
-    idf double precision
-);
-
-
---
--- Name: magns; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.magns (
-    id bigint NOT NULL,
-    magn double precision
-);
-
-
---
--- Name: package_tfidf; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.package_tfidf (
-    package_id bigint,
-    lexeme text,
-    tfidf double precision,
-    occurs integer
-);
-
-
---
 -- Name: packages; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -151,7 +107,9 @@ CREATE TABLE public.packages (
     category_ts tsvector GENERATED ALWAYS AS (to_tsvector('russian'::regconfig, category_text)) STORED,
     file_size bigint,
     download_count integer GENERATED ALWAYS AS (public.sum_integer_values(downloads)) STORED,
-    logo_bytes bytea
+    logo_bytes bytea,
+    logo_width integer,
+    logo_height integer
 );
 
 
@@ -235,30 +193,6 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
--- Name: best_sims best_sims_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.best_sims
-    ADD CONSTRAINT best_sims_pkey PRIMARY KEY (package_id);
-
-
---
--- Name: idf idf_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.idf
-    ADD CONSTRAINT idf_pkey PRIMARY KEY (lexeme);
-
-
---
--- Name: magns magns_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.magns
-    ADD CONSTRAINT magns_pkey PRIMARY KEY (id);
-
-
---
 -- Name: packages packages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -283,31 +217,10 @@ ALTER TABLE ONLY public.sibrowser_configs
 
 
 --
--- Name: a; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX a ON public.package_tfidf USING btree (package_id);
-
-
---
 -- Name: authors_icase_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX authors_icase_index ON public.packages USING gin (((lower((authors)::text))::jsonb));
-
-
---
--- Name: b; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX b ON public.package_tfidf USING btree (lexeme);
-
-
---
--- Name: c; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX c ON public.package_tfidf USING btree (package_id, lexeme);
 
 
 --
@@ -343,27 +256,6 @@ CREATE INDEX index_packages_on_superseded_ids ON public.packages USING gin (supe
 --
 
 CREATE UNIQUE INDEX index_packages_on_vk_document_id_and_vk_owner_id ON public.packages USING btree (vk_document_id, vk_owner_id);
-
-
---
--- Name: package_tfidf_lexeme_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX package_tfidf_lexeme_idx ON public.package_tfidf USING btree (lexeme);
-
-
---
--- Name: package_tfidf_package_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX package_tfidf_package_id_idx ON public.package_tfidf USING btree (package_id);
-
-
---
--- Name: package_tfidf_package_id_lexeme_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX package_tfidf_package_id_lexeme_idx ON public.package_tfidf USING btree (package_id, lexeme);
 
 
 --
@@ -410,8 +302,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220125171004'),
 ('20220209205234'),
 ('20220708185411'),
-('20220709202101'),
 ('20220709213054'),
-('20220710205516');
+('20220710205516'),
+('20220711173903');
 
 

@@ -27,7 +27,12 @@
   </div>
 
   <% if @package.has_logo? %>
-    <%= image_tag(package_logo_path(@package), class: 'mx-auto my-4', itemprop: 'image') %>
+    <%= image_tag package_logo_path(@package),
+     class: 'mx-auto my-4',
+     width: @package.logo_width,
+     height: @package.logo_height,
+     itemprop: 'image'
+    %>
   <% end %>
 
   <p>

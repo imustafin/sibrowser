@@ -144,7 +144,9 @@ class PackagesController < ApplicationController
     package = Package.find(params[:package_id])
 
     if package.logo_bytes
-      send_data(package.logo_bytes, type: 'image/jpeg', disposition: :inline)
+      send_data package.logo_bytes,
+        type: Si::Package::IMAGE_TYPE,
+        disposition: :inline
     else
       render status: 404, body: ''
     end

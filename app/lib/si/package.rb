@@ -9,32 +9,37 @@ module Si
         if logo_file_path
           logo_path = "Images/#{logo_file_path}"
           tmp = Tempfile.new([File.basename(logo_file_path), File.extname(logo_file_path)])
-          @logo_file = tmp.path
+          logo_file = tmp.path
           tmp.unlink
-          zip.extract(logo_path, @logo_file)
+          zip.extract(logo_path, logo_file)
+          convert_logo(logo_file)
         end
       end
-    end
-
-    def logo_file
-      @logo_file
     end
 
     def logo_file_path
       @logo_file_path ||= package['logo']&.delete_prefix('@')
     end
 
-    def logo_bytes
-      return unless logo_file
+    IMAGE_EXT = 'webp'
+    IMAGE_TYPE = 'image/webp'
 
-      @logo_compressed ||= ImageProcessing::Vips
+    def convert_logo(logo_file)
+      logo_file = ImageProcessing::Vips
         .source(logo_file)
-        .resize_to_limit(500, 500)
-        .convert('jpg')
-        .saver(quality: 90)
+        .resize_to_limit(600, 600)
+        .convert('webp')
+        .saver(quality: 75, lossless: false, min_size: true, strip: true)
         .call
-        .read
+
+
+      @logo_bytes = logo_file.read
+
+      logo_image = Vips::Image.new_from_file(logo_file.path)
+      @logo_width, @logo_height = logo_image.size
     end
+
+    attr_reader :logo_bytes, :logo_width, :logo_height
 
     def package
       @package ||= @content.css('package').first
