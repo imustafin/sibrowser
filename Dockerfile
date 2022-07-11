@@ -18,6 +18,8 @@ RUN bundle install
 
 COPY . .
 
+RUN rm -rf spec
+
 RUN if [ "x$RAILS_ENV" = "xproduction" ]; then \
     SECRET_KEY_BASE="$(openssl rand -base64 32)" bundle exec rake assets:precompile ; \
 fi
