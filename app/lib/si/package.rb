@@ -8,7 +8,7 @@ module Si
 
         if logo_file_path
           begin
-            logo_path = "Images/#{Rack::Utils.escape(logo_file_path)}"
+            logo_path = "Images/#{encode_zip_name(logo_file_path)}"
             tmp = Tempfile.new([File.basename(logo_file_path), File.extname(logo_file_path)])
             logo_file = tmp.path
             tmp.unlink
@@ -23,6 +23,10 @@ module Si
 
     def logo_file_path
       @logo_file_path ||= package['logo']&.delete_prefix('@')
+    end
+
+    def encode_zip_name(s)
+      ERB::Util.url_encode(s)
     end
 
     IMAGE_EXT = 'webp'

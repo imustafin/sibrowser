@@ -97,7 +97,16 @@ RSpec.describe Si::Package do
     let(:file) { File.open(file_fixture('packet_ot_stasyana_2.siq')) }
     subject(:package) { described_class.new(file) }
 
-    it 'has_logo_bytes' do
+    it 'has logo_bytes' do
+      expect(package.logo_bytes).to be_present
+    end
+  end
+
+  context 'in 059_-_Treshovaya_solyanka_Novogodnyaya_-_Blacksmith_Remastered.siq' do
+    let(:file) { File.open(file_fixture('059_-_Treshovaya_solyanka_Novogodnyaya_-_Blacksmith_Remastered.siq')) }
+    subject(:package) { described_class.new(file) }
+
+    it 'has logo_bytes' do
       expect(package.logo_bytes).to be_present
     end
   end
