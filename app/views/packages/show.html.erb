@@ -26,6 +26,10 @@
     <%= render KeywordLinksComponent.new(tags: @package.tags || [], categories: @package.categories || {}) %>
   </div>
 
+  <% if @package.has_logo? %>
+    <%= image_tag(package_logo_path(@package), class: 'mx-auto my-4', itemprop: 'image') %>
+  <% end %>
+
   <p>
     <%= t('sigame_package',
           link: link_to('SIGame', 'https://vladimirkhil.com/si/game', class: 'font-bold')).html_safe

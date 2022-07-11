@@ -140,6 +140,16 @@ class PackagesController < ApplicationController
     end
   end
 
+  def logo
+    package = Package.find(params[:package_id])
+
+    if package.logo_bytes
+      send_data(package.logo_bytes, type: 'image/jpeg', disposition: :inline)
+    else
+      render status: 404, body: ''
+    end
+  end
+
   def set_cat
     return head(:forbidden) unless helpers.admin?
 

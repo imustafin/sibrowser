@@ -186,4 +186,8 @@ class Package < ApplicationRecord
   def too_big_for_online?
     file_size && file_size > ONLINE_LIMIT
   end
+
+  def has_logo?
+    logo_bytes != nil
+  end
 end

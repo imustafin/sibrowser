@@ -34,6 +34,10 @@
       <% end %>
     </div>
 
+    <% if @package.has_logo? %>
+      <%= image_tag(package_logo_path(@package), class: 'mx-auto', itemprop: 'image') %>
+    <% end %>
+
     <%= simple_format \
       @package.post_text.present? \
         ? @package.post_text.truncate(150, separator: /\s/) \
