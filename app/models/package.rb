@@ -6,6 +6,9 @@ class Package < ApplicationRecord
 
   # CHANGELOG
   #
+  # 7
+  # * Add webp image, width, height
+  #
   # 6
   # * Add file_size
   #
@@ -14,7 +17,7 @@ class Package < ApplicationRecord
   #   VK identifies docs by (vk_owner_id, vk_document_id),
   #   so search by the whole pair
   # * Add vk_download_url
-  VERSION = 6
+  VERSION = 7
 
   validates :name, presence: true
   validates :source_link, presence: true
