@@ -119,4 +119,13 @@ RSpec.describe Si::Package do
       expect(package.logo_bytes).to be_present
     end
   end
+
+  context 'in Lucifer_FM_2.siq' do
+    let(:file) { File.open(file_fixture('Lucifer_FM_2.siq')) }
+    subject(:package) { described_class.new(file) }
+
+    it 'has logo_bytes' do
+      expect(package.logo_bytes).to be_present
+    end
+  end
 end

@@ -7,15 +7,25 @@ module Si
         @content = Nokogiri::XML(zip.read('content.xml'))
 
         if logo_file_path
+          tmp = Tempfile.new([File.basename(logo_file_path), File.extname(logo_file_path)])
+          logo_file = tmp.path
+          tmp.unlink
+
+          encode = true
           begin
-            logo_path = "Images/#{encode_zip_name(logo_file_path)}"
-            tmp = Tempfile.new([File.basename(logo_file_path), File.extname(logo_file_path)])
-            logo_file = tmp.path
-            tmp.unlink
+            last_part = logo_file_path
+            last_part = encode_zip_name(last_part) if encode
+
+            logo_path = "Images/#{last_part}"
             zip.extract(logo_path, logo_file)
             convert_logo(logo_file)
           rescue Errno::ENOENT => e
-            Sentry.capture_exception(e)
+            if encode
+              encode = false
+              retry
+            else
+              Sentry.capture_exception(e)
+            end
           end
         end
       end

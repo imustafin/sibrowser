@@ -6,6 +6,12 @@ class Package < ApplicationRecord
 
   # CHANGELOG
   #
+  # 10
+  # * Don't report not found encoded names
+  #
+  # 9
+  # * Zip file names can be unencoded
+  #
   # 8
   # * Zip file names encode + as is
   #
