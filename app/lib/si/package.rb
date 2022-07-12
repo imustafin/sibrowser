@@ -42,7 +42,7 @@ module Si
 
 
       # These chars are not encoded
-      keep = '+()'
+      keep = '+()&'
       keep.chars.each do |c|
         ans.gsub!(enc.call(c), c)
       end
