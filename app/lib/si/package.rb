@@ -18,7 +18,15 @@ module Si
 
             logo_path = "Images/#{last_part}"
             zip.extract(logo_path, logo_file)
-            convert_logo(logo_file)
+
+            begin
+              convert_logo(logo_file)
+            rescue Vips::Error => e
+              Sentry.capture_exception(e)
+              @logo_bytes = nil
+              @logo_height = nil
+              @logo_width = nil
+            end
           rescue Errno::ENOENT => e
             if encode
               encode = false
