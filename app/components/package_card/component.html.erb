@@ -1,78 +1,94 @@
 <article
-  class="w-full h-full border-solid border bg-white flex flex-col mb-4"
+  class="w-full h-full border-solid border bg-white mb-4 flex flex-col"
   itemscope
   itemtype="http://schema.org/Article"
   itemprop="itemListElement"
 >
-  <div class="p-2">
-    <meta itemprop="position" content="<%= @position %>">
-    <h2 class="py-1">
-      <% (@package.authors || []).each do |author| %>
-        <span class="pr-2">
-          <%= render AuthorLinkComponent.new(author: author) %>
-        </span>
-      <% end %>
-      <%= time_tag @package.published_at.to_date, class: 'inline-block', itemprop: 'datePublished' %>
-    </h2>
+  <meta itemprop="position" content="<%= @position %>">
 
-    <%= link_to @package, itemprop: "url" do %>
-      <h1 class="text-xl font-bold" itemprop="name headline">
-        <%= @package.name %>
-      </h1>
-      <%= render Packages::FileName::Component.new \
-        package: @package,
-        class: 'text-l font-semibold'
-      %>
-    <% end %>
-
-    <div class="pt-2">
-      <%= render KeywordLinksComponent.new(tags: @package.tags || [], categories: @package.categories || {}) %>
-      <% if @package.too_big_for_online? %>
-        <div class="pb-1">
-          <%= render Packages::TooBigForOnlineTag::Component.new %>
-        </div>
+  <div class="grid grid-cols-1 sm:grid-cols-5 sm:grid-rows-[auto_1fr_auto]">
+    <div class="sm:row-span-3 sm:col-span-1 px-2 sm:p-2 sm:border-r"> <!-- logo -->
+      <%= link_to @package do %>
+        <% if @package.has_logo? %>
+          <%= image_tag package_logo_path(@package),
+          width: @package.logo_width,
+          height: @package.logo_height,
+          class: 'object-cover w-full max-h-64 sm:h-full',
+          itemprop: 'image'
+          %>
+        <% else %>
+          <%= heroicon('photograph', variant: :outline,
+                      options: { class: 'h-44 sm:h-full w-full text-gray-300' })
+          %>
+        <% end %>
       <% end %>
     </div>
 
-    <% if @package.has_logo? %>
-      <%= image_tag package_logo_path(@package),
-       width: @package.logo_width,
-       height: @package.logo_height,
-       class: 'mx-auto',
-       itemprop: 'image'
-      %>
-    <% end %>
+    <div class="order-first sm:order-1 col-span-4 p-2"> <!-- titles -->
+      <h2 class="pb-1">
+        <% (@package.authors || []).each do |author| %>
+          <span class="pr-2">
+            <%= render AuthorLinkComponent.new(author: author) %>
+          </span>
+        <% end %>
+        <%= time_tag @package.published_at.to_date, class: 'inline-block', itemprop: 'datePublished' %>
+      </h2>
 
-    <%= simple_format \
-      @package.post_text.present? \
-        ? @package.post_text.truncate(150, separator: /\s/) \
-        : helpers.package_description(@package, true),
-      itemprop: 'description',
-      class: 'pt-4'
-    %>
-
-    <% if @package.question_distribution.present? %>
-      <p class="pt-4 text-gray-700">
-        <%= t('total_questions') %>: <%= @package.question_distribution[:total] %>
-      </p>
-      <% @package.question_distribution[:types].each do |type, count| %>
-        <span class="mr-4 inline-block text-gray-700">
-          <div class="<%= ApplicationHelper::TYPE_COLORS[type] %> w-4 h-4 inline-block bottom-0"></div>
-          <%= t type %>
-          <%= number_to_percentage \
-            count.to_f / @package.question_distribution[:total] * 100,
-            precision: 0
-          %>
-        </span>
+      <%= link_to @package, itemprop: "url" do %>
+        <h1 class="text-xl font-bold" itemprop="name headline">
+          <%= @package.name %>
+        </h1>
+        <%= render Packages::FileName::Component.new \
+          package: @package,
+          class: 'text-l font-semibold'
+        %>
       <% end %>
-    <% end %>
+
+      <div class="pt-2">
+        <%= render KeywordLinksComponent.new(tags: @package.tags || [], categories: @package.categories || {}) %>
+        <% if @package.too_big_for_online? %>
+          <div class="pb-1">
+            <%= render Packages::TooBigForOnlineTag::Component.new %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="order-3 col-span-4 pt-2 px-2"> <!-- text -->
+      <%= simple_format \
+        @package.post_text.present? \
+          ? @package.post_text.truncate(150, separator: /\s/) \
+          : helpers.package_description(@package, true),
+        itemprop: 'description'
+      %>
+    </div>
+
+    <div class="order-4 col-span-4 p-2"> <!-- distribution -->
+      <% if @package.question_distribution.present? %>
+        <p class="text-gray-700">
+          <%= t('total_questions') %>: <%= @package.question_distribution[:total] %>
+        </p>
+        <% @package.question_distribution[:types].each do |type, count| %>
+          <span class="mr-4 inline-block text-gray-700">
+            <div class="<%= ApplicationHelper::TYPE_COLORS[type] %> w-4 h-4 inline-block bottom-0"></div>
+            <%= t type %>
+            <%= number_to_percentage \
+            count.to_f / @package.question_distribution[:total] * 100,
+             precision: 0
+            %>
+          </span>
+        <% end %>
+      <% end %>
+    </div>
   </div>
+
+
   <div class="border-t divide-x flex">
     <% if @package.vk_download_url %>
       <%= link_to package_direct_download_path(@package),
-       target: '_blank',
-       class: "flex w-fit font-bold px-4 py-4 hover:bg-gray-100 items-center" \
-       do
+        target: '_blank',
+        class: "flex w-fit font-bold px-4 py-4 hover:bg-gray-100 items-center" \
+        do
       %>
         <%= heroicon "document-download", options: { class: "h-6 mr-2 inline" } %>
         <span id="<%= dom_id(@package, :download_count) %>">
@@ -81,6 +97,6 @@
       <% end %>
     <% end %>
     <%= link_to t('source'), @package.source_link, target: '_blank',
-     class: "flex font-bold px-4 py-4 hover:bg-gray-100 items-center" %>
+      class: "flex font-bold px-4 py-4 hover:bg-gray-100 items-center" %>
   </div>
 </article>
