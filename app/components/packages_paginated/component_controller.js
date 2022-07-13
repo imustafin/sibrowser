@@ -12,6 +12,8 @@ export default class extends Controller {
     this.observer = new IntersectionObserver(es => this.handleIntersect(es), {
       threshold: [0, 1],
     });
+
+    this.loadingContents = false;
   }
 
   connect() {
@@ -65,6 +67,10 @@ export default class extends Controller {
     const isIntersecting = intersection.isIntersecting;
     const afterLast = this.afterLastTarget;
 
+    if (this.loadingContents) {
+      return; // don't load two things at once
+    }
+
     if (isIntersecting) {
       const next = this.paginationTarget.querySelector('[rel=next]');
       if (!next) {
@@ -76,6 +82,8 @@ export default class extends Controller {
 
       const url = new URL(next.href);
       url.searchParams.delete('only_pagination');
+
+      this.loadingContents = true;
       fetch(url, {
         headers: {
           Accept: "text/vnd.turbo-stream.html",
@@ -83,7 +91,9 @@ export default class extends Controller {
       })
         .then(r => r.text())
         .then(html => Turbo.renderStreamMessage(html))
-        .then(_ => afterLast.classList.toggle('invisible', true));
+        .then(_ => afterLast.classList.toggle('invisible', true))
+        .then(_ => this.loadingContents = false)
+        .catch(err => { console.error(err); this.loadingContents = false });
     }
   }
 
