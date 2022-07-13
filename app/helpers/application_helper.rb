@@ -43,23 +43,18 @@ module ApplicationHelper
   end
 
   def package_description(package, for_html=false)
-    ans = ''
+    if package.post_text.present?
+      text = package.post_text
+      text = simple_format(text) if for_html
 
-    if package.question_distribution.present?
+      text.squish
+    elsif package.question_distribution.present?
       total = package.question_distribution[:total]
       type_strings = package.question_distribution[:types].map do |type, count|
         t(type) + ': ' + number_to_percentage(count.to_f / total * 100, precision: 0)
       end
 
-      ans += type_strings.join(', ')
+      type_strings.join(', ')
     end
-
-    if package.post_text.present?
-      text = package.post_text
-      text = simple_format(text) if for_html
-      ans += '. ' + text.squish
-    end
-
-    ans
   end
 end
