@@ -32,6 +32,8 @@
     <% if ENV['YANDEX_VERIFICATION'] %>
       <meta name="yandex-verification" content="<%= ENV['YANDEX_VERIFICATION'] %>">
     <% end %>
+
+    <%= yield(:head) %>
   </head>
 
   <body class="bg-indigo-300 text-black-20 min-h-screen flex flex-col justify-between">

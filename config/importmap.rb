@@ -9,3 +9,5 @@ pin_all_from "app/components", under: "components"
 
 pin "chartkick", to: "chartkick.js"
 pin "Chart.bundle", to: "Chart.bundle.js"
+
+pin "with_chartkick"
