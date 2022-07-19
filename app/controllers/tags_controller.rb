@@ -4,13 +4,15 @@ class TagsController < ApplicationController
   helper_method :tag_id, :packages
 
   def index
+    page = params[:page]
+
     @tags = Package
       .from(Package.visible.select('jsonb_array_elements_text(tags) AS tag, id'))
       .where("tag <> ''")
       .group('lower(tag)')
       .order('COUNT(tag) DESC', 'MIN(subquery.id) DESC')
       .select('MIN(tag) AS tag', 'COUNT(tag) AS count')
-      .page(params[:page]).per(10)
+      .page(page).per(10)
 
     @page_title = t(:tags)
 
@@ -18,6 +20,8 @@ class TagsController < ApplicationController
       @tags_to_cats = SibrowserConfig.instance.tags_to_cats || {}
       @cats = SibrowserConfig::CATEGORIES
     end
+
+    set_meta_tags noindex: page.present?
   end
 
   def show

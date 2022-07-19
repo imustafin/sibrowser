@@ -4,9 +4,13 @@ class AuthorsController < ApplicationController
   helper_method :plot_data, :author, :all_packages, :package_count, :all_packages_count
 
   def index
-    @authors = Author.all.page(params[:page]).per(10)
+    page = params[:page]
+
+    @authors = Author.all.page(page).per(10)
 
     @page_title = t(:authors)
+
+    set_meta_tags noindex: page.present?
   end
 
   def show
