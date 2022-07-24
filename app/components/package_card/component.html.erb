@@ -90,13 +90,14 @@
         class: "flex w-fit font-bold px-4 py-4 hover:bg-gray-100 items-center" \
         do
       %>
-        <%= heroicon "document-download", options: { class: "h-6 mr-2 inline" } %>
+        <%= heroicon "document-download", options: { class: "h-6 mr-1 inline" } %>
+        <%= t('link') %>
+        (
         <span id="<%= dom_id(@package, :download_count) %>">
           <%= @package.download_count %>
         </span>
+        )
       <% end %>
     <% end %>
-    <%= link_to t('source'), @package.source_link, target: '_blank',
-      class: "flex font-bold px-4 py-4 hover:bg-gray-100 items-center" %>
   </div>
 </article>
