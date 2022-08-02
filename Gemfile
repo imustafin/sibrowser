@@ -59,7 +59,7 @@ gem 'platform-api', '~> 3.3', require: false
 
 gem 'sentry-ruby', '~> 5.4'
 gem 'sentry-rails', '~> 5.4'
-gem 'sentry-sidekiq', '~> 5.3'
+gem 'sentry-sidekiq', '~> 5.4'
 
 gem 'chartkick', '~> 4.2'
 
