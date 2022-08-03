@@ -41,33 +41,38 @@ class Package < ApplicationRecord
     (self[:authors] || []).reject(&:blank?)
   end
 
+  def self.question_type(q)
+    ts = q['question_types'].take_while { |t| t != 'marker' }
+
+    ts.delete('say')
+    ts.delete('text')
+    ts.uniq!
+
+    if ts.empty?
+      :text
+    elsif ts.count == 1
+      ts.first.to_sym
+    else
+      :mixed
+    end
+  end
+
+  def self.question_distribution(col)
+    col = col.flat_map { |r| r['themes'] } if col.first&.key?('themes')
+    col = col.flat_map { |r| r['questions'] } if col.first&.key?('questions')
+
+    types = col.map { |q| question_type(q) }
+
+    {
+      total: col.count,
+      types: types.tally.sort_by { |x| -x.last }.to_h
+    }
+  end
+
   def question_distribution
     return nil unless structure
 
-    questions = structure
-      .flat_map { |r| r['themes'] }
-      .flat_map { |t| t['questions'] }
-
-    types = questions.map do |q|
-      ts = q['question_types'].take_while { |t| t != 'marker' }
-
-      ts.delete('say')
-      ts.delete('text')
-      ts.uniq!
-
-      if ts.empty?
-        :text
-      elsif ts.count == 1
-        ts.first.to_sym
-      else
-        :mixed
-      end
-    end
-
-    {
-      total: questions.count,
-      types: types.tally.sort_by { |x| -x.last }.to_h
-    }
+    self.class.question_distribution(structure)
   end
 
   def self.update_or_create!(params)

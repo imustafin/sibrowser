@@ -1,0 +1,54 @@
+<% content_for :head do %>
+  <style>
+   <% structure.each_with_index do |round, i| %>
+   #<%= content_id(i) %> { display: none; }
+   #<%= tab_id(i) %>:checked ~ #<%= content_id(i) %> { display: block; }
+   #<%= tab_id(i) %>:checked + label { border-bottom: 1px solid white; text-decoration-line: underline; }
+   <% end %>
+  </style>
+<% end %>
+
+<div class="flex flex-row w-full flex-wrap">
+  <% structure.each_with_index do |round, i| %>
+    <input
+      class="hidden"
+      type="radio"
+      name="round-tabs"
+      id="<%= tab_id(i) %>"
+      <%= i == 0 ? 'checked' : nil %>
+    >
+    <label
+      for="<%= tab_id(i) %>"
+      class="bg-white border border-indigo-500 top-[1px] relative px-4 min-h-4 py-px font-bold cursor-pointer"
+    >
+      <%= round['name'] %>
+    </label>
+  <% end %>
+  <div class="h-0 basis-full"></div>
+
+  <% structure.each_with_index do |round, i| %>
+    <div
+      id="<%= content_id(i) %>"
+      class="bg-white border border-indigo-500 px-4 py-2 w-full"
+    >
+      <% round['themes'].each do |theme| %>
+        <details>
+          <summary class="font-bold cursor-pointer"><%= theme['name'] %></summary>
+          <ul class="pt-1">
+            <% theme['questions'].each do |question| %>
+              <li class="border-b border-gray-0 px-2 mb-2">
+                <% if question['question_text'].present? %>
+                  <%= question['question_text'] %>
+                <% else %>
+                  <% (question['question_types'].uniq - ['marker']).each do |type| %>
+                    <<%= t(type) %>>
+                  <% end %>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </details>
+      <% end %>
+    </div>
+  <% end %>
+</div>
