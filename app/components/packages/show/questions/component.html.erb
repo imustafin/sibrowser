@@ -40,7 +40,7 @@
                 <% if question['question_text'].present? %>
                   <%= question['question_text'] %>
                 <% else %>
-                  <% (question['question_types'].uniq - ['marker']).each do |type| %>
+                  <% (question['question_types'].uniq - ['marker', 'say', 'text']).each do |type| %>
                     <<%= t(type) %>>
                   <% end %>
                 <% end %>
