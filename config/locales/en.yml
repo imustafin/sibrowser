@@ -63,6 +63,7 @@ en:
   author: Author
   author_not_found_pre: We don't know about any packages authored by %{author}.
   author_not_found_table: "Other authors with similar names you might be looking for:"
+  packages_not_found: Packages not found
 
   total_download_stats:
     pre: "SIBrowser has helped to download a package"

@@ -63,6 +63,7 @@ tt:
   author: Ясаучы
   author_not_found_pre: Без %{author} ясаган бернинди пакетны белмибез.
   author_not_found_table: "Сез эзләгән охшаш исемле ясаучылар:"
+  packages_not_found: Пакетлар табылмаган
 
   total_download_stats:
     pre: "SIBrowser пакетларны %{count} тапкыр йөкләргә булышкан."

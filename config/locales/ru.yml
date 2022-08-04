@@ -63,6 +63,7 @@ ru:
   author: Автор
   author_not_found_pre: Мы не знаем никаких пакетов, созданных автором %{author}.
   author_not_found_table: "Другие авторы с похожими именами, которых вы могли искать:"
+  packages_not_found: Пакеты не найдены
 
   total_download_stats:
     pre: "SIBrowser помог скачать пакеты"

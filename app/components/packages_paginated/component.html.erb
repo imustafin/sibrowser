@@ -1,46 +1,52 @@
-<%= helpers.turbo_stream_from :download_counts %>
-<div data-controller="packages_paginated--component">
-  <div data-packages_paginated--component-target="beforeFloating"></div>
-  <% if @order %>
-    <div class="w-fit float-left py-2 space-x-2">
-      <%= link_to(t('packages_index.most_new'), root_path, class: order_class(:published_at)) %>
-      <%= link_to(t('packages_index.most_downloaded'), root_path(sort: :download_count), class: order_class(:download_count)) %>
-    </div>
-  <% end %>
-  <div
-    data-packages_paginated--component-target="pagination"
-    id="pagination"
-    class="sticky w-fit transition top-2 float-right py-2 px-2"
-  >
-    <%= paginate @packages, window: 1, theme: "infinite" %>
+<%  if @packages.size == 0 %>
+  <div class="italic text-center">
+    <%= t(:packages_not_found) %>
   </div>
-  <div
-    id="packages"
-    class="w-full"
-    itemscope
-    itemtype="https://schema.org/ItemList"
-  >
-    <meta itemprop="numberOfItems" content="<%= @packages.total_count %>">
-    <div
-      data-packages_paginated--component-target="firstBeforeFirst"
-      data-page-number="<%= @packages.current_page %>"
-    >
-    </div>
-    <% @packages.each_with_index do |package, i| %>
-      <%= render PackageCard::Component.new(package: package, position: @first_index + i) %>
+<% else %>
+  <%= helpers.turbo_stream_from :download_counts %>
+  <div data-controller="packages_paginated--component">
+    <div data-packages_paginated--component-target="beforeFloating"></div>
+    <% if @order %>
+      <div class="w-fit float-left py-2 space-x-2">
+        <%= link_to(t('packages_index.most_new'), root_path, class: order_class(:published_at)) %>
+        <%= link_to(t('packages_index.most_downloaded'), root_path(sort: :download_count), class: order_class(:download_count)) %>
+      </div>
     <% end %>
+    <div
+      data-packages_paginated--component-target="pagination"
+      id="pagination"
+      class="sticky w-fit transition top-2 float-right py-2 px-2"
+    >
+      <%= paginate @packages, window: 1, theme: "infinite" %>
+    </div>
+    <div
+      id="packages"
+      class="w-full"
+      itemscope
+      itemtype="https://schema.org/ItemList"
+    >
+      <meta itemprop="numberOfItems" content="<%= @packages.total_count %>">
+      <div
+        data-packages_paginated--component-target="firstBeforeFirst"
+        data-page-number="<%= @packages.current_page %>"
+      >
+      </div>
+      <% @packages.each_with_index do |package, i| %>
+        <%= render PackageCard::Component.new(package: package, position: @first_index + i) %>
+      <% end %>
+    </div>
+    <div
+      data-packages_paginated--component-target="afterLast"
+      class="
+        flex m-auto justify-center items-center w-fit
+        animate-pulse
+        bg-indigo-200 py-2 px-8 rounded-md
+        my-4
+        invisible
+      "
+    >
+      <%= heroicon "wifi", options: { class: "h-8 mr-4" } %>
+      <%= t :loading %>
+    </div>
   </div>
-  <div
-    data-packages_paginated--component-target="afterLast"
-    class="
-      flex m-auto justify-center items-center w-fit
-      animate-pulse
-      bg-indigo-200 py-2 px-8 rounded-md
-      my-4
-      invisible
-    "
-  >
-    <%= heroicon "wifi", options: { class: "h-8 mr-4" } %>
-    <%= t :loading %>
-  </div>
-</div>
+<% end %>
