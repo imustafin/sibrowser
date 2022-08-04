@@ -6,7 +6,6 @@ class PackagesController < ApplicationController
   def index
     return packages_pagination(packages) if request.format.turbo_stream?
 
-
     page = params['page']
 
     if !page && sort_column == :published_at
@@ -16,7 +15,8 @@ class PackagesController < ApplicationController
       @page_title += ' ' + t('title_packages_page', page:) if page
     end
 
-    set_meta_tags noindex: params[:q].present? || page.present?
+    empty = packages.size == 0
+    set_meta_tags noindex: params[:q].present? || page.present? || empty
   end
 
   def packages

@@ -3,7 +3,7 @@
    <% structure.each_with_index do |round, i| %>
    #<%= content_id(i) %> { display: none; }
    #<%= tab_id(i) %>:checked ~ #<%= content_id(i) %> { display: block; }
-   #<%= tab_id(i) %>:checked + label { border-bottom: 1px solid white; text-decoration-line: underline; }
+   #<%= tab_id(i) %>:checked + label { border-bottom: 1px solid white; text-decoration-line: underline; font-weight: initial; }
    <% end %>
   </style>
 <% end %>

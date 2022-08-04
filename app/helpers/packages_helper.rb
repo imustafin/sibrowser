@@ -4,6 +4,12 @@ module PackagesHelper
 
     py = small ? 'py-1' : 'py-2'
 
-    "border-4 border-transparent inline-block bg-purple-500 #{py} px-4 font-bold text-white hover:border-purple-600 "
+    <<~CLASS.squish + ' '
+      border-4 border-transparent
+      inline-block cursor-pointer
+      bg-purple-500 hover:border-purple-600
+      #{py} px-4
+      font-bold text-white
+    CLASS
   end
 end
