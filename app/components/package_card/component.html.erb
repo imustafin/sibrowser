@@ -7,20 +7,9 @@
   <meta itemprop="position" content="<%= @position %>">
 
   <div class="grid grid-cols-1 sm:grid-cols-5 sm:grid-rows-[auto_1fr_auto]">
-    <div class="sm:row-span-3 sm:col-span-1 px-2 sm:p-2 sm:border-r"> <!-- logo -->
+    <div class="sm:row-span-3 sm:col-span-1 px-2 sm:p-2 sm:border-r">
       <%= link_to @package do %>
-        <% if @package.has_logo? %>
-          <%= image_tag package_logo_path(@package),
-          width: @package.logo_width,
-          height: @package.logo_height,
-          class: 'object-cover w-full max-h-64 sm:h-full',
-          itemprop: 'image'
-          %>
-        <% else %>
-          <%= heroicon('photograph', variant: :outline,
-                      options: { class: 'h-44 sm:h-full w-full text-gray-300' })
-          %>
-        <% end %>
+        <%= render Packages::Logo::Component.new(package: @package) %>
       <% end %>
     </div>
 

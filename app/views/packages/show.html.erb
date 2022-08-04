@@ -1,99 +1,142 @@
 <article itemscope itemtype="http://schema.org/Article">
-  <h1 class="text-4xl font-bold text-center" itemprop="name headline">
-    <%= @package.name %>
-  </h1>
-  <%= render Packages::FileName::Component.new \
-    package: @package,
-    class: 'block text-3xl font-bold text-center'
-  %>
+  <div class="bg-white p-4 mt-4">
+    <h1 class="text-2xl font-bold" itemprop="name headline">
+      <%= @package.name %>
+    </h1>
+    <%= render Packages::FileName::Component.new \
+      package: @package,
+      class: 'block text-xl font-bold '
+    %>
 
-  <% if @package.authors.present? %>
-    <h2 class="text-2xl font-bold text-center">
-      <% @package.authors.each do |author| %>
-        <span class="pr-2">
-          <%= render AuthorLinkComponent.new(author: author) %>
-        </span>
+    <% if @package.authors.present? %>
+      <h2 class="font-bold">
+        <% @package.authors.each do |author| %>
+          <span class="pr-2">
+            <%= render AuthorLinkComponent.new(author: author) %>
+          </span>
+        <% end %>
+      </h2>
+    <% end %>
+
+    <div class="text-center pt-1">
+      <% if @package.too_big_for_online? %>
+        <div class="pb-1">
+          <%= render Packages::TooBigForOnlineTag::Component.new %>
+        </div>
       <% end %>
-    </h2>
-  <% end %>
+      <%= render KeywordLinksComponent.new(tags: @package.tags || [], categories: @package.categories || {}) %>
+    </div>
 
-  <div class="text-center pt-1">
-    <% if @package.too_big_for_online? %>
-      <div class="pb-1">
-        <%= render Packages::TooBigForOnlineTag::Component.new %>
-      </div>
-    <% end %>
-    <%= render KeywordLinksComponent.new(tags: @package.tags || [], categories: @package.categories || {}) %>
-  </div>
+    <div class="grid grid-cols-1 sm:grid-cols-5 border-b">
+      <div class="sm:row-span-3 sm:col-span-1 px-2 sm:p-2 sm:border-r mr-4">
+        <div>
+          <%= render Packages::Logo::Component.new(package: @package) %>
+        </div>
 
-  <% if @package.has_logo? %>
-    <%= image_tag package_logo_path(@package),
-     class: 'mx-auto my-4',
-     width: @package.logo_width,
-     height: @package.logo_height,
-     itemprop: 'image'
-    %>
-  <% end %>
-
-  <p>
-    <%= t('sigame_package',
-          link: link_to('SIGame', 'https://vladimirkhil.com/si/game', class: 'font-bold')).html_safe
-    %>
-    <%= t('sigame_author',
-          link: link_to(t('khil'), 'https://vladimirkhil.com/', class: 'font-bold')).html_safe
-    %>
-  </p>
-
-  <div class="mb-8">
-    <% if @package.post_text.present? %>
-      <h3 class="text-xl mb-2 text-center">
-        <%= t('original_message') %>
-      </h3>
-      <span itemprop="description">
-        <%= simple_format(@package.post_text) %>
-      </span>
-    <% else %>
-      <span itemprop="description">
-        <%= package_description(@package, true) %>
-      </span>
-    <% end %>
-
-    <% if @package.question_distribution.present? %>
-      <h3 class="text-xl mb-2 mt-4 text-center">
-        <%= t :questions %> <br>
-      </h3>
-
-      <p class="mb-2">
-        <%= t :total_questions %>: <%= @package.question_distribution[:total] %>
-      </p>
-      <div class="w-full h-8 mb-2">
-        <%= distribution(@package.question_distribution) %>
-      </div>
-      <% @package.question_distribution[:types].each do |type, count| %>
-      <span class="mr-4 inline-block">
-        <div class="<%= ApplicationHelper::TYPE_COLORS[type] %> w-4 h-4 inline-block bottom-0"></div>
-        <span class="font-bold">
-          <%= t type %>
-        </span>
-        <span class="text-gray-700">
-          <%=
-            number_to_percentage(
-              count.to_f / @package.question_distribution[:total] * 100,
-              precision: 0
-            )
+        <%= turbo_stream_from :download_counts %>
+        <div class="flex justify-center mt-8 mb-4">
+          <%= link_to package_direct_download_path(@package),
+           target: '_blank',
+           class: button_class + "w-full flex items-center justify-center" \
+             do
           %>
-        </span>
-      </span>
-      <% end %>
-    <% end %>
+            <%= heroicon "document-download", options: { class: "h-6 inline" } %>
+            <span id="<%= dom_id(@package, :download_count) %>">
+              Скачать (<%= @package.download_count %>)
+            </span>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="col-span-4">
+        <% if @package.post_text.present? %>
+            <%= simple_format(@package.post_text) %>
+        <% end %>
+
+        <table class="mt-4">
+          <tr>
+            <td>
+              <%= t('published_at') %>
+            </td>
+            <td>
+              <%= time_tag(@package.published_at.to_date, itemprop: 'datePublished') %>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <%= t('added_to_sibrowser') %>
+            </td>
+            <td>
+              <%= time_tag(@package.created_at.to_date) %>
+            </td>
+          </tr>
+          <% if @package.created_at.to_date != @package.updated_at.to_date %>
+            <tr>
+              <td>
+                <%= t('updated_in_sibrowser') %>
+              </td>
+              <td>
+                <%= time_tag(@package.updated_at.to_date) %>
+              </td>
+            </tr>
+          <% end %>
+          <tr>
+            <td class="pr-2">
+              <%= t(:original_message) %>
+            </td>
+            <td>
+              <%= link_to t("source"), @package.source_link, target: "_blank", class: 'font-bold' %>
+            </td>
+          </tr>
+
+
+          <% if @package.question_distribution.present? %>
+            <tr>
+              <td>
+                <%= t :total_questions %>
+              </td>
+              <td>
+                <%= @package.question_distribution[:total] %> <br>
+              </td>
+            </tr>
+          <% end %>
+        </table>
+
+        <% @package.question_distribution.present? && @package.question_distribution[:types].each do |type, count| %>
+          <span class="mr-4 inline-block">
+            <div class="<%= ApplicationHelper::TYPE_COLORS[type] %> w-4 h-4 inline-block bottom-0"></div>
+            <span class="text-gray-700">
+              <%= t type %>
+            </span>
+            <span>
+              <%=
+              number_to_percentage(
+                count.to_f / @package.question_distribution[:total] * 100,
+                precision: 0
+              )
+              %>
+            </span>
+          </span>
+        <% end %>
+      </div>
+    </div>
+
 
     <% if @package.structure.present? %>
-      <h3 class="text-xl mb-4 text-center">
-        <%= t('rounds') %>
+      <h3 class="text-xl mt-4 mb-2">
+        <%= t(:questions) %>
       </h3>
-
       <%= render Packages::Show::Questions::Component.new(structure: @package.structure) %>
     <% end %>
+
+    <p class="mt-4">
+      <%= t('sigame_package',
+            link: link_to('SIGame', 'https://vladimirkhil.com/si/game', class: 'font-bold')).html_safe
+      %>
+      <%= t('sigame_author',
+            link: link_to(t('khil'), 'https://vladimirkhil.com/', class: 'font-bold')).html_safe
+      %>
+    </p>
   </div>
 
   <% if admin? %>
@@ -159,26 +202,5 @@
   <% end %>
 
 
-  <%= t('published_at') %>: <%= time_tag(@package.published_at.to_date, itemprop: 'datePublished') %> <br>
 
-  <%= t('added_to_sibrowser') %>: <%= time_tag(@package.created_at.to_date) %> <br>
-
-  <% if @package.created_at.to_date != @package.updated_at.to_date %>
-    <%= t('updated_in_sibrowser') %>: <%= time_tag(@package.updated_at.to_date) %> <br>
-  <% end %>
-
-  <%= turbo_stream_from :download_counts %>
-  <div class="flex justify-center mt-8 mb-4">
-    <%= link_to package_direct_download_path(@package),
-     target: '_blank',
-     class: button_class + "mr-4 flex" \
-       do
-    %>
-      <%= heroicon "document-download", options: { class: "h-6 mr-2 inline" } %>
-      <span id="<%= dom_id(@package, :download_count) %>">
-        <%= @package.download_count %>
-      </span>
-    <% end %>
-    <%= link_to t("source"), @package.source_link, target: "_blank", class: button_class %>
-  </div>
 </article>

@@ -41,7 +41,7 @@
                   <%= question['question_text'] %>
                 <% else %>
                   <% (question['question_types'].uniq - ['marker', 'say', 'text']).each do |type| %>
-                    <<%= t(type) %>>
+                    &lt;<%= t(type) %>&gt;
                   <% end %>
                 <% end %>
               </li>

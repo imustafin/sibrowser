@@ -1,0 +1,15 @@
+<% if package.has_logo? %>
+  <%= image_tag package_logo_path(package),
+   width: package.logo_width,
+   height: package.logo_height,
+   class: 'object-cover w-full max-h-64 sm:h-full',
+   itemprop: 'image'
+  %>
+<% else %>
+  <%= helpers.heroicon 'photograph',
+   variant: :outline,
+   options: {
+     class: 'h-44 sm:h-full w-full text-gray-300/50'
+    }
+  %>
+<% end %>

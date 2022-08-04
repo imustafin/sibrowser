@@ -31,10 +31,6 @@ module ApplicationHelper
     }
   end
 
-  def distribution(dist)
-    render partial: 'components/distribution', locals: dist
-  end
-
   def admin?
     session[:admin]
   end
