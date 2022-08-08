@@ -1,140 +1,73 @@
 require 'rails_helper'
 
 RSpec.describe Classification::Classifier do
-  def cp(tag, category_text)
-    create(:package, tags: [tag], category_text:)
+  RSpec::Matchers.define :approx do |expected|
+    match do |actual|
+      expect(actual).to be_within(0.001).of(expected)
+    end
   end
 
-  let!(:a1) { cp('anime', 'назовите тайтл') }
-  let!(:a2) { cp('anime', 'тайтл наруто тайтл') }
-  let!(:m1) { cp('music', 'rammstein lindemann назовите amerika') }
-  let!(:m2) { cp('music', 'lindemann radio') }
+  def p_words(words)
+    create(:package, category_text: words)
+  end
 
   let(:instance) { described_class.new }
 
-  EPS = 0.0001
+  let_it_be(:pa) { p_words(%w[hasta la vista baby la vista la]) }
+  let_it_be(:pb) { p_words(%w[hasta one two three]) }
 
-  DF = {
-    'amerika' => 1,
-    'lindemann' => 2,
-    'radio' => 1,
-    'rammstein' => 1,
-    'назов' => 2,
-    'нарут' => 1,
-    'тайтл' => 2
-  }.freeze
+  let(:len) { instance.class.const_get(:Len) }
+  let(:tf) { instance.class.const_get(:Tf) }
+  let(:idf) { instance.class.const_get(:Idf) }
 
-  def all_lexemes
-    DF.keys
-  end
-
-  def df(lexeme)
-    DF[lexeme]
-  end
-
-  def all_packages
-    4
-  end
-
-  def idf(lexeme)
-    Math.log(all_packages.to_f / df(lexeme), 10)
-  end
-
-  describe '#idf' do
-    it 'has correct data' do
-      expect(instance.idf.all).to match_array(
-        all_lexemes.map do |lexeme|
-          have_attributes(
-            lexeme:,
-            df: df(lexeme),
-            idf: be_within(EPS).of(idf(lexeme))
-          )
-        end
+  describe 'len' do
+    it 'has correct document lengths' do
+      expect(len.all).to include(
+        have_attributes(
+          package: pa,
+          len: 7
+        ),
+        have_attributes(
+          package: pb,
+          len: 4
+        )
       )
     end
   end
 
-  def lens(id)
-    {
-      a1.id => 2,
-      a2.id => 3,
-      m1.id => 4,
-      m2.id => 2
-    }[id]
-  end
-
-  def occurs_data
-    {
-      a1.id => {
-        'назов' => 1,
-        'тайтл' => 1
-      },
-      a2.id => {
-        'нарут' => 1,
-        'тайтл' => 2
-      },
-      m1.id => {
-        'rammstein' => 1,
-        'lindemann' => 1,
-        'назов' => 1,
-        'amerika' => 1
-      },
-      m2.id => {
-        'lindemann' => 1,
-        'radio' => 1
-      }
-    }
-  end
-
-  def occurs(id, lexeme)
-    occurs_data[id][lexeme]
-  end
-
-  def doc_lexemes(id)
-    occurs_data[id].keys
-  end
-
-  def ids
-    occurs_data.keys
-  end
-
-  def tfidf(id, lexeme)
-    idf(lexeme) * occurs(id, lexeme) / lens(id)
-  end
-
-  describe '#package_tfidf' do
-    it 'has correct data' do
-      expect(instance.package_tfidf.all).to match_array(
-        ids.flat_map do |id|
-          doc_lexemes(id).map do |lexeme|
-            have_attributes(
-              package_id: id,
-              lexeme:,
-              occurs: occurs(id, lexeme),
-              tfidf: be_within(EPS).of(tfidf(id, lexeme))
-            )
-          end
-        end
+  describe 'tf' do
+    it 'has correct term frequencies' do
+      expect(tf.all).to include(
+        have_attributes(
+          package: pa,
+          term: 'hasta',
+          tf: approx(1.0 / 7)
+        ),
+        have_attributes(
+          package: pa,
+          term: 'la',
+          tf: approx(3.0 / 7)
+        ),
+        have_attributes(
+          package: pb,
+          term: 'one',
+          tf: approx(1.0 / 4)
+        )
       )
     end
   end
 
-  def magn(id)
-    doc_lexemes(id)
-      .map { |lex| tfidf(id, lex) ** 2 }
-      .sum
-      .then { |x| Math.sqrt(x) }
-  end
-
-  describe '#magns' do
-    it 'has correct data' do
-      expect(instance.magns.all).to match_array(
-        ids.map do |id|
-          have_attributes(
-            id:,
-            magn: be_within(EPS).of(magn(id))
-          )
-        end
+  describe 'idf' do
+    it 'has correct inverse document frequency' do
+      expect(idf.all).to include(
+        have_attributes(
+          term: 'hasta',
+          idf: Math.log10(2.0 / 2)
+        ),
+        have_attributes(
+          term: 'one',
+          idf: Math.log10(2.0 / 1)
+        )
       )
     end
   end

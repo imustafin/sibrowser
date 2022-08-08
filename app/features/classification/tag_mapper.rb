@@ -1,17 +1,8 @@
 module Classification
   class TagMapper
     def initialize
-      refresh = false
-      refresh = true
-
-      if refresh
-        execute <<~SQL
-          DROP TABLE IF exists tag_mapped;
-        SQL
-      end
-
       execute <<~SQL
-        CREATE TABLE IF NOT EXISTS tag_mapped(
+        CREATE TEMPORARY TABLE IF NOT EXISTS tag_mapped(
           id bigint,
           category text,
           weight float
@@ -25,7 +16,6 @@ module Classification
       end
 
       fill_tag_mapped
-      execute 'ANALYZE tag_mapped;'
     end
 
     def tag_mapped
