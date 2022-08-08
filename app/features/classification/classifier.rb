@@ -142,11 +142,10 @@ module Classification
 
     def fill_apriori
       distinct_ids = Pcategory.select(:package_id).distinct.count
-      dict = Idf.count
 
       CAT_TO_TAG.keys.each do |category|
         this_cat = Pcategory.where(category:).count.to_f
-        prob =  (this_cat + 1) / (distinct_ids + dict)
+        prob =  this_cat / distinct_ids
         Apriori.create!(
           category:,
           probability: prob
@@ -169,7 +168,7 @@ module Classification
     end
 
     def unnest_ts(as = true)
-      "unnest(category_ts) AS ts"
+      "unnest(searchable) AS ts"
     end
 
     def execute(sql)

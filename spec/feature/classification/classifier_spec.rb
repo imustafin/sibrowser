@@ -8,7 +8,7 @@ RSpec.describe Classification::Classifier do
   end
 
   def pk(tags, words)
-    create(:package, category_text: words, tags:)
+    create(:package, name: words.join(' '), tags:)
   end
 
   let(:instance) { described_class.new.prepare }
@@ -28,11 +28,11 @@ RSpec.describe Classification::Classifier do
       expect(len.all).to include(
         have_attributes(
           package: pa,
-          len: 8
+          len: 9
         ),
         have_attributes(
           package: pb,
-          len: 6
+          len: 7
         )
       )
     end
@@ -44,17 +44,17 @@ RSpec.describe Classification::Classifier do
         have_attributes(
           package: pa,
           term: 'hasta',
-          tf: approx(1.0 / 8)
+          tf: approx(1.0 / 9)
         ),
         have_attributes(
           package: pa,
           term: 'la',
-          tf: approx(3.0 / 8)
+          tf: approx(3.0 / 9)
         ),
         have_attributes(
           package: pb,
           term: 'one',
-          tf: approx(1.0 / 6)
+          tf: approx(1.0 / 7)
         )
       )
     end
@@ -101,21 +101,20 @@ RSpec.describe Classification::Classifier do
       # We do laplace smoothing
       # add 1 to divisible, add n to divider
 
-      dict = 11 # number of distinct words (with categories)
       n = 3 # number of documents
 
       expect(apriori.all).to include(
         have_attributes(
           category: 'music',
-          probability: approx((1.0 + 1) / (n + dict))
+          probability: approx(1.0 / n)
         ),
         have_attributes(
           category: 'anime',
-          probability: approx((2.0 + 1) / (n + dict))
+          probability: approx(2.0 / n)
         ),
         have_attributes(
           category: 'movies',
-          probability: approx(1.0 / (n + dict))
+          probability: approx(0)
         )
       )
     end
