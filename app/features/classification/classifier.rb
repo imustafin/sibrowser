@@ -47,23 +47,28 @@ module Classification
       model(:len) do
         belongs_to :package
       end
-      report(Len) { fill_len }
 
       model(:tf) do
         belongs_to :package
       end
-      report(Tf) { fill_tf }
 
       model(:idf)
-      report(Idf) { fill_idf }
 
       model(:pcategory) do
         belongs_to :package
       end
-      report(Pcategory) { fill_pcategory }
 
       model(:apriori)
+    end
+
+    def prepare
+      report(Len) { fill_len }
+      report(Tf) { fill_tf }
+      report(Idf) { fill_idf }
+      report(Pcategory) { fill_pcategory }
       report(Apriori) { fill_apriori }
+
+      self
     end
 
     def report(model, &blk)

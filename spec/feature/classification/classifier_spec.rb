@@ -11,7 +11,7 @@ RSpec.describe Classification::Classifier do
     create(:package, category_text: words, tags:)
   end
 
-  let(:instance) { described_class.new }
+  let(:instance) { described_class.new.prepare }
 
   let_it_be(:pa) { pk(['музыка'], %w[hasta la vista baby la vista la lindemann]) }
   let_it_be(:pb) { pk(['аниме'], %w[hasta one two three anime naruto]) }
