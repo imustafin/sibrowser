@@ -27,7 +27,7 @@
       <%= render KeywordLinksComponent.new(tags: @package.tags || [], categories: @package.categories || {}) %>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-5 border-b">
+    <div class="grid grid-cols-1 sm:grid-cols-5 sm:border-b">
       <div class="sm:row-span-3 sm:col-span-1 px-2 sm:p-2 sm:border-r mr-4">
         <div>
           <%= render Packages::Logo::Component.new(package: @package) %>
