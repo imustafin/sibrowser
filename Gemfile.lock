@@ -254,7 +254,7 @@ GEM
       railties (>= 6.0.0)
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
-    view_component (2.64.0)
+    view_component (2.66.0)
       activesupport (>= 5.0.0, < 8.0)
       concurrent-ruby (~> 1.0)
       method_source (~> 1.0)
@@ -303,7 +303,7 @@ DEPENDENCIES
   test-prof (~> 1.0, >= 1.0.9)
   turbo-rails (~> 1.1)
   tzinfo-data
-  view_component (~> 2.64)
+  view_component (~> 2.66)
   web-console (>= 4.1.0)
 
 RUBY VERSION
