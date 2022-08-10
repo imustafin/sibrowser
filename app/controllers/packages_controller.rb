@@ -115,29 +115,55 @@ class PackagesController < ApplicationController
 
     url = package.vk_download_url
 
-    unless url
-      render html: "No download link", status: 404, layout: true
-    else
-      if request.is_crawler?
-        msg = "Crawler '#{request.crawler_name}' tried direct download #{package.id}"
-        Sentry.capture_message(msg) if Sentry.initialized?
-        logger.info(msg)
-      else
-        # Update and broadcast download counts
-        package.with_lock do
-          package.add_download
-          package.save!
-        end
+    return render html: "No download link", status: 404, layout: true unless url
 
-        package.broadcast_update_to(
-          :download_counts,
-          target: helpers.dom_id(package, :download_count),
-          html: package.download_count
-        )
+    if request.is_crawler?
+      msg = "Crawler '#{request.crawler_name}' tried direct download #{package.id}"
+      Sentry.capture_message(msg) if Sentry.initialized?
+      logger.info(msg)
+      redirect_to url, allow_other_host: true
+      # Don't bother fetching new url
+      return
+    end
+
+
+    # Update and broadcast download counts
+    package.with_lock do
+      unless package.vk_download_url_fresh?
+        new_url = fetch_new_vk_download_url(package)
+
+        package.touch_vk_download_url
+        package.vk_download_url = new_url
+
+        url = new_url
       end
 
-      redirect_to url, allow_other_host: true
+      package.add_download
+      package.save!
     end
+
+    package.broadcast_update_to(
+      :download_counts,
+      target: helpers.dom_id(package, :download_count),
+      html: package.download_count
+    )
+
+    redirect_to url, allow_other_host: true
+  end
+
+  def fetch_new_vk_download_url(package)
+    group_id, topic_id, start_comment_id = \
+      package.source_link.scan(/vk\.com\/topic-(\d+)_(\d+)\?post=(\d+)/).first
+
+    posts = Vk.board_get_comments(group_id:, topic_id:, start_comment_id:, count: 1)
+    post = posts.dig('response', 'items', 0)
+
+    return nil unless post['id'].to_s == start_comment_id
+
+    doc = post['attachments'].find { |x| x.dig('doc', 'id')&.to_s == package.vk_document_id }
+
+
+    doc&.dig('doc', 'url')
   end
 
   def logo

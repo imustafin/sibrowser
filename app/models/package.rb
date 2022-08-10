@@ -41,6 +41,16 @@ class Package < ApplicationRecord
     (self[:authors] || []).reject(&:blank?)
   end
 
+  SOURCE_LINK_LIFESPAN = 24.hours
+
+  def touch_vk_download_url
+    self.vk_download_url_updated_at = Time.now
+  end
+
+  def vk_download_url_fresh?
+    (Time.now - vk_download_url_updated_at) < SOURCE_LINK_LIFESPAN
+  end
+
   def self.question_type(q)
     ts = q['question_types'].take_while { |t| t != 'marker' }
 

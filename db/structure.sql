@@ -109,7 +109,8 @@ CREATE TABLE public.packages (
     download_count integer GENERATED ALWAYS AS (public.sum_integer_values(downloads)) STORED,
     logo_bytes bytea,
     logo_width integer,
-    logo_height integer
+    logo_height integer,
+    vk_download_url_updated_at timestamp(6) without time zone
 );
 
 
@@ -304,6 +305,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220708185411'),
 ('20220709213054'),
 ('20220710205516'),
-('20220711173903');
+('20220711173903'),
+('20220810183607');
 
 
