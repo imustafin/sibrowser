@@ -243,7 +243,7 @@ GEM
     stimulus-rails (1.1.0)
       railties (>= 6.0.0)
     strscan (3.0.3)
-    tailwindcss-rails (2.0.10)
+    tailwindcss-rails (2.0.12)
       railties (>= 6.0.0)
     test-prof (1.0.9)
     thor (1.2.1)
