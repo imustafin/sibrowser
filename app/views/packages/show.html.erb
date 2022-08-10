@@ -14,9 +14,12 @@
              do
           %>
             <%= heroicon "document-download", options: { class: "h-6 inline" } %>
+            <%= t(:link) %>
+            (
             <span id="<%= dom_id(@package, :download_count) %>">
-              Скачать (<%= @package.download_count %>)
+              <%= @package.download_count %>
             </span>
+            )
           <% end %>
         </div>
       </div>
