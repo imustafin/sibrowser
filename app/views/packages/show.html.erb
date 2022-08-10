@@ -1,32 +1,5 @@
 <article itemscope itemtype="http://schema.org/Article">
   <div class="bg-white p-4 mt-4">
-    <h1 class="text-2xl font-bold" itemprop="name headline">
-      <%= @package.name %>
-    </h1>
-    <%= render Packages::FileName::Component.new \
-      package: @package,
-      class: 'block text-xl font-bold '
-    %>
-
-    <% if @package.authors.present? %>
-      <h2 class="font-bold">
-        <% @package.authors.each do |author| %>
-          <span class="pr-2">
-            <%= render AuthorLinkComponent.new(author: author) %>
-          </span>
-        <% end %>
-      </h2>
-    <% end %>
-
-    <div class="text-center pt-1">
-      <% if @package.too_big_for_online? %>
-        <div class="pb-1">
-          <%= render Packages::TooBigForOnlineTag::Component.new %>
-        </div>
-      <% end %>
-      <%= render KeywordLinksComponent.new(tags: @package.tags || [], categories: @package.categories || {}) %>
-    </div>
-
     <div class="grid grid-cols-1 sm:grid-cols-5 sm:border-b">
       <div class="sm:row-span-3 sm:col-span-1 px-2 sm:p-2 sm:border-r mr-4">
         <div>
@@ -49,6 +22,33 @@
       </div>
 
       <div class="col-span-4">
+        <h1 class="text-2xl font-bold" itemprop="name headline">
+          <%= @package.name %>
+        </h1>
+        <%= render Packages::FileName::Component.new \
+          package: @package,
+          class: 'block text-xl font-bold '
+        %>
+
+        <% if @package.authors.present? %>
+          <h2 class="font-bold">
+            <% @package.authors.each do |author| %>
+              <span class="pr-2">
+                <%= render AuthorLinkComponent.new(author: author) %>
+              </span>
+            <% end %>
+          </h2>
+        <% end %>
+
+        <div class="pt-1">
+          <% if @package.too_big_for_online? %>
+            <div class="pb-1">
+              <%= render Packages::TooBigForOnlineTag::Component.new %>
+            </div>
+          <% end %>
+          <%= render KeywordLinksComponent.new(tags: @package.tags || [], categories: @package.categories || {}) %>
+        </div>
+
         <% if @package.post_text.present? %>
             <%= simple_format(@package.post_text) %>
         <% end %>
