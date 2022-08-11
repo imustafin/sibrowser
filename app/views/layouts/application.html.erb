@@ -58,12 +58,12 @@
     </header>
     <main class="mb-auto">
       <div class="md:container mx-auto bg-indigo-100 p-2 pt-4 md:my-4 md:px-4">
+        <%= render Announcement::Component.new %>
         <% if @breadcrumbs %>
           <div class="pb-2">
             <%= render BreadcrumbsComponent.new(**@breadcrumbs) %>
           </div>
         <% end %>
-
         <%= yield %>
       </div>
     </main>
