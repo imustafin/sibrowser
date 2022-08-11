@@ -143,67 +143,6 @@
   </div>
 
   <% if admin? %>
-    <p>
-      <%= @package.category_scores %>
-    </p>
-    <table class="border-2 border-black w-full">
-      <% @package.structure.each_with_index do |round, round_id| %>
-        <tr class="h-10 bg-indigo-500 text-white">
-          <td><%= round['name'] %></td>
-          <td></td>
-        </tr>
-        <% round['themes'].each_with_index do |theme, theme_id| %>
-          <tr class="h-10 bg-indigo-300 font-bold" id="<%= [round_id, theme_id].join('_') %>">
-            <td><%= round['name'] %> <br> >> <%= theme['name'] %></td>
-            <td>
-              <% @cats.each do |c| %>
-              <div class="inline-block w-14">
-                <%= c %>
-                <%= button_to(
-                '',
-                package_set_cat_path(package_id: @package.id),
-                params: { round: round_id, theme: theme_id, question: nil, cat: c },
-                class: 'bg-blue-300 w-10'
-                )%>
-              </div>
-
-              <% end %>
-            </td>
-          </tr>
-          <% theme['questions'].each_with_index do |question, question_id| %>
-            <tr
-              class="border-2 border-black
-  <%= (SibrowserConfig::CATEGORIES.include?(@package.manual_categories&.dig(round_id.to_s, theme_id.to_s, question_id.to_s))) ? 'bg-indigo-200' : '' %>
-                      "
-              id="<%= [round_id, theme_id, question_id].join('_') %>"
-            >
-              <td class="w-96">
-                <%= question['question_text'] %>
-                <br>
-                <%= question['answers'].join(' ') %></td>
-              <td>
-                <% @cats.each do |c| %>
-                  <div class="inline-block w-14">
-                    <%= c %>
-                    <%= button_to(
-                    (
-                      ((@package.manual_categories&.dig(round_id.to_s, theme_id.to_s, question_id.to_s) == c) ? '+' : '') +
-                      ((@package.predicted_categories&.dig(round_id.to_s, theme_id.to_s, question_id.to_s) == c) ? 'p': '')
-                    ),
-                    package_set_cat_path(package_id: @package.id),
-                    params: { round: round_id, theme: theme_id, question: question_id, cat: c },
-                    class: 'bg-blue-300 w-10'
-                    )%>
-                  </div>
-                <% end %>
-              </td>
-            </tr>
-          <% end %>
-        <% end %>
-      <% end %>
-    </table>
+    <%= render Packages::Show::Admin::StructureClassification::Component.new(package: @package) %>
   <% end %>
-
-
-
 </article>

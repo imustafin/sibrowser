@@ -110,7 +110,8 @@ CREATE TABLE public.packages (
     logo_bytes bytea,
     logo_width integer,
     logo_height integer,
-    vk_download_url_updated_at timestamp(6) without time zone
+    vk_download_url_updated_at timestamp(6) without time zone,
+    structure_classification jsonb
 );
 
 
@@ -306,6 +307,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220709213054'),
 ('20220710205516'),
 ('20220711173903'),
-('20220810183607');
+('20220810183607'),
+('20220811175747');
 
 

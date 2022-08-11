@@ -1,0 +1,49 @@
+<%= form_with url: package_set_cat_path(package_id: @package.id) do |form| %>
+<table class="border-2 border-black w-full">
+  <% @package.structure.each_with_index do |round, round_id| %>
+    <tr class="h-10 bg-indigo-500 text-white">
+      <td><%= round['name'] %></td>
+      <td></td>
+    </tr>
+    <% round['themes'].each_with_index do |theme, theme_id| %>
+      <tr class="h-10 bg-indigo-300 font-bold" id="<%= [round_id, theme_id].join('_') %>">
+        <td><%= round['name'] %> <br> >> <%= theme['name'] %></td>
+        <td>
+        </td>
+      </tr>
+      <% theme['questions'].each_with_index do |question, question_id| %>
+        <tr
+          class="border-2 border-black"
+          id="<%= [round_id, theme_id, question_id].join('_') %>"
+        >
+          <td class="w-96">
+            <%= question['question_text'] %>
+            <br>
+            <span class="font-bold">
+              <%= question['answers'].join(' ') %></td>
+            </span>
+          <td>
+            <% categories.each do |c| %>
+              <div class="inline-block w-16">
+                <div class="text-center">
+                  <%= c %>
+                </div>
+                <% n = radio_name(round_id, theme_id, question_id, c) %>
+                <% ['yes', 'null', 'no'].each do |ans| %>
+                  <%= form.radio_button n, ans, checked: value_by_name(n) == ans %>
+                  <%= form.label "#{n}_#{ans}", ans %>
+                <% end %>
+              </div>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  <% end %>
+</table>
+
+<%= form.submit class: 'font-bold bg-black text-white'  %>
+<div class="text-xl">
+  <%= flash[:set_cat] %>
+</div>
+<% end %>

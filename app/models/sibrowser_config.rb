@@ -16,6 +16,10 @@ class SibrowserConfig < ApplicationRecord
     'unk'
   ].freeze
 
+  CATEGORIES_2 = [
+    'anime'
+  ]
+
   def self.instance
     first_or_create
   end

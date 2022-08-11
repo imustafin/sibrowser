@@ -98,10 +98,6 @@ class PackagesController < ApplicationController
 
     @page_description = helpers.package_description(@package)
 
-    if helpers.admin?
-      @cats = SibrowserConfig::CATEGORIES
-    end
-
     @breadcrumbs = {
       parts: [
         [t(:packages), packages_path],
@@ -183,38 +179,23 @@ class PackagesController < ApplicationController
 
     p = Package.find(params[:package_id])
 
-
-    mc = p.manual_categories || {}
-    mc = [] unless mc.is_a?(Hash)
-
-    if params[:question].present? && mc.dig(params[:round], params[:theme], params[:question]) == params[:cat]
-      new_cat = nil
-    else
-      new_cat = params[:cat]
+    permitted = {}
+    p.structure.each_with_index do |round, round_id|
+      round['themes'].each_with_index do |theme, theme_id|
+        theme['questions'].each_with_index do |_, question_id|
+          SibrowserConfig::CATEGORIES_2.each do |cat|
+            name = [round_id, theme_id, question_id, cat].join('_')
+            permitted[name] = ['yes', 'null', 'no']
+          end
+        end
+      end
     end
 
-    question_ids = params[:question]
+    x = params.permit(permitted).to_h
 
-    if params[:question].present?
-      question_ids = [params[:question]]
-    else
-      r = p.structure[params[:round].to_i]
-      t = r['themes'][params[:theme].to_i]['questions']
-      question_ids = (0...t.length).map(&:to_s)
-    end
+    p.update!(structure_classification: x)
 
-    upd = {
-      params[:round] => {
-        params[:theme] => question_ids.map { |id| [id, new_cat] }.to_h
-      }
-    }
-
-    mc = mc.deep_merge(upd)
-    p.manual_categories = mc
-    p.save!
-
-    anchor = [params[:round], params[:theme], params[:question]].reject(&:blank?).join('_')
-
-    redirect_to action: :show, id: params[:package_id], anchor: anchor
+    flash[:set_cat] = "Saved at #{Time.now}"
+    redirect_to p
   end
 end
