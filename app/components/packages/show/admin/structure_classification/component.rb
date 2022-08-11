@@ -21,7 +21,7 @@ module Packages
 
           def value_by_name(name)
             parts = name.split('_')
-            package&.structure_classification[name] || 'null'
+            package&.structure_classification&.[](name) || 'null'
           end
         end
       end
