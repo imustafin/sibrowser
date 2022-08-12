@@ -1,0 +1,19 @@
+<table>
+  <caption>cat_stats</caption>
+  <thead>
+    <th>cat</th>
+    <th>yes</th>
+    <th>null</th>
+    <th>no</th>
+    <th>yes / no</th>
+  </thead>
+<% @cats.each do |cat, dist| %>
+  <tr>
+    <td class="italic border border-black"><%= cat %></td>
+    <td class="border border-black text-center"><%= dist[:yes] %></td>
+    <td class="border border-black text-center"><%= dist[:null] %></td>
+    <td class="border border-black text-center"><%= dist[:no] %></td>
+    <td class="border border-black text-center"><%= dist[:no] == 0 ? 'n/a' : (dist[:yes].to_f / dist[:no]).round(2) %></td>
+  </tr>
+<% end %>
+</table>

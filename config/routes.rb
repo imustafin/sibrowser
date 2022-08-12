@@ -28,6 +28,10 @@ Rails.application.routes.draw do
   post 'admin/login', to: 'admin#login', as: 'login'
   post 'admin/logout', to: 'admin#logout', as: 'logout'
 
+  scope 'admin' do
+    get 'cat_stats', to: 'admin#cat_stats', as: 'admin_cat_stats'
+  end
+
   scope '(:locale)', constraints: { locale: Languages.map(&:last).map(&:to_s) } do
     root 'packages#index'
 
