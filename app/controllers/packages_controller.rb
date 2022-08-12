@@ -179,19 +179,18 @@ class PackagesController < ApplicationController
 
     p = Package.find(params[:package_id])
 
-    permitted = {}
+    permitted = []
     p.structure.each_with_index do |round, round_id|
       round['themes'].each_with_index do |theme, theme_id|
         theme['questions'].each_with_index do |_, question_id|
           SibrowserConfig::CATEGORIES_2.each do |cat|
-            name = [round_id, theme_id, question_id, cat].join('_')
-            permitted[name] = ['yes', 'null', 'no']
+            permitted << [round_id, theme_id, question_id, cat].join('_')
           end
         end
       end
     end
 
-    x = params.permit(permitted).to_h
+    x = params.permit(*permitted).select { |k, v| %w[yes null no].include?(v) }
 
     p.update!(structure_classification: x)
 
