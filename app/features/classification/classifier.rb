@@ -1,66 +1,46 @@
 module Classification
   class Classifier
-    # tf — Term Frequency
-    # tf(t, d) relative frequency of term t in document d
-    # tf(t, d) = f(t, d) / |d|
-    # Where
-    #   f(t, d) = how many times t occurs in d
-    #   |d| = number of words (len(d))
+    attr_accessor :tid
 
-    def initialize
-      tmp = 'create temporary table if not exists'
+
+    def model(name, **cols, &blk)
+      self.class.attr_accessor(name)
+
+      tablename = "#{name}_#{tid}"
+
       execute <<~SQL
-        #{tmp}
-        goodterms (
-          term text
+        create temporary table #{tablename}
+        (
+          #{cols.map { |k, v| "#{k} #{v}" }.join(', ')}
         );
-
-        #{tmp}
-        pcategories (
-          package_id bigint,
-          category text
-        );
-
-        #{tmp}
-        aprioris (
-          category text,
-          probability float
-        );
-
-        #{tmp}
-        termprobs (
-          term text,
-          category text,
-          probability float
-        );
-
-        #{tmp}
-        packprobs (
-          package_id bigint,
-          category text,
-          probability float
-        )
       SQL
 
-      model(:goodterm)
+      instance_variable_set(
+        "@#{name}",
+        Class.new(ApplicationRecord) do
+          self.table_name = tablename
 
-      model(:pcategory) do
-        belongs_to :package
-      end
+          instance_exec(self, &blk) if blk
+        end
+      )
+    end
 
-      model(:apriori)
+    def initialize
+      @tid = SecureRandom.urlsafe_base64(5).downcase
 
-      model(:termprob)
-
-      model(:packprob)
+      model(:goodterm, term: :text)
+      model(:pcategory, package_id: :bigint, category: :text) { belongs_to :package }
+      model(:apriori, category: :text, probability: :float)
+      model(:termprob, term: :text, category: :text, probability: :float)
+      model(:packprob, package_id: :bigint, category: :text, probability: :float)
     end
 
     def prepare
-      report(Goodterm) { fill_goodterms }
-      report(Pcategory) { fill_pcategory }
-      report(Apriori) { fill_apriori }
-      report(Termprob) { fill_termprobs }
-      report(Packprob) { fill_packprobs }
+      report(:goodterm)
+      report(:pcategory)
+      report(:apriori)
+      report(:termprob)
+      report(:packprob)
 
       self
     end
@@ -68,12 +48,12 @@ module Classification
     def report(model, &blk)
       puts "Filling #{model}"
       start = Time.now
-      blk.call
+      send("fill_#{model}")
       finish = Time.now
-      puts "Filled #{model.count} of #{model} in #{(finish - start).round(2)}"
+      puts "Filled #{send(model).count} of #{model} in #{(finish - start).round(2)}"
     end
 
-    def fill_goodterms
+    def fill_goodterm
       all_terms = Package
         .from(Package.select(unnest_ts))
         .select('(ts).lexeme as term')
@@ -90,7 +70,7 @@ module Classification
       puts "Cleaned terms #{Package.from(good_terms).count}"
 
       # insert(Goodterm, good_terms)
-      insert(Goodterm, all_terms)
+      insert(goodterm, all_terms)
     end
 
     def fill_pcategory
@@ -119,7 +99,7 @@ module Classification
       end
 
       irows = inserts.map { |(a, b)| "(#{a}, '#{b}')" }.join(', ')
-      insert(Pcategory, "values #{irows}")
+      insert(pcategory, "values #{irows}")
     end
 
     def category_by_tag(tag)
@@ -127,13 +107,13 @@ module Classification
     end
 
     def fill_apriori
-      distinct_ids = Pcategory.select(:package_id).count
+      distinct_ids = pcategory.select(:package_id).count
       inserts = []
 
-      all_cats = Pcategory.distinct.pluck(:category)
+      all_cats = pcategory.distinct.pluck(:category)
 
       all_cats.each do |category|
-        this_cat = Pcategory.where(category:).count.to_f
+        this_cat = pcategory.where(category:).count.to_f
         prob =  this_cat / distinct_ids
 
         inserts << [category, prob]
@@ -141,24 +121,24 @@ module Classification
 
       rows = inserts.map { |(a, b)| "('#{a}', #{b})" }.join(', ')
 
-      insert(Apriori, "values #{rows}")
+      insert(apriori, "values #{rows}")
     end
 
-    def fill_termprobs
-      all_terms = Goodterm.all
+    def fill_termprob
+      all_terms = goodterm.all
 
-      all_terms_n = Goodterm.count
+      all_terms_n = goodterm.count
 
-      all_categories = Pcategory.select('category').distinct
+      all_categories = pcategory.select('category').distinct
 
       term_cat = Package
         .from(all_terms)
         .select('term', 'category')
         .joins("CROSS JOIN (#{all_categories.to_sql}) s")
 
-      real_counts = Pcategory
+      real_counts = pcategory
         .joins("JOIN (#{Package.select('id', unnest_ts).to_sql}) s ON package_id = s.id")
-        .joins("JOIN #{Goodterm.table_name} on term = (ts).lexeme")
+        .joins("JOIN #{goodterm.table_name} on term = (ts).lexeme")
         .group('category', '(ts).lexeme')
         .select(
           '(ts).lexeme AS term',
@@ -180,19 +160,19 @@ module Classification
         .joins("LEFT OUTER JOIN (#{real_counts.to_sql}) rr using (term, category)")
         .joins("JOIN (#{category_len.to_sql}) clen using(category)")
 
-      insert(Termprob, data)
+      insert(termprob, data)
     end
 
-    def fill_packprobs
+    def fill_packprob
       package_term_counts = Package
         .from(Package.select('id', unnest_ts))
         .select('id', '(ts).lexeme as term', "(#{ts_occurs}) as occurs")
-        .joins("JOIN #{Goodterm.table_name} ON term = (ts).lexeme")
+        .joins("JOIN #{goodterm.table_name} ON term = (ts).lexeme")
 
       package_tc_probs = Package
         .from(package_term_counts)
         .select('id', 'term', 'category', 'occurs * log(probability) as term_log_prob')
-        .joins("JOIN #{Termprob.table_name} USING (term)")
+        .joins("JOIN #{termprob.table_name} USING (term)")
 
       package_terms_log_prob = Package
         .from(package_tc_probs)
@@ -202,16 +182,16 @@ module Classification
       with_apriori = Package
         .from(package_terms_log_prob)
         .select('id', 'category',
-          "(term_log_prob_sum + log(#{Apriori.table_name}.probability)) AS log_prob")
-        .joins("JOIN #{Apriori.table_name} using (category)")
+          "(term_log_prob_sum + log(#{apriori.table_name}.probability)) AS log_prob")
+        .joins("JOIN #{apriori.table_name} using (category)")
 
 
       pp Package.joins("JOIN (#{with_apriori.to_sql}) s USING (id)")
-        .select('id', 'name', 'tags', 's.category', 'log_prob', "#{Pcategory.table_name}.category as pcat")
+        .select('id', 'name', 'tags', 's.category', 'log_prob', "#{pcategory.table_name}.category as pcat")
         .where("packages.tags <> '[]'")
-        .where("#{Pcategory.table_name}.category = 'anime'")
+        .where("#{pcategory.table_name}.category = 'anime'")
          .where('id = 17004')
-        .joins("JOIN #{Pcategory.table_name} on id = package_id")
+        .joins("JOIN #{pcategory.table_name} on id = package_id")
         .limit(10)
         # .order('log_prob desc')
         .order(
@@ -231,18 +211,6 @@ module Classification
 
     def ts_occurs
       'array_length((ts).positions, 1)'
-    end
-
-    def model(name, &blk)
-      cap = name.capitalize
-      if self.class.const_defined?(cap)
-        self.class.const_get(cap)
-      else
-        ans = self.class.const_set(cap, Class.new(ApplicationRecord) do
-          instance_exec(self, &blk) if blk
-        end
-        )
-      end
     end
 
     def unnest_ts(as = true)
