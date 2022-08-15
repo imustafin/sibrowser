@@ -1,7 +1,6 @@
 module Classification
   class Classifier
-    attr_accessor :tid
-
+    attr_accessor :tid, :cat
 
     def model(name, **cols, &blk)
       self.class.attr_accessor(name)
@@ -21,26 +20,62 @@ module Classification
           self.table_name = tablename
 
           instance_exec(self, &blk) if blk
+
+          @name = name.to_s
+          def self.name
+            @name.to_s
+          end
         end
       )
     end
 
     def initialize
-      @tid = SecureRandom.urlsafe_base64(5).downcase
+      @tid = SecureRandom.hex(5)
 
-      model(:goodterm, term: :text)
-      model(:pcategory, package_id: :bigint, category: :text) { belongs_to :package }
-      model(:apriori, category: :text, probability: :float)
+      model(:document,
+        id: 'text primary key',
+        doc_id: :text,
+        package_id: :bigint,
+        round: :int,
+        theme: :int,
+        question: :int,
+        term: :text,
+        count: :int,
+
+        role: :text, # train or test?
+        cat: :text # correct category
+      ) do
+        enum role: { train: 'train', test: 'test' }
+      end
+
+      model(:term, term: :text)
+      model(:apriori, id: :int, category: :text, probability: :float)
       model(:termprob, term: :text, category: :text, probability: :float)
-      model(:packprob, package_id: :bigint, category: :text, probability: :float)
+      model(:docprob, doc_id: :text, category: :text, log_prob: :float)
+      model(:doccls, doc_id: :text, yes_p: :float, no_p: :float)
     end
 
-    def prepare
-      report(:goodterm)
-      report(:pcategory)
+    def prepare(cat)
+      @cat = cat
+
+      report(:document)
+      puts "Train #{document.train.count}"
+      puts "Test #{document.test.count}"
+
+      report(:term)
       report(:apriori)
+      pp apriori.all.as_json
       report(:termprob)
-      report(:packprob)
+      ['yes', 'no'].each do |category|
+        [['Best', :desc], ['Worst', :asc]].each do |(word, sort)|
+          pp ["#{word} terms for #{category}",
+          termprob.where(category:).order(:probability => sort).limit(5).pluck(:term, :probability).to_h]
+        end
+      end
+
+      report(:docprob)
+
+      report(:doccls)
 
       self
     end
@@ -53,157 +88,196 @@ module Classification
       puts "Filled #{send(model).count} of #{model} in #{(finish - start).round(2)}"
     end
 
-    def fill_goodterm
-      all_terms = Package
-        .from(Package.select(unnest_ts))
-        .select('(ts).lexeme as term')
-        .distinct
+    def fill_document
+      cs = StringCleaner.new
 
-      puts "Initial distinct terms #{Package.from(all_terms).count}"
+      Package
+        .select(:id, :structure, :structure_classification)
+        .where.not(structure_classification: {})
+        .where.not(structure: {})
+        .find_in_batches do |batch|
+          inserts = []
 
-      good_terms = Package
-        .from(all_terms)
-        .select('term')
-        .where('char_length(term) > 2 or char_length(term) < 10')
-        .where("term similar to '[a-zа-я]*'")
+          batch.each do |package|
+            package.structure.each_with_index do |round, round_id|
+              round['themes'].each_with_index do |theme, theme_id|
+                theme['questions'].each_with_index do |question, question_id|
+                  cls_key = [round_id, theme_id, question_id, cat].join('_')
+                  cls_y = package.structure_classification[cls_key] || 'null'
+                  next if cls_y == 'null'
 
-      puts "Cleaned terms #{Package.from(good_terms).count}"
+                  s = [question['answers'] + [question['question_text']]].join(' ')
+                  s = cs.clean(s)
+                  next if s.blank?
 
-      # insert(Goodterm, good_terms)
-      insert(goodterm, all_terms)
-    end
-
-    def fill_pcategory
-      inserts = []
-      Package.where.not(tags: []).select(:id, :tags).find_in_batches do |batch|
-        batch.map do |p|
-          next unless p.tags
-
-          cats = p.tags.map { |t| category_by_tag(t) }.compact
-
-          if cats.include?('anime')
-            inserts << [p.id, 'anime']
-          else
-            inserts << [p.id, 'not_anime']
+                  s.split.tally.each do |term, count|
+                    doc_id = [package.id, cls_key].join('_')
+                    inserts << {
+                      doc_id:,
+                      id: [doc_id, term].join('_'),
+                      package_id: package.id,
+                      round: round_id,
+                      theme: theme_id,
+                      question: question_id,
+                      term:,
+                      count:,
+                      cat: cls_y
+                    }
+                  end
+                end
+              end
+            end
           end
 
+          document.import(inserts)
+      end
 
-          # cats.each do |cat|
-          #   inserts << [p.id, cat]
-          # end
+      r = Random.new(123)
 
-          # (CAT_TO_TAG.keys - cats).each do |cat|
-          #   inserts << [p.id, "not_#{cat}"]
-          # end
+      trains = []
+      tests = []
+
+      document.ids.each do |id|
+        to_train = r.rand(100) < 75
+
+        if to_train
+          trains << id
+        else
+          tests << id
         end
       end
 
-      irows = inserts.map { |(a, b)| "(#{a}, '#{b}')" }.join(', ')
-      insert(pcategory, "values #{irows}")
+      document.where(id: trains).update_all(role: 'train')
+      document.where(id: tests).update_all(role: 'test')
     end
 
-    def category_by_tag(tag)
-      CAT_TO_TAG.find { |_, v| v.include?(tag.downcase.strip) }&.first
+    def fill_term
+      data = document.train.select('term').distinct
+      insert(term, data)
     end
 
+    # Apriori probability of tag being yes/no
     def fill_apriori
-      distinct_ids = pcategory.select(:package_id).count
-      inserts = []
+      # distinct documents
+      n = document.train.select(:doc_id).distinct.count
 
-      all_cats = pcategory.distinct.pluck(:category)
+      yes = document.train.select(:doc_id).where(cat: :yes).distinct.count.to_f / n
+      no = document.train.select(:doc_id).where(cat: :no).distinct.count.to_f / n
 
-      all_cats.each do |category|
-        this_cat = pcategory.where(category:).count.to_f
-        prob =  this_cat / distinct_ids
+      apriori.create!(category: :yes, probability: yes)
+      apriori.create!(category: :no, probability: no)
+    end
 
-        inserts << [category, prob]
-      end
-
-      rows = inserts.map { |(a, b)| "('#{a}', #{b})" }.join(', ')
-
-      insert(apriori, "values #{rows}")
+    def all_terms
+      document.train.select(:term).distinct
     end
 
     def fill_termprob
-      all_terms = goodterm.all
+      all_terms_n = all_terms.count
 
-      all_terms_n = goodterm.count
+      term_cat = all_terms
+        .reselect('term', 'cat')
+        .joins("CROSS JOIN (values ('yes'), ('no')) s(cat)")
 
-      all_categories = pcategory.select('category').distinct
-
-      term_cat = Package
-        .from(all_terms)
-        .select('term', 'category')
-        .joins("CROSS JOIN (#{all_categories.to_sql}) s")
-
-      real_counts = pcategory
-        .joins("JOIN (#{Package.select('id', unnest_ts).to_sql}) s ON package_id = s.id")
-        .joins("JOIN #{goodterm.table_name} on term = (ts).lexeme")
-        .group('category', '(ts).lexeme')
+      real_counts = document.train
+        .group('cat', 'term')
         .select(
-          '(ts).lexeme AS term',
-          'category',
-          "sum(#{ts_occurs}) as real_count"
+          'term',
+          'cat',
+          "sum(count) as real_count"
         )
 
       category_len = Package
         .from(real_counts)
-        .select('category', 'sum(real_count) as category_len')
-        .group('category')
+        .select('cat', 'sum(real_count) as category_len')
+        .group('cat')
 
-      data = Package
+      data = document
         .from(term_cat)
-        .select('term', 'category',
-          # 'real_count', 'category_len',
-          # Laplace smoothing here
-          "(coalesce(real_count, 0) + 1)::float / (category_len + #{all_terms_n})")
-        .joins("LEFT OUTER JOIN (#{real_counts.to_sql}) rr using (term, category)")
-        .joins("JOIN (#{category_len.to_sql}) clen using(category)")
+        .select(
+          'term',
+          'cat',
+          # Laplace smoothing for log_p
+          "LOG((coalesce(real_count, 0) + 1)::float / (category_len + #{all_terms_n})) AS log_p")
+        .joins("LEFT OUTER JOIN (#{real_counts.to_sql}) rr using (term, cat)")
+        .joins("JOIN (#{category_len.to_sql}) clen using(cat)")
 
       insert(termprob, data)
     end
 
-    def fill_packprob
-      package_term_counts = Package
-        .from(Package.select('id', unnest_ts))
-        .select('id', '(ts).lexeme as term', "(#{ts_occurs}) as occurs")
-        .joins("JOIN #{goodterm.table_name} ON term = (ts).lexeme")
+    def fill_docprob
+      # prob = p(cat) * PRODUCT[p(word|cat)]
+      # log(prob) = log(p(cat)) + SUM[log(p(word|cat))]
 
-      package_tc_probs = Package
-        .from(package_term_counts)
-        .select('id', 'term', 'category', 'occurs * log(probability) as term_log_prob')
+      # doc term counts but only for good terms
+      doc_term_count = document.train
+        .select('doc_id', 'term', "count")
+        .joins("JOIN (#{all_terms.to_sql}) s USING (term)")
+
+      doc_term_count_probs = document
+        .from(doc_term_count)
+        .select('doc_id', 'term', 'category', 'count * probability as term_log_prob')
         .joins("JOIN #{termprob.table_name} USING (term)")
 
-      package_terms_log_prob = Package
-        .from(package_tc_probs)
-        .select('id', 'category', 'sum(term_log_prob) as term_log_prob_sum')
-        .group('id', 'category')
+      doc_terms_log_prob = Package
+        .from(doc_term_count_probs)
+        .select('doc_id', 'category', 'sum(term_log_prob) as term_log_prob_sum')
+        .group('doc_id', 'category')
 
       with_apriori = Package
-        .from(package_terms_log_prob)
-        .select('id', 'category',
+        .from(doc_terms_log_prob)
+        .select('doc_id', 'category',
           "(term_log_prob_sum + log(#{apriori.table_name}.probability)) AS log_prob")
         .joins("JOIN #{apriori.table_name} using (category)")
 
+      insert(docprob, with_apriori)
+    end
 
-      pp Package.joins("JOIN (#{with_apriori.to_sql}) s USING (id)")
-        .select('id', 'name', 'tags', 's.category', 'log_prob', "#{pcategory.table_name}.category as pcat")
-        .where("packages.tags <> '[]'")
-        .where("#{pcategory.table_name}.category = 'anime'")
-         .where('id = 17004')
-        .joins("JOIN #{pcategory.table_name} on id = package_id")
-        .limit(10)
-        # .order('log_prob desc')
-        .order(
-          # :id,
-          'log_prob desc'
-        )
-        .as_json
+    def fill_doccls
+      d = document.test
+        .select(:doc_id, :cat, 'jsonb_object_agg(category, log_prob) as probs')
+        .joins("JOIN #{docprob.table_name} USING (doc_id)")
+        .group(:doc_id, :cat)
+
+      yes_p = "coalesce((probs->'yes')::float, '-infinity')"
+      no_p = "coalesce((probs->'no')::float, '-infinity')"
+      expr = <<~SQL.squish
+              case
+    when #{yes_p} = #{no_p} then 'null'
+    when #{yes_p} > #{no_p} then 'yes'
+              end
+            SQL
 
 
+      c = document
+          .from(d)
+          .select(
+            :doc_id,
+            :cat,
+            "#{expr} inferred",
+            "cat = #{expr} correct"
+            )
+
+      test_doc_ids = document.test.select(:doc_id).distinct.pluck(:doc_id)
+
+      n = test_doc_ids.count
+
+      texts = []
+      ['yes', 'null', 'no'].each do |correct|
+        ['yes', 'null', 'no'].each do |inferred|
+          count = document
+            .from(c, document.table_name)
+            .where(cat: correct, inferred:, doc_id: test_doc_ids)
+            .count
+          texts << "#{correct} as #{inferred} = #{count}"
+        end
+      end
+
+      texts.each do |t|
+        puts t
+      end
 
       raise 'kek'
-
     end
 
 
@@ -225,81 +299,5 @@ module Classification
       d = data.respond_to?(:to_sql) ? data.to_sql : data
       execute "insert into #{table.table_name} #{d}"
     end
-
-
-    CAT_TO_TAG = {
-      'anime' => [
-        'аниме',
-        'anime',
-        'хентай',
-        'ониме',
-        'наруто',
-        'аниме и все с ним связанное',
-        'аниме(jojo)',
-        'naruto',
-      ],
-      'music' => [
-        'музыка',
-        'музыкальный',
-        'рок',
-        'иностранный рок',
-        'рэп',
-        'рок, метал',
-        'русский рок',
-        'саундтреки',
-        'саундтрек',
-        'мэшапы',
-        'music',
-        'хип-хоп',
-        'музло',
-        'мешапы',
-        'мелодии',
-        'король и шут',
-        'каверы',
-        'альтернативный рок',
-        'sopor aeternus & the ensemble of shadows',
-        'группа "пикник"',
-        'группа "кооператив ништяк"',
-        'группа "lacrimosa"',
-        'группа "nautilus pompilius"',
-        'группа "the cure"',
-        'группа "агата кристи"',
-      ],
-      'games' => [
-        'игры',
-        'видеоигры',
-        'компьютерные игры',
-        'league of legends',
-        'хартстоун',
-        'hearthstone',
-        'игра escape from tarkov',
-        'звуки из игр',
-        'дота',
-        'игровой',
-        'игра auto chess',
-        'игра',
-        'игр',
-        'warhammer 40k/fb/aos',
-        'osu!',
-        'osu! rhythm game',
-        'games',
-        'game',
-        'cs:go без киберспорта',
-      ],
-      'movies' => [
-        'кино',
-        'фильмы',
-        'сериалы',
-        'кинопак',
-        'мультфильмы',
-        'мультсериалы',
-        'мульты',
-        'мультики',
-        'киномир',
-        'актёр',
-        'актёры',
-        'актрисы',
-      ],
-    }
   end
 end
