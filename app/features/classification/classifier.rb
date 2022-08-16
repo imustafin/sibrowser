@@ -59,8 +59,8 @@ module Classification
       @cat = cat
 
       report(:document)
-      puts "Train #{document.train.count}"
-      puts "Test #{document.test.count}"
+      puts "Train #{document.train.select(:doc_id).distinct.count}"
+      puts "Test #{document.test.select(:doc_id).distinct.count}"
 
       report(:term)
       report(:apriori)
@@ -137,7 +137,7 @@ module Classification
       trains = []
       tests = []
 
-      document.ids.each do |id|
+      document.distinct.pluck(:doc_id).each do |id|
         to_train = r.rand(100) < 75
 
         if to_train
@@ -147,8 +147,8 @@ module Classification
         end
       end
 
-      document.where(id: trains).update_all(role: 'train')
-      document.where(id: tests).update_all(role: 'test')
+      document.where(doc_id: trains).update_all(role: 'train')
+      document.where(doc_id: tests).update_all(role: 'test')
     end
 
     def fill_term
@@ -206,11 +206,13 @@ module Classification
     end
 
     def fill_docprob
+      # fill doc probs for test
+
       # prob = p(cat) * PRODUCT[p(word|cat)]
       # log(prob) = log(p(cat)) + SUM[log(p(word|cat))]
 
       # doc term counts but only for good terms
-      doc_term_count = document.train
+      doc_term_count = document.test
         .select('doc_id', 'term', "count")
         .joins("JOIN (#{all_terms.to_sql}) s USING (term)")
 
@@ -239,12 +241,14 @@ module Classification
         .joins("JOIN #{docprob.table_name} USING (doc_id)")
         .group(:doc_id, :cat)
 
-      yes_p = "coalesce((probs->'yes')::float, '-infinity')"
-      no_p = "coalesce((probs->'no')::float, '-infinity')"
+      minus_inf = '-999999'
+      yes_p = "coalesce((probs->'yes')::float, #{minus_inf})"
+      no_p = "coalesce((probs->'no')::float, #{minus_inf})"
       expr = <<~SQL.squish
               case
     when #{yes_p} = #{no_p} then 'null'
     when #{yes_p} > #{no_p} then 'yes'
+    else 'no'
               end
             SQL
 
@@ -255,21 +259,25 @@ module Classification
             :doc_id,
             :cat,
             "#{expr} inferred",
-            "cat = #{expr} correct"
+            "cat = #{expr} correct",
+            "#{yes_p} yes_p",
+            "#{no_p} no_p"
             )
 
-      test_doc_ids = document.test.select(:doc_id).distinct.pluck(:doc_id)
+      test_doc_ids = document.test.distinct.pluck(:doc_id)
 
       n = test_doc_ids.count
 
       texts = []
+
+      texts << "Total: #{document.from(c).count}"
       ['yes', 'null', 'no'].each do |correct|
         ['yes', 'null', 'no'].each do |inferred|
           count = document
             .from(c, document.table_name)
             .where(cat: correct, inferred:, doc_id: test_doc_ids)
             .count
-          texts << "#{correct} as #{inferred} = #{count}"
+          texts << "Correct '#{correct}' as Inferred '#{inferred}': #{count}"
         end
       end
 
