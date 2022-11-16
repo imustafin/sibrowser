@@ -22,11 +22,26 @@ class ParseBoardWorker
          .map { |a| a['doc'] }
 
         docs.each do |doc|
-          next if Package.skip_updating?(
+          skip_updating = Package.skip_updating?(
             doc['id'],
             doc['owner_id'],
             Time.at(i['date'])
           )
+
+          if skip_updating
+            package = Package.find_by(
+              vk_document_id: doc['id'],
+              vk_owner_id: doc['owner_id']
+            )
+
+            if package
+              package.touch_vk_download_url
+              package.vk_download_url = doc['url']
+              package.save!
+            end
+
+            next
+          end
 
           ParseVkFileWorker.perform_async(
             'filename' => doc['title'],
