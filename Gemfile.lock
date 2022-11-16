@@ -120,13 +120,13 @@ GEM
       activerecord
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
-    loofah (2.18.0)
+    loofah (2.19.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.1)
       mini_mime (>= 0.1.1)
     marcel (1.0.2)
-    meta-tags (2.17.0)
+    meta-tags (2.18.0)
       actionpack (>= 3.2.0, < 7.1)
     method_source (1.0.0)
     mini_magick (4.11.0)
@@ -151,7 +151,7 @@ GEM
       net-protocol
       timeout
     nio4r (2.5.8)
-    nokogiri (1.13.8)
+    nokogiri (1.13.9)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     pg (1.4.3)
@@ -289,7 +289,7 @@ DEPENDENCIES
   image_processing (~> 1.12, >= 1.12.2)
   importmap-rails (~> 1.1)
   kaminari (~> 1.2)
-  meta-tags (~> 2.17)
+  meta-tags (~> 2.18)
   pg (~> 1.4)
   pg_search (~> 2.3)
   platform-api (~> 3.3)
