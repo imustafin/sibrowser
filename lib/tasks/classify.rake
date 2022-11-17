@@ -4,8 +4,10 @@ namespace :classify do
     k = Classification::Classifier
     cls = k.new
 
-    cls.prepare
+    cls.prepare('anime')
 
-    pp k::Termprob.limit(10).as_json
+    cls.predict
+
+    pp cls.result
   end
 end

@@ -40,6 +40,8 @@ module Classification
         y_cat: :text # correct category
       ) do
         enum role: { train: :train, test: :test }
+
+        scope :with_cat, ->{ where.not(y_cat: nil) }
       end
 
       model(:docterm,
@@ -55,6 +57,7 @@ module Classification
       model(:termprob, term: :text, cat: :text, log_p: :float)
       model(:docprob, doc_id: :text, cat: :text, log_p: :float)
       model(:doccls, doc_id: :text, yes_p: :float, no_p: :float)
+      model(:result, id: :text, cat: :text)
     end
 
     def prepare(cat)
@@ -124,22 +127,28 @@ module Classification
 
       Package
         .select(:id, :structure, :structure_classification)
-        .where.not(structure_classification: {})
+        # .where.not(structure_classification: {})
         .where.not(structure: {})
-        .find_in_batches do |batch|
+        .find_in_batches.with_index do |batch, i|
+          puts "Batch #{i}/#{Package.where.not(structure: {}).count / 1000}"
+
           inserts = []
 
           batch.each do |package|
             iter_structure(package.structure) do |round, round_id, theme, theme_id, question, question_id|
               id = [package.id, round_id, theme_id, question_id].join('_')
               cls_key = [round_id, theme_id, question_id, cat].join('_')
-              y_cat = package.structure_classification[cls_key] || 'null'
-              next if y_cat == 'null'
+              y_cat = package.structure_classification&.[](cls_key) || 'null'
 
               clean_text = question_text(question)
+              byebug if package.id == 19278 && clean_text.blank?
               next if clean_text.blank?
 
-              role = r.rand(1.0) < TRAIN_PORTION ? :train : :test
+              if y_cat == 'null'
+                role = nil
+              else
+                role = r.rand(1.0) < TRAIN_PORTION ? :train : :test
+              end
 
               inserts << {
                 id:,
@@ -157,7 +166,7 @@ module Classification
     def fill_docterm
       data = document
         .from(
-          document.select(
+          document.with_cat.select(
             'id as document_id',
             "unnest(to_tsvector('pg_catalog.russian', clean_text)) as ts"))
         .select(
@@ -169,7 +178,8 @@ module Classification
     end
 
     def fill_term
-      data = document.train
+      data = document
+        .with_cat
         .joins("JOIN #{docterm.table_name} ON document_id = #{document.table_name}.id")
         .select('term')
         .distinct
@@ -184,10 +194,10 @@ module Classification
     # Apriori probability of tag being yes/no
     def fill_apriori
       # distinct documents
-      n = document.train.count
+      n = document.with_cat.count
 
-      yes = log(document.train.where(y_cat: :yes).count.to_f / n)
-      no = log(document.train.where(y_cat: :no).count.to_f / n)
+      yes = log(document.with_cat.where(y_cat: :yes).count.to_f / n)
+      no = log(document.with_cat.where(y_cat: :no).count.to_f / n)
 
       apriori.create!(cat: :yes, log_p: yes)
       apriori.create!(cat: :no, log_p: no)
@@ -202,7 +212,7 @@ module Classification
         .joins("CROSS JOIN (values ('yes'), ('no')) s(cat)")
 
       # occurences of term in cat
-      real_counts = document.train
+      real_counts = document.with_cat
         .joins("JOIN #{docterm.table_name} ON #{document.table_name}.id = document_id")
         .group('y_cat', 'term')
         .select(
@@ -238,7 +248,7 @@ module Classification
       # log(prob) = log(p(cat)) + SUM[log(p(word|cat))]
 
       # test document terms
-      doc_term_count = document.test
+      doc_term_count = document.with_cat
         .select(
           "#{document.table_name}.id as id",
           "term",
@@ -264,6 +274,40 @@ module Classification
         .joins("JOIN #{apriori.table_name} using (cat)")
 
       insert(docprob, with_apriori)
+    end
+
+    def predict_docs(docs)
+      d = docs
+        .select(:id, 'jsonb_object_agg(cat, log_p) as probs')
+        .joins("JOIN #{docprob.table_name} on id = doc_id")
+        .group(:id)
+
+      minus_inf = '-999999'
+      yes_p = "coalesce((probs->'yes')::float, #{minus_inf})"
+      no_p = "coalesce((probs->'no')::float, #{minus_inf})"
+      expr = <<~SQL.squish
+              case
+    when #{yes_p} = #{no_p} then NULL
+    when #{yes_p} > #{no_p} then 1
+    else 0
+              end
+            SQL
+
+      package_id = "split_part(id, '_', 1)"
+
+      c = document
+        .from(d)
+        .select(
+          "#{package_id} package_id",
+          "sum(#{expr})::float / count(*) match_part",
+        )
+        .group(package_id)
+    end
+
+    def predict
+      d = predict_docs(document)
+
+      pp d.limit(10).as_json
     end
 
     def fill_doccls
@@ -335,8 +379,6 @@ module Classification
       texts.each do |t|
         puts t
       end
-
-      raise 'kek'
     end
 
 
