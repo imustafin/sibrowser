@@ -13,3 +13,9 @@ docker-compose -f docker-compose.development.yml exec app bash
 
 ./bin/dev
 ```
+
+
+## Heroku db
+Outside of docker run `download.sh`. It saves dump as `latest.dump.X`.
+
+To load the dump run `restore.sh Y` where `Y` is the dump filename (`latest.dump.X`).
