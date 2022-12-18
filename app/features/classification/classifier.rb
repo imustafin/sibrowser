@@ -1,6 +1,6 @@
 module Classification
   class Classifier
-    attr_accessor :tid, :cat
+    attr_accessor :tid, :cat, :train_packages
 
     def model(name, **cols, &blk)
       self.class.attr_accessor(name)
@@ -36,17 +36,26 @@ module Classification
         id: 'text primary key',
         clean_text: :text,
 
-        role: :text, # train or test?
         y_cat: :text # correct category
       ) do
-        enum role: { train: :train, test: :test }
-
         scope :with_cat, ->{ where.not(y_cat: nil) }
       end
+
+      model(:predict_document,
+        id: 'text primary key',
+        clean_text: :text
+      )
 
       model(:docterm,
         id: 'serial primary key',
         document_id: "text references #{document.table_name}(id)",
+        term: :text,
+        occurences: :int
+      )
+
+      model(:predict_docterm,
+        id: 'serial primary key',
+        document_id: "text references #{predict_document.table_name}(id)",
         term: :text,
         occurences: :int
       )
@@ -60,12 +69,13 @@ module Classification
       model(:result, id: :text, cat: :text)
     end
 
-    def prepare(cat)
+    def train(dataset, cat)
       @cat = cat
+      @train_packages = dataset
 
       report(:document)
-      puts "Train #{document.train.count}"
-      puts "Test #{document.test.count}"
+      puts "Distribution"
+      puts document.group(:y_cat).count
 
       report(:docterm)
       puts "Text #{document.first.clean_text}"
@@ -74,19 +84,20 @@ module Classification
       report(:term)
 
       report(:apriori)
-      pp apriori.all.as_json
+      apriori.all.as_json.map do |row|
+        log_p = row['log_p']
+        p = log_p.nil? ? 0 : exp(log_p)
+
+        puts "#{row['cat']}: log_p #{log_p}, p #{p}"
+      end
 
       report(:termprob)
-      ['yes', 'no'].each do |cat|
+      ['yes', 'no', 'null'].each do |cat|
         [['Best', :desc], ['Worst', :asc]].each do |(word, sort)|
           pp ["#{word} terms for #{cat}",
           termprob.where(cat:).order(:log_p => sort).limit(5).pluck(:term, :log_p).to_h]
         end
       end
-
-      report(:docprob)
-
-      report(:doccls)
 
       self
     end
@@ -114,23 +125,26 @@ module Classification
     end
 
 
-    def question_text(question)
-      text = ([question['question_text']] + question['answers']).join(' ')
-      string_cleaner.clean(text)
+    def question_text(round:, theme:, question:)
+      strings = [
+        *question['answers'],
+        question['question_text'],
+        round['name'],
+        theme['name']
+      ]
+
+      string_cleaner.clean(strings.join(' '))
     end
 
     SEED = 123
     TRAIN_PORTION = 0.85
 
     def fill_document
-      r = Random.new(SEED)
-
-      Package
+      train_packages
+        .where.not(structure_classification: {}) # train only on mapped packages
         .select(:id, :structure, :structure_classification)
-        # .where.not(structure_classification: {})
-        .where.not(structure: {})
         .find_in_batches.with_index do |batch, i|
-          puts "Batch #{i}/#{Package.where.not(structure: {}).count / 1000}"
+          puts "Batch #{i}/#{train_packages.count / 1000}"
 
           inserts = []
 
@@ -140,19 +154,11 @@ module Classification
               cls_key = [round_id, theme_id, question_id, cat].join('_')
               y_cat = package.structure_classification&.[](cls_key) || 'null'
 
-              clean_text = question_text(question)
-              byebug if package.id == 19278 && clean_text.blank?
+              clean_text = question_text(round:, theme:, question:)
               next if clean_text.blank?
-
-              if y_cat == 'null'
-                role = nil
-              else
-                role = r.rand(1.0) < TRAIN_PORTION ? :train : :test
-              end
 
               inserts << {
                 id:,
-                role:,
                 y_cat:,
                 clean_text:
               }
@@ -163,6 +169,32 @@ module Classification
         end
     end
 
+    def fill_predict_document(packages)
+      packages
+        .select(:id, :structure)
+        .find_in_batches.with_index do |batch, i|
+          puts "Predict doc batch #{i}/#{packages.count / 1000}"
+
+          inserts = []
+
+          batch.each do |package|
+            iter_structure(package.structure) do |round, round_id, theme, theme_id, question, question_id|
+              id = [package.id, round_id, theme_id, question_id].join('_')
+              clean_text = question_text(round:, theme:, question:)
+              next if clean_text.blank?
+
+              inserts << {
+                id:,
+                clean_text:
+              }
+            end
+          end
+
+          predict_document.import(inserts)
+        end
+    end
+
+    # Fills (document_id, term, occrences) only for documents which are mapped (with_cat)
     def fill_docterm
       data = document
         .from(
@@ -175,6 +207,25 @@ module Classification
           'array_length((ts).positions, 1) as occurences'
         )
       insert(docterm, " (document_id, term, occurences) select * from (#{data.to_sql}) s")
+    end
+
+    def fill_predict_docterm
+      data = predict_document
+        .from(
+          predict_document.select(
+            'id as did',
+            "unnest(to_tsvector('pg_catalog.russian', clean_text)) as ts"))
+        .select(
+          "did",
+          '(ts).lexeme as term',
+          'array_length((ts).positions, 1) as occurences'
+        )
+        .joins("join #{docterm.table_name} ON (ts).lexeme = #{docterm.table_name}.term")
+
+      insert(
+        predict_docterm,
+        " (document_id, term, occurences) select * from (#{data.to_sql}) s"
+      )
     end
 
     def fill_term
@@ -191,16 +242,22 @@ module Classification
       Math.log10(f)
     end
 
+    def exp(f)
+      10 ** f
+    end
+
     # Apriori probability of tag being yes/no
     def fill_apriori
       # distinct documents
-      n = document.with_cat.count
+      n = document.count
 
       yes = log(document.with_cat.where(y_cat: :yes).count.to_f / n)
       no = log(document.with_cat.where(y_cat: :no).count.to_f / n)
+      null = log(document.with_cat.where(y_cat: :null).count.to_f / n)
 
       apriori.create!(cat: :yes, log_p: yes)
       apriori.create!(cat: :no, log_p: no)
+      apriori.create!(cat: :null, log_p: null)
     end
 
     def fill_termprob
@@ -209,7 +266,7 @@ module Classification
       # (term, cat)
       term_cat = term
         .reselect('term', 'cat')
-        .joins("CROSS JOIN (values ('yes'), ('no')) s(cat)")
+        .joins("CROSS JOIN (values ('yes'), ('no'), ('null')) s(cat)")
 
       # occurences of term in cat
       real_counts = document.with_cat
@@ -242,26 +299,27 @@ module Classification
     end
 
     def fill_docprob
-      # fill doc probs for test
+      # fill doc probs for predict_document
 
       # prob = p(cat) * PRODUCT[p(word|cat)]
       # log(prob) = log(p(cat)) + SUM[log(p(word|cat))]
 
       # test document terms
-      doc_term_count = document.with_cat
+      doc_term_count = predict_document
         .select(
-          "#{document.table_name}.id as id",
+          "#{predict_document.table_name}.id as id",
           "term",
           "occurences")
-        .joins("JOIN #{docterm.table_name} on document_id = #{document.table_name}.id")
+        .joins(
+          "JOIN #{predict_docterm.table_name} on document_id = #{predict_document.table_name}.id"
+        )
 
-
-      doc_term_count_probs = document
+      doc_term_count_probs = predict_document
         .from(doc_term_count, :sub)
         .select("sub.id", 'term', 'cat', 'occurences * log_p as term_log_p')
         .joins("JOIN #{termprob.table_name} USING (term)")
 
-      doc_terms_log_prob = Package
+      doc_terms_log_prob = Package # packages here is a placeholder for any model
         .from(doc_term_count_probs, :sub)
         .select('sub.id', 'cat', 'sum(term_log_p) as term_log_p_sum')
         .group('sub.id', 'cat')
@@ -276,8 +334,13 @@ module Classification
       insert(docprob, with_apriori)
     end
 
-    def predict_docs(docs)
-      d = docs
+    def predict(packages, give_documents)
+      fill_predict_document(packages)
+      fill_predict_docterm
+
+      fill_docprob
+
+      d = predict_document
         .select(:id, 'jsonb_object_agg(cat, log_p) as probs')
         .joins("JOIN #{docprob.table_name} on id = doc_id")
         .group(:id)
@@ -285,29 +348,32 @@ module Classification
       minus_inf = '-999999'
       yes_p = "coalesce((probs->'yes')::float, #{minus_inf})"
       no_p = "coalesce((probs->'no')::float, #{minus_inf})"
+      null_p = "coalesce((probs->'null')::float, #{minus_inf})"
       expr = <<~SQL.squish
               case
-    when #{yes_p} = #{no_p} then NULL
-    when #{yes_p} > #{no_p} then 1
-    else 0
+                when #{yes_p} > greatest(#{no_p}, #{null_p}) then 1
+                when #{no_p} > greatest(#{yes_p}, #{null_p}) then 0
+                else NULL
               end
             SQL
 
+      if give_documents
+        return predict_document
+          .from(d)
+          .select('id', "case #{expr} when 1 then 'yes' when 0 then 'no' else 'null' end cat")
+      end
+
+
       package_id = "split_part(id, '_', 1)"
 
-      c = document
+      predict_document
         .from(d)
         .select(
           "#{package_id} package_id",
+          # sum skips nulls, so it is number of 1 / (number of 1 or null)
           "sum(#{expr})::float / count(*) match_part",
         )
         .group(package_id)
-    end
-
-    def predict
-      d = predict_docs(document)
-
-      pp d.limit(10).as_json
     end
 
     def fill_doccls
