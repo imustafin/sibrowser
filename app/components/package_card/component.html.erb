@@ -32,6 +32,9 @@
           class: 'text-l font-semibold'
         %>
       <% end %>
+      <% if helpers.admin? %>
+        Anime: <%= @package.cat_anime_ratio %>
+      <% end %>
 
       <div class="pt-2">
         <%= render KeywordLinksComponent.new(tags: @package.tags || [], categories: @package.categories || {}) %>

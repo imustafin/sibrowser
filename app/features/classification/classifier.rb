@@ -36,10 +36,8 @@ module Classification
         id: 'text primary key',
         clean_text: :text,
 
-        y_cat: :text # correct category
-      ) do
-        scope :with_cat, ->{ where.not(y_cat: nil) }
-      end
+        y_cat: 'text not null' # correct category
+      )
 
       model(:predict_document,
         id: 'text primary key',
@@ -61,7 +59,7 @@ module Classification
       )
 
 
-      model(:term, term: :text)
+      model(:term, term: 'text primary key')
       model(:apriori, id: :int, cat: :text, log_p: :float)
       model(:termprob, term: :text, cat: :text, log_p: :float)
       model(:docprob, doc_id: :text, cat: :text, log_p: :float)
@@ -92,7 +90,7 @@ module Classification
       end
 
       report(:termprob)
-      ['yes', 'no', 'null'].each do |cat|
+      ['yes', 'no'].each do |cat|
         [['Best', :desc], ['Worst', :asc]].each do |(word, sort)|
           pp ["#{word} terms for #{cat}",
           termprob.where(cat:).order(:log_p => sort).limit(5).pluck(:term, :log_p).to_h]
@@ -125,12 +123,13 @@ module Classification
     end
 
 
-    def question_text(round:, theme:, question:)
+    def question_text(package:, round:, theme:, question:)
       strings = [
         *question['answers'],
         question['question_text'],
         round['name'],
-        theme['name']
+        theme['name'],
+        package.name
       ]
 
       string_cleaner.clean(strings.join(' '))
@@ -140,11 +139,13 @@ module Classification
     TRAIN_PORTION = 0.85
 
     def fill_document
-      train_packages
-        .where.not(structure_classification: {}) # train only on mapped packages
-        .select(:id, :structure, :structure_classification)
+      tp_scope = train_packages
+        .where.not(structure_classification: {}) # train ony on mapped packages
+
+      tp_scope
+        .select(:id, :name, :structure, :structure_classification)
         .find_in_batches.with_index do |batch, i|
-          puts "Batch #{i}/#{train_packages.count / 1000}"
+          puts "Batch #{i}/#{tp_scope.count / 1000}"
 
           inserts = []
 
@@ -154,7 +155,9 @@ module Classification
               cls_key = [round_id, theme_id, question_id, cat].join('_')
               y_cat = package.structure_classification&.[](cls_key) || 'null'
 
-              clean_text = question_text(round:, theme:, question:)
+              next if y_cat == 'null'
+
+              clean_text = question_text(package:, round:, theme:, question:)
               next if clean_text.blank?
 
               inserts << {
@@ -171,7 +174,7 @@ module Classification
 
     def fill_predict_document(packages)
       packages
-        .select(:id, :structure)
+        .select(:id, :name, :structure)
         .find_in_batches.with_index do |batch, i|
           puts "Predict doc batch #{i}/#{packages.count / 1000}"
 
@@ -180,7 +183,7 @@ module Classification
           batch.each do |package|
             iter_structure(package.structure) do |round, round_id, theme, theme_id, question, question_id|
               id = [package.id, round_id, theme_id, question_id].join('_')
-              clean_text = question_text(round:, theme:, question:)
+              clean_text = question_text(package:, round:, theme:, question:)
               next if clean_text.blank?
 
               inserts << {
@@ -198,7 +201,7 @@ module Classification
     def fill_docterm
       data = document
         .from(
-          document.with_cat.select(
+          document.select(
             'id as document_id',
             "unnest(to_tsvector('pg_catalog.russian', clean_text)) as ts"))
         .select(
@@ -220,7 +223,7 @@ module Classification
           '(ts).lexeme as term',
           'array_length((ts).positions, 1) as occurences'
         )
-        .joins("join #{docterm.table_name} ON (ts).lexeme = #{docterm.table_name}.term")
+        .joins("join #{term.table_name} ON (ts).lexeme = #{term.table_name}.term")
 
       insert(
         predict_docterm,
@@ -230,7 +233,6 @@ module Classification
 
     def fill_term
       data = document
-        .with_cat
         .joins("JOIN #{docterm.table_name} ON document_id = #{document.table_name}.id")
         .select('term')
         .distinct
@@ -251,13 +253,11 @@ module Classification
       # distinct documents
       n = document.count
 
-      yes = log(document.with_cat.where(y_cat: :yes).count.to_f / n)
-      no = log(document.with_cat.where(y_cat: :no).count.to_f / n)
-      null = log(document.with_cat.where(y_cat: :null).count.to_f / n)
+      yes = log(document.where(y_cat: :yes).count.to_f / n)
+      no = log(document.where(y_cat: :no).count.to_f / n)
 
       apriori.create!(cat: :yes, log_p: yes)
       apriori.create!(cat: :no, log_p: no)
-      apriori.create!(cat: :null, log_p: null)
     end
 
     def fill_termprob
@@ -266,10 +266,10 @@ module Classification
       # (term, cat)
       term_cat = term
         .reselect('term', 'cat')
-        .joins("CROSS JOIN (values ('yes'), ('no'), ('null')) s(cat)")
+        .joins("CROSS JOIN (values ('yes'), ('no')) s(cat)")
 
       # occurences of term in cat
-      real_counts = document.with_cat
+      real_counts = document
         .joins("JOIN #{docterm.table_name} ON #{document.table_name}.id = document_id")
         .group('y_cat', 'term')
         .select(
@@ -334,10 +334,17 @@ module Classification
       insert(docprob, with_apriori)
     end
 
+    def truncate(x)
+      x.connection.truncate(x.table_name)
+    end
+
     def predict(packages, give_documents)
+      predict_docterm.connection.truncate_tables(
+        *[docprob, predict_docterm, predict_document].map(&:table_name)
+      )
+
       fill_predict_document(packages)
       fill_predict_docterm
-
       fill_docprob
 
       d = predict_document
@@ -348,105 +355,30 @@ module Classification
       minus_inf = '-999999'
       yes_p = "coalesce((probs->'yes')::float, #{minus_inf})"
       no_p = "coalesce((probs->'no')::float, #{minus_inf})"
-      null_p = "coalesce((probs->'null')::float, #{minus_inf})"
       expr = <<~SQL.squish
               case
-                when #{yes_p} > greatest(#{no_p}, #{null_p}) then 1
-                when #{no_p} > greatest(#{yes_p}, #{null_p}) then 0
-                else NULL
+                when #{yes_p} > #{no_p} then 1
+                else 0
               end
             SQL
 
       if give_documents
         return predict_document
           .from(d)
-          .select('id', "case #{expr} when 1 then 'yes' when 0 then 'no' else 'null' end cat")
+          .select('id', "case #{expr} when 1 then 'yes' else 'no' end cat")
       end
 
-
-      package_id = "split_part(id, '_', 1)"
+      package_id = "split_part(id, '_', 1)::bigint"
 
       predict_document
         .from(d)
         .select(
-          "#{package_id} package_id",
-          # sum skips nulls, so it is number of 1 / (number of 1 or null)
+          "#{package_id} id",
+          # sum skips nulls, so it is number of 1 / (total number)
           "sum(#{expr})::float / count(*) match_part",
         )
         .group(package_id)
     end
-
-    def fill_doccls
-      d = document.test
-        .select(:id, :y_cat, 'jsonb_object_agg(cat, log_p) as probs')
-        .joins("JOIN #{docprob.table_name} on id = doc_id")
-        .group(:id, :y_cat)
-
-      minus_inf = '-999999'
-      yes_p = "coalesce((probs->'yes')::float, #{minus_inf})"
-      no_p = "coalesce((probs->'no')::float, #{minus_inf})"
-      expr = <<~SQL.squish
-              case
-    when #{yes_p} = #{no_p} then 'null'
-    when #{yes_p} > #{no_p} then 'yes'
-    else 'no'
-              end
-            SQL
-
-
-      c = document
-          .from(d)
-          .select(
-            :id,
-            :y_cat,
-            "#{expr} inferred",
-            "y_cat = #{expr} correct",
-            "#{yes_p} yes_p",
-            "#{no_p} no_p"
-            )
-
-      test_doc_ids = document.test.ids
-
-      n = test_doc_ids.count
-
-      texts = []
-
-      texts << "Total: #{document.from(c).count}"
-      counts = {
-        yes: document.from(c).where("y_cat = 'yes'").count,
-        no: document.from(c).where("y_cat = 'no'").count
-      }
-
-      texts << "Total yes: #{counts[:yes]}"
-      texts << "Total no: #{counts[:no]}"
-
-      ['yes', 'no'].each do |correct|
-        ['yes', 'no'].each do |inferred|
-          count = document
-            .from(c, document.table_name)
-            .where(y_cat: correct, inferred:, id: test_doc_ids)
-            .count
-
-          percent_ok = (count.to_f / counts[correct.to_sym] * 100).round(2)
-          texts << "Correct '#{correct}' as Inferred '#{inferred}': #{count} (#{percent_ok}%)"
-        end
-      end
-
-      retrieved = document.from(c).where("inferred = 'yes'").count.to_f
-      relevant = document.from(c).where("y_cat = 'yes'").count.to_f
-      relevant_retrieved = document.from(c).where("inferred = 'yes' AND y_cat = 'yes'").count.to_f
-      precision = relevant_retrieved / retrieved
-      recall = relevant_retrieved / relevant
-      texts << "Precision: #{precision.round(2)}"
-      texts << "Recall: #{recall.round(2)}"
-      f1 = 2 * (precision * recall) / (precision + recall)
-      texts << "F1: #{f1.round(2)}"
-
-      texts.each do |t|
-        puts t
-      end
-    end
-
 
     ## utils
 
