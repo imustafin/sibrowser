@@ -3,7 +3,11 @@
     <%= t('.title') %>
   </p>
   <p>
-    <%= link_to t('.vote'), 'https://vk.com/wall-204752566_47', class: 'font-bold' %>
-    <%= t('.body') %>
+    <%= t('.body_pre') %>
+    <%= link_to t('.body_link'), category_path('anime'), class: 'font-bold' %><!-- 
+    --><%= t('.body_post', default: '') %>.
+    <%= t('.body_2_pre', default: '') %>
+    <%= link_to t('.body_2_link'), 'https://vk.com/sibrowser', class: 'font-bold' %><!--
+    --><%= t('.body_2_post', default: '') %>!
   </p>
 </div>

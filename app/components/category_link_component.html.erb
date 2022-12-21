@@ -2,7 +2,7 @@
       class: 'inline-block border-2 border-green-200 hover:border-green-400 bg-green-50 text-green-800 px-1',
       rel: 'category' do %>
   <span class="font-bold">
-    <%= category_name %>
+    <%= t(category_name, scope: :category_names, default: category_name) %>
   </span>
   <span>
     <%= number_to_percentage(category_ratio * 100, precision: 0) %>

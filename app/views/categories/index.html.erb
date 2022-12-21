@@ -2,7 +2,9 @@
   <%= t('categories') %>
 </h1>
 
-<table class="w-full">
+<%= t(:categories_index_short_description) %>
+
+<table class="w-full mt-2 mb-2">
   <thead>
     <tr class="bg-indigo-600 text-white">
       <th class="text-center py-4 px-3"><%= t('category') %></th>
@@ -10,9 +12,12 @@
     </tr>
   </thead>
   <% @categories.each do |c| %>
-    <tr>
-      <td class="py-4 text-center">
-        <%= link_to c.first, category_path(c.first), class: 'font-bold' %>
+    <tr class="odd:bg-white even:bg-indigo-50">
+      <td class="text-center">
+        <%= link_to \
+         t(c.first, scope: :category_names, default: c.first),
+         category_path(c.first),
+         class: 'font-bold' %>
       </td>
       <td class="text-center">
         <%= c.last %>
@@ -20,3 +25,7 @@
     </tr>
   <% end %>
 </table>
+
+<div class="w-full bg-white border-indigo-600 border-4 p-2 mt-4">
+  <%= render "index_text_#{I18n.locale}" %>
+</div>

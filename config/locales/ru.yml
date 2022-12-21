@@ -89,3 +89,10 @@ ru:
   packages_index:
     most_new: По дате
     most_downloaded: По скачиваниям
+
+  category_names:
+    anime: Аниме
+
+  categories_index_short_description: |
+    Категории — это как теги, только устанваливаются автоматически
+    нашим сайтом, а не устанавливаются авторами пакетов.

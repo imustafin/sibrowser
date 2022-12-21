@@ -120,14 +120,35 @@ class Package < ApplicationRecord
       .exists?
   end
 
+  CAT_ANIME_RATIO_MIN = 0.6
+
+  def categories
+    cats = (self[:categories] || {})
+    cats.delete('anime')
+
+    if cat_anime_ratio >= CAT_ANIME_RATIO_MIN
+      cats[:anime] = cat_anime_ratio
+    end
+
+    cats
+  end
+
   scope :by_author, ->(author) { where('LOWER(authors::text)::jsonb @> to_jsonb(LOWER(?)::text)', author) }
 
   scope :by_tag, ->(tag) { where('LOWER(tags::text)::jsonb @> to_jsonb(LOWER(?)::text)', tag) }
 
-  scope :by_category, ->(cat) { where("(categories->>?) IS NOT NULL", cat)}
+  scope :by_category, ->(cat) {
+    if cat == 'anime'
+      where('cat_anime_ratio >= ?', CAT_ANIME_RATIO_MIN)
+    else
+      where("(categories->>?) IS NOT NULL", cat)
+    end
+  }
 
   scope :reorder_by_category, ->(cat) {
-    if SibrowserConfig::CATEGORIES.include?(cat)
+    if cat == 'anime'
+      reorder(cat_anime_ratio: :desc)
+    elsif SibrowserConfig::CATEGORIES.include?(cat)
       reorder(Arel.sql("categories->>'#{cat}' DESC"))
     else
       self

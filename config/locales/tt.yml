@@ -86,3 +86,10 @@ tt:
   packages_index:
     most_new: Дата буенча
     most_downloaded: Йөкләүләр буенча
+
+  category_names:
+    anime: Аниме
+
+  categories_index_short_description: |
+    Категорияләр — тегларга охшаган, әмма аларны пакет ясаучылары куйганчы түгел,
+    ә безнең сайт автоматик рәвештә урнаштырыла.

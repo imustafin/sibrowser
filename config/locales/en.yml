@@ -57,7 +57,7 @@ en:
   tag_packages: Packages with this tag
   categories: Categories
   category: Category
-  category_packages: Packages in this Category
+  category_packages: Packages in this category
   title_category: "%{category} — SIGame Package Category"
   description_category: Total packages in category %{category} — %{package_count}
   author: Author
@@ -88,3 +88,10 @@ en:
   packages_index:
     most_new: By date
     most_downloaded: By downloads
+
+  category_names:
+    anime: Anime
+
+  categories_index_short_description: |
+    Categories are like tags but are set automatically by the website, in contrast
+    with tags which are set by package authors.

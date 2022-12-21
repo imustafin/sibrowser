@@ -2,7 +2,6 @@ class SibrowserConfig < ApplicationRecord
 
   CATEGORIES = [
     'anime',
-    'gachi',
     'gam',
     'fic',
     'mus',
@@ -10,7 +9,6 @@ class SibrowserConfig < ApplicationRecord
     'meme',
     'exact',
     'hum',
-    'food',
     'inet',
     'ero',
     'unk'
