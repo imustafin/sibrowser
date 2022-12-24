@@ -6,9 +6,8 @@ ru:
       last: »
       previous: ‹
       first: «
+  loading: Загрузка
   packages: Пакеты
-  packages_newest: Новые пакеты
-  packages_most_downloaded: Самые скачиваемые пакеты
   published_at: Опубликовано
   name: Название
   authors: Авторы
@@ -58,7 +57,6 @@ ru:
   categories: Категории
   category: Категория
   category_packages: Пакеты в этой категории
-  title_category: "%{category} — Категория пакетов для SIGame"
   description_category: Всего пакетов в категории %{category} — %{package_count}
   author: Автор
   author_not_found_pre: Мы не знаем никаких пакетов, созданных автором %{author}.
@@ -86,9 +84,24 @@ ru:
       short: Слишком большой для онлайна
       description: 'Размер пакета слишком большой для игры онлайн (макс. %{max})'
 
-  packages_index:
-    most_new: По дате
-    most_downloaded: По скачиваниям
+  packages_index_sort:
+    published_at:
+      title: Новые пакеты
+      link: По дате
+    download_count:
+      title: Самые скачиваемые пакеты
+      link: По скачиваниям
+
+  categories_show_sort:
+    published_at:
+      title: Категория %{category}
+      link: По дате
+    download_count:
+      title: Самые скачиваемые %{category} пакеты
+      link: По скачиваниям
+    relevance:
+      title: Самые релевантные %{category} пакеты
+      link: По релевантности
 
   category_names:
     anime: Аниме

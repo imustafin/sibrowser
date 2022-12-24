@@ -6,9 +6,8 @@ en:
       last: »
       previous: ‹
       first: «
+  loading: Loading
   packages: Packages
-  packages_newest: Newest Packages
-  packages_most_downloaded: Most Downloaded Packages
   published_at: Published
   name: Name
   authors: Authors
@@ -58,7 +57,6 @@ en:
   categories: Categories
   category: Category
   category_packages: Packages in this category
-  title_category: "%{category} — SIGame Package Category"
   description_category: Total packages in category %{category} — %{package_count}
   author: Author
   author_not_found_pre: We don't know about any packages authored by %{author}.
@@ -85,9 +83,24 @@ en:
       short: Too big for online
       description: 'File size is too big for online (max: %{max})'
 
-  packages_index:
-    most_new: By date
-    most_downloaded: By downloads
+  packages_index_sort:
+    published_at:
+      title: New packages
+      link: By date
+    download_count:
+      title: Most downloaded packages
+      link: By downloads
+
+  categories_show_sort:
+    published_at:
+      title: '%{category} category'
+      link: By date
+    download_count:
+      title: Most downloaded %{category} packages
+      link: By downloads
+    relevance:
+      title: Most relevant %{category} packages
+      link: By relevance
 
   category_names:
     anime: Anime

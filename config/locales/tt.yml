@@ -6,9 +6,8 @@ tt:
       last: »
       previous: ‹
       first: «
+  loading: Йөкләү
   packages: Пакетлар
-  packages_newest: Яңа пакетлар
-  packages_most_downloaded: Иң йөкләүгән пакетлар
   published_at: Бастырылган
   name: Исем
   authors: Ясаучылар
@@ -58,7 +57,6 @@ tt:
   categories: Категорияләр
   category: Категория
   category_packages: Бу категориядәге пакетлар
-  title_category: "%{category} — SIGame пакет категориясе"
   description_category: "%{category} категориядәге пакет саны — %{package_count}"
   author: Ясаучы
   author_not_found_pre: Без %{author} ясаган бернинди пакетны белмибез.
@@ -83,9 +81,24 @@ tt:
       short: Онлайн уенга артык зур
       description: 'Пакет файлы онлайн уйнау өчен артык зур (%{max} макс.)'
 
-  packages_index:
-    most_new: Дата буенча
-    most_downloaded: Йөкләүләр буенча
+  packages_index_sort:
+    published_at:
+      title: Яңа пакетлар
+      link: Дата буенча
+    download_count:
+      title: Иң йөкләүгән пакетлар
+      link: Йөкләүләр буенча
+
+  categories_show_sort:
+    published_at:
+      title: '%{category} категориясе'
+      link: Дата буенча
+    download_count:
+      title: Иң йөкләүгән %{category} пакетлар
+      link: Йөкләүләр буенча
+    relevance:
+      title: Иң туры килгән %{category} пакетлар
+      link: Туры килүе буенча
 
   category_names:
     anime: Аниме

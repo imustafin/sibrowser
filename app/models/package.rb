@@ -145,13 +145,11 @@ class Package < ApplicationRecord
     end
   }
 
-  scope :reorder_by_category, ->(cat) {
+  scope :order_by_category, ->(cat) {
     if cat == 'anime'
-      reorder(cat_anime_ratio: :desc)
-    elsif SibrowserConfig::CATEGORIES.include?(cat)
-      reorder(Arel.sql("categories->>'#{cat}' DESC"))
-    else
-      self
+      order(cat_anime_ratio: :desc)
+    else SibrowserConfig::CATEGORIES.include?(cat)
+      order(Arel.sql("categories->>'#{cat}' DESC"))
     end
   }
 

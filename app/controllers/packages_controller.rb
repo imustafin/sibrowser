@@ -1,7 +1,7 @@
 class PackagesController < ApplicationController
   include PackagesPagination
 
-  helper_method :vk_link, :vk_members_count, :download_stats, :packages, :page_header, :sort_column
+  helper_method :vk_link, :vk_members_count, :download_stats, :packages, :page_title, :sort_column
 
   def index
     return packages_pagination(packages) if request.format.turbo_stream?
@@ -11,7 +11,7 @@ class PackagesController < ApplicationController
     if !page && sort_column == :published_at
       set_meta_tags site: nil
     else
-      @page_title = page_header
+      @page_title = page_title
       @page_title += ' ' + t('title_packages_page', page:) if page
     end
 
@@ -32,20 +32,22 @@ class PackagesController < ApplicationController
     end
   end
 
-  def sort_column
-    ans = params[:sort]&.to_sym
-    # Allow only :download_count from params
-    ans = :published_at if ans != :download_count
-
-    ans
+  def supported_sort_columns
+    %i[published_at download_count]
   end
 
-  def page_header
-    if sort_column == :download_count
-      t('packages_most_downloaded')
+  def sort_column
+    ans = params[:sort]&.to_sym
+
+    if supported_sort_columns.include?(ans)
+      ans
     else
-      t('packages_newest')
+      supported_sort_columns.first
     end
+  end
+
+  def page_title
+    t("packages_index_sort.#{sort_column}.title")
   end
 
   def download_stats

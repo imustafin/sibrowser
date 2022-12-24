@@ -1,5 +1,5 @@
 <h1 class="text-2xl font-bold text-center pb-2">
-  <%= page_header %>
+  <%= page_title %>
 </h1>
 
 <p>
@@ -32,5 +32,5 @@
         link: link_to(t('join_vk.link'), vk_link, class: 'font-bold') %>
 </p>
 
-<%= render PackagesPaginated::Component.new(packages:, order: sort_column) %>
+<%= render PackagesPaginated::Component.new(packages:, sort_provider: controller) %>
 

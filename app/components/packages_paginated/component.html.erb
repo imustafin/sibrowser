@@ -6,10 +6,11 @@
   <%= helpers.turbo_stream_from :download_counts %>
   <div data-controller="packages_paginated--component">
     <div data-packages_paginated--component-target="beforeFloating"></div>
-    <% if @order %>
+    <% if has_sort? %>
       <div class="w-fit float-left py-2 space-x-2">
-        <%= link_to(t('packages_index.most_new'), root_path, class: order_class(:published_at)) %>
-        <%= link_to(t('packages_index.most_downloaded'), root_path(sort: :download_count), class: order_class(:download_count)) %>
+        <% sort_links.each do |x| %>
+          <%= link_to t(x[:t]), x[:path], class: x[:class] %>
+        <% end %>
       </div>
     <% end %>
     <div
