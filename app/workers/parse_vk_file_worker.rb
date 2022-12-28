@@ -104,7 +104,7 @@ class ParseVkFileWorker
         logo_bytes: nil,
         logo_width: nil,
         logo_height: nil,
-        hash: nil
+        file_hash: nil
       )
 
       logger.info 'Vk file unavailable'
@@ -114,7 +114,7 @@ class ParseVkFileWorker
 
     file_size = siq.length
 
-    hash = compute_hash(siq)
+    fille_hash = compute_hash(siq)
 
     logger.info "Body length #{file_size}, parsing"
 
@@ -145,7 +145,7 @@ class ParseVkFileWorker
       logo_bytes: si_package.logo_bytes,
       logo_width: si_package.logo_width,
       logo_height: si_package.logo_height,
-      hash:
+      file_hash:
     )
 
     siq.close!
