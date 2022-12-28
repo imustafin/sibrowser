@@ -20,7 +20,10 @@ class ParseVkFileWorker
     tempfile = Tempfile.new(['package', '.siq'], binmode: true)
 
     Net::HTTP.get_response(URI(url)) do |resp|
-      raise "HTTP result is #{resp.class.name}, not ok" unless resp.is_a?(Net::HTTPOK)
+      unless resp.is_a?(Net::HTTPOK)
+        logger.info "HTTP result if #{resp.class.name}, skipping"
+        return
+      end
       resp.read_body(tempfile)
     end
 
@@ -72,13 +75,8 @@ class ParseVkFileWorker
     logger.info "Parsing #{params['filename']} with url #{url}"
 
     siq = download_vk(url)
-    file_size = siq.length
 
-    logger.info "Body length #{file_size}, parsing"
-
-    vk_download_url = clean_url(url)
-
-    if vk_error?(siq)
+    if !siq || vk_error?(siq)
       Package.update_or_create!(
         vk_document_id: params['file_id'],
         vk_owner_id: params["owner_id"],
@@ -100,6 +98,12 @@ class ParseVkFileWorker
 
       return
     end
+
+    file_size = siq.length
+
+    logger.info "Body length #{file_size}, parsing"
+
+    vk_download_url = clean_url(url)
 
     si_package = Si::Package.new(siq)
 
