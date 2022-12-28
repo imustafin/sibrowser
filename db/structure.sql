@@ -114,7 +114,7 @@ CREATE TABLE public.packages (
     structure_classification jsonb,
     cat_anime_ratio double precision DEFAULT 0.0 NOT NULL,
     file_hash bytea,
-    CONSTRAINT chk_rails_4687cee246 CHECK (((version < 9) OR (disappeared_at IS NULL) OR (file_hash IS NOT NULL)))
+    CONSTRAINT file_hash_since_version_9 CHECK (((version < 9) OR (disappeared_at IS NOT NULL) OR (file_hash IS NOT NULL)))
 );
 
 
@@ -314,6 +314,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220811175747'),
 ('20221219221922'),
 ('20221228171054'),
-('20221228173701');
+('20221228173701'),
+('20221228180056');
 
 
