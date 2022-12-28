@@ -114,7 +114,7 @@ class ParseVkFileWorker
 
     file_size = siq.length
 
-    fille_hash = compute_hash(siq)
+    file_hash = compute_hash(siq)
 
     logger.info "Body length #{file_size}, parsing"
 
