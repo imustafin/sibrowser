@@ -83,6 +83,7 @@ class ParseVkFileWorker
     )
 
     url = params['file_url']
+    vk_download_url = clean_url(url)
 
     logger.info "Parsing #{params['filename']} with url #{url}"
 
@@ -118,7 +119,6 @@ class ParseVkFileWorker
 
     logger.info "Body length #{file_size}, parsing"
 
-    vk_download_url = clean_url(url)
 
     si_package = Si::Package.new(siq)
 
