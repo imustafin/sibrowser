@@ -62,6 +62,18 @@ class ParseVkFileWorker
     uri.to_s
   end
 
+  def compute_hash(file)
+    h = Digest::SHA512.new
+
+    file.each(nil, 512) do |chunk|
+      h << chunk
+    end
+
+    file.rewind
+
+    h.hexdigest
+  end
+
   def perform(params)
     file_date = Time.at(params['file_date'])
     return if Package.skip_updating?(
@@ -91,7 +103,8 @@ class ParseVkFileWorker
         file_size: nil,
         logo_bytes: nil,
         logo_width: nil,
-        logo_height: nil
+        logo_height: nil,
+        hash: nil
       )
 
       logger.info 'Vk file unavailable'
@@ -100,6 +113,8 @@ class ParseVkFileWorker
     end
 
     file_size = siq.length
+
+    hash = compute_hash(siq)
 
     logger.info "Body length #{file_size}, parsing"
 
@@ -129,7 +144,8 @@ class ParseVkFileWorker
       file_size:,
       logo_bytes: si_package.logo_bytes,
       logo_width: si_package.logo_width,
-      logo_height: si_package.logo_height
+      logo_height: si_package.logo_height,
+      hash:
     )
 
     siq.close!

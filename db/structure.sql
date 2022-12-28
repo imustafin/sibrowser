@@ -112,7 +112,9 @@ CREATE TABLE public.packages (
     logo_height integer,
     vk_download_url_updated_at timestamp(6) without time zone,
     structure_classification jsonb,
-    cat_anime_ratio double precision DEFAULT 0.0 NOT NULL
+    cat_anime_ratio double precision DEFAULT 0.0 NOT NULL,
+    hash bytea,
+    CONSTRAINT chk_rails_4687cee246 CHECK (((version < 9) OR (disappeared_at IS NULL) OR (hash IS NOT NULL)))
 );
 
 
@@ -310,6 +312,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220711173903'),
 ('20220810183607'),
 ('20220811175747'),
-('20221219221922');
+('20221219221922'),
+('20221228171054');
 
 

@@ -6,6 +6,9 @@ class Package < ApplicationRecord
 
   # CHANGELOG
   #
+  # 9
+  # * Add package file hash
+  #
   # 8
   # * Zip file names can be unencoded, some chars are never encoded
   #
@@ -20,7 +23,7 @@ class Package < ApplicationRecord
   #   VK identifies docs by (vk_owner_id, vk_document_id),
   #   so search by the whole pair
   # * Add vk_download_url
-  VERSION = 8
+  VERSION = 9
 
   validates :name, presence: true
   validates :source_link, presence: true
