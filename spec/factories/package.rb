@@ -1,14 +1,12 @@
 FactoryBot.define do
-  sequence :vk_document_id do |n|
+  sequence :file_hash do |n|
     n
   end
 
   factory :package do
     name { 'Package Name' }
-    source_link { 'https://example.com/package.siq' }
     version { Package::VERSION }
-    vk_document_id
-    vk_owner_id { vk_document_id }
+    file_hash
 
     factory :package_one_theme do
       transient do

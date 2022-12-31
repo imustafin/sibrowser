@@ -39,8 +39,8 @@ module ApplicationHelper
   end
 
   def package_description(package, for_html=false)
-    if package.post_text.present?
-      text = package.post_text
+    text = package.earliest_post&.[]('text')
+    if text.present?
       text = simple_format(text) if for_html
 
       text.squish

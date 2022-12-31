@@ -26,9 +26,6 @@ class Package < ApplicationRecord
   VERSION = 9
 
   validates :name, presence: true
-  validates :source_link, presence: true
-  validates :vk_document_id, presence: true
-  validates :vk_owner_id, presence: true
   validates :version, presence: true
 
   pg_search_scope :search_freetext,
@@ -90,24 +87,19 @@ class Package < ApplicationRecord
 
   def self.update_or_create!(params)
     transaction do
-      model = find_by(
-        vk_document_id: params[:vk_document_id],
-        vk_owner_id: params[:vk_owner_id]
-      )
+      model = find_by(file_hash: params[:file_hash])
 
       params = params.merge(version: VERSION)
 
       unless model
         create!(params)
       else
-        # Same logic as in .skip_updating?
-        if params[:published_at] < model.published_at \
-            || model.version < VERSION \
-            || model.structure.blank? \
-            || model.disappeared_at
-          model.update(params)
-          model.save!
-        end
+        params[:published_at] = [
+          model.published_at,
+          params[:published_at].to_datetime
+        ].min
+        model.update(params)
+        model.save!
       end
     end
   end
@@ -232,5 +224,9 @@ class Package < ApplicationRecord
 
   def has_logo?
     logo_bytes != nil
+  end
+
+  def earliest_post
+    posts.min_by { |x| x['published_at'].to_datetime }
   end
 end

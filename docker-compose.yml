@@ -39,4 +39,4 @@ services:
       - '3000:3000'
 
   redis:
-    image: redis:4
+    image: redis:6.2.3

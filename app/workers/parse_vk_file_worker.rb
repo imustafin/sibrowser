@@ -75,38 +75,43 @@ class ParseVkFileWorker
   end
 
   def perform(params)
-    file_date = Time.at(params['file_date'])
-    return if Package.skip_updating?(
-      params['file_id'],
-      params['owner_id'],
-      file_date
-    )
+    document_id = params['document_id']
+    owner_id = params['owner_id']
+    url = params['url']
+    default_post = params['default_post']
+    parsing_timestamp = params['parsing_timestamp'].to_datetime
+    published_at = params['published_at']
 
-    url = params['file_url']
+    existing = ParseUtils.packages_for_doc(document_id:, owner_id:).first
+
+    if existing \
+        && existing.parsed_at > parsing_timestamp \
+        && existing.version >= Package::VERSION
+      # Package is fresh and already parsed after the requested time,
+      # so skip
+      return
+    end
+
     vk_download_url = clean_url(url)
 
-    logger.info "Parsing #{params['filename']} with url #{url}"
+    logger.info "Parsing url #{url} (#{document_id} by #{owner_id})"
 
     siq = download_vk(url)
 
     if !siq || vk_error?(siq)
-      Package.update_or_create!(
-        vk_document_id: params['file_id'],
-        vk_owner_id: params["owner_id"],
-        filename: params['filename'],
-        source_link: params['source_link'],
-        published_at: file_date,
-        disappeared_at: Time.now,
-        structure: nil,
-        name: params['filename'],
-        vk_download_url:,
-        vk_download_url_updated_at: Time.now,
-        file_size: nil,
-        logo_bytes: nil,
-        logo_width: nil,
-        logo_height: nil,
-        file_hash: nil
-      )
+      if existing
+        # Remove post
+        existing.with_lock do
+          new_posts = existing.posts.reject do |p|
+            p['document_id'] == document_id && p['owner_id'] == owner_id
+          end
+
+          existing.update!(
+            posts: new_posts,
+            parsed_at: Time.current
+          )
+        end
+      end
 
       logger.info 'Vk file unavailable'
 
@@ -119,7 +124,6 @@ class ParseVkFileWorker
 
     logger.info "Body length #{file_size}, parsing"
 
-
     si_package = Si::Package.new(siq)
 
     name = si_package.name
@@ -127,17 +131,12 @@ class ParseVkFileWorker
 
     logger.info "Parsed"
 
-    Package.update_or_create!(
-      filename: params['filename'],
+    package_params = {
       name: name,
       authors: si_package.authors,
-      source_link: params['source_link'],
-      post_text: params['post_text'],
-      published_at: file_date,
+      published_at: published_at,
       structure: si_package.structure,
       tags: si_package.tags,
-      vk_document_id: params['file_id'],
-      vk_owner_id: params["owner_id"],
       disappeared_at: nil,
       vk_download_url:,
       vk_download_url_updated_at: Time.now,
@@ -145,8 +144,11 @@ class ParseVkFileWorker
       logo_bytes: si_package.logo_bytes,
       logo_width: si_package.logo_width,
       logo_height: si_package.logo_height,
-      file_hash:
-    )
+      file_hash:,
+      parsed_at: Time.current
+    }
+    package_params[:posts] = [default_post] if default_post
+    Package.update_or_create!(**package_params)
 
     siq.close!
   end

@@ -50,8 +50,8 @@
 
     <div class="order-3 col-span-4 pt-2 px-2"> <!-- text -->
       <%= simple_format \
-        @package.post_text.present? \
-          ? @package.post_text.truncate(150, separator: /\s/) \
+        @package.earliest_post&.[]('text').present? \
+          ? @package.earliest_post['text'].truncate(150, separator: /\s/) \
           : helpers.package_description(@package, true),
         itemprop: 'description'
       %>

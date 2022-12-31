@@ -82,24 +82,18 @@ CREATE TABLE public.ar_internal_metadata (
 CREATE TABLE public.packages (
     id bigint NOT NULL,
     name character varying NOT NULL,
-    source_link character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    post_text text,
-    filename character varying,
     published_at timestamp without time zone,
-    vk_document_id character varying NOT NULL,
     version integer NOT NULL,
     authors jsonb,
     structure jsonb,
     tags jsonb,
-    searchable tsvector GENERATED ALWAYS AS (((((((setweight(to_tsvector('russian'::regconfig, (COALESCE(name, ''::character varying))::text), 'A'::"char") || setweight(to_tsvector('russian'::regconfig, (COALESCE(filename, ''::character varying))::text), 'A'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(authors, '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(tags, '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(jsonb_path_query_array(structure, '$[*]."name"'::jsonpath), '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(jsonb_path_query_array(structure, '$[*]."themes"[*]."name"'::jsonpath), '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(post_text, ''::text)), 'C'::"char"))) STORED,
     category_scores jsonb,
     manual_categories jsonb,
     predicted_categories jsonb,
     categories jsonb GENERATED ALWAYS AS (public.actual_categories(predicted_categories)) STORED,
     disappeared_at timestamp without time zone,
-    vk_owner_id character varying NOT NULL,
     vk_download_url character varying,
     superseded_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
     downloads jsonb DEFAULT '{}'::jsonb NOT NULL,
@@ -114,6 +108,9 @@ CREATE TABLE public.packages (
     structure_classification jsonb,
     cat_anime_ratio double precision DEFAULT 0.0 NOT NULL,
     file_hash bytea,
+    posts jsonb DEFAULT '[]'::jsonb NOT NULL,
+    parsed_at timestamp(6) without time zone NOT NULL,
+    searchable tsvector GENERATED ALWAYS AS ((((((setweight(to_tsvector('russian'::regconfig, (COALESCE(name, ''::character varying))::text), 'A'::"char") || setweight(to_tsvector('russian'::regconfig, COALESCE(authors, '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(tags, '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(jsonb_path_query_array(structure, '$[*]."name"'::jsonpath), '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(jsonb_path_query_array(structure, '$[*]."themes"[*]."name"'::jsonpath), '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(jsonb_path_query_array(posts, '$[*]."text"'::jsonpath), '{}'::jsonb)), 'C'::"char"))) STORED,
     CONSTRAINT file_hash_since_version_9 CHECK (((version < 9) OR (disappeared_at IS NOT NULL) OR (file_hash IS NOT NULL)))
 );
 
@@ -257,13 +254,6 @@ CREATE INDEX index_packages_on_superseded_ids ON public.packages USING gin (supe
 
 
 --
--- Name: index_packages_on_vk_document_id_and_vk_owner_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_packages_on_vk_document_id_and_vk_owner_id ON public.packages USING btree (vk_document_id, vk_owner_id);
-
-
---
 -- Name: tags_icase_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -315,6 +305,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221219221922'),
 ('20221228171054'),
 ('20221228173701'),
-('20221228180056');
+('20221228180056'),
+('20221229153246');
 
 

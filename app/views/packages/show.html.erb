@@ -52,8 +52,8 @@
           <%= render KeywordLinksComponent.new(tags: @package.tags || [], categories: @package.categories || {}) %>
         </div>
 
-        <% if @package.post_text.present? %>
-            <%= simple_format(@package.post_text) %>
+        <% if @package.earliest_post&.[]('text').present? %>
+            <%= simple_format(@package.earliest_post['text']) %>
         <% end %>
 
         <table class="mt-4">
@@ -88,7 +88,10 @@
               <%= t(:original_message) %>
             </td>
             <td>
-              <%= link_to t("source"), @package.source_link, target: "_blank", class: 'font-bold' %>
+              <% @package.posts.each_with_index do |post, i| %>
+                <%= link_to "#{t('source')} #{i + 1}", post['link'], target: "_blank", class: 'font-bold' %><!--
+                --><% if i < @package.posts.size - 1 %>, <% end %>
+              <% end %>
             </td>
           </tr>
 
