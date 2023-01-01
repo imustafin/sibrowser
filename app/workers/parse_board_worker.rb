@@ -60,7 +60,10 @@ class ParseBoardWorker
         post_for_message_doc(message:, doc:, post_link:)
       end
 
-      package.update!(posts: new_posts)
+      package.update!(
+        posts: new_posts,
+        vk_download_url: doc['url']
+      )
     end
   end
 
