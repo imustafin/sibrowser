@@ -192,7 +192,7 @@ class PackagesController < ApplicationController
       end
     end
 
-    x = params.permit(*permitted).select { |k, v| %w[yes null no].include?(v) }
+    x = params.permit(*permitted).select { |k, v| %w[yes no].include?(v) }
 
     p.update!(structure_classification: x)
 

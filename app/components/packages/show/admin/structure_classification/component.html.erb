@@ -30,7 +30,7 @@
                 </div>
                 <% n = radio_name(round_id, theme_id, question_id, c) %>
                 <% ['yes', 'null', 'no'].each do |ans| %>
-                  <%= form.radio_button n, ans, checked: value_by_name(n) == ans %>
+                  <%= form.radio_button n, ans, checked: value_by_name(n) == ans, tabindex: tabindex(c), name: n %>
                   <%= form.label "#{n}_#{ans}", ans %>
                 <% end %>
               </div>

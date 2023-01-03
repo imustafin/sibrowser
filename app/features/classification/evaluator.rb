@@ -1,9 +1,9 @@
 module Classification
   class Evaluator
     # All packages should be mapped
-    def repeated_k_fold(packages, n, k)
+    def repeated_k_fold(packages, n, k, category)
       matrix = Array
-        .new(n) { k_fold(packages, k) }
+        .new(n) { k_fold(packages, k, category) }
         .reduce(&method(:sum_m))
 
       {
@@ -12,7 +12,7 @@ module Classification
       }
     end
 
-    def k_fold(packages, k)
+    def k_fold(packages, k, category)
       ids = packages.pluck(:id)
 
       train_sets = ids
@@ -21,13 +21,14 @@ module Classification
 
       train_sets
         .map { |test_ids| evaluate(packages.where.not(id: test_ids),
-                                    packages.where(id: test_ids)) }
+                                    packages.where(id: test_ids),
+                                    category) }
         .reduce(&method(:sum_m))
     end
 
-    def evaluate(train, test)
+    def evaluate(train, test, category)
       k = Classification::Classifier.new
-      k.train(train, 'anime')
+      k.train(train, category)
       predicted = k.predict(test, true)
 
       matrix = {
@@ -40,9 +41,9 @@ module Classification
         y = row['cat']
 
         pid, *parts = id.split('_')
-        k = [*parts, 'anime'].join('_')
+        k = [*parts, category].join('_')
 
-        correct = Package.find(pid).structure_classification[k]
+        correct = Package.find(pid).structure_classification[k] || 'null'
 
         next if correct == 'null'
 
@@ -52,9 +53,9 @@ module Classification
       matrix
     end
 
-    def predict(train, x)
+    def predict(train, x, category)
       k = Classification::Classifier.new
-      k.train(train, 'anime')
+      k.train(train, category)
       predicted = k.predict(x, false)
 
       predicted

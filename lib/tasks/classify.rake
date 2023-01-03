@@ -27,9 +27,25 @@ namespace :classify do
 
   desc 'Show classification results on sample'
   task test: :environment do
-    all = Package.where.not(structure: {})
-    mapped = all.where.not(structure_classification: {})
+    results = {}
 
-    pp Classification::Evaluator.new.repeated_k_fold(mapped, 1, 5)
+    SibrowserConfig::CATEGORIES_2.each do |cat|
+      all = Package.where.not(structure: {})
+      mapped = all
+        .where.not(structure_classification: {})
+        .select do |p| # should have at least one for this cat
+          p.structure_classification.any? do |k, v|
+            # this can and not null mapping
+            k.split('_').last == cat.to_s \
+              && v != 'null'
+          end
+        end
+
+      mapped_rel = all.where(id: mapped.pluck(:id))
+
+      results[cat] = Classification::Evaluator.new.repeated_k_fold(mapped_rel, 1, 5, cat)
+    end
+
+    pp results
   end
 end

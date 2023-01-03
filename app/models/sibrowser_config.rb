@@ -15,7 +15,8 @@ class SibrowserConfig < ApplicationRecord
   ].freeze
 
   CATEGORIES_2 = [
-    'anime'
+    'anime',
+    'videogames'
   ]
 
   def self.instance
