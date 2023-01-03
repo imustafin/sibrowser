@@ -14,8 +14,9 @@ module Classification
         );
       SQL
 
+      iv = "@#{name}"
       instance_variable_set(
-        "@#{name}",
+        iv,
         Class.new(ApplicationRecord) do
           self.table_name = tablename
 
@@ -27,9 +28,12 @@ module Classification
           end
         end
       )
+
+      @all_models << instance_variable_get(iv)
     end
 
     def initialize
+      @all_models = []
       @tid = SecureRandom.hex(5)
 
       model(:document,
@@ -65,6 +69,12 @@ module Classification
       model(:docprob, doc_id: :text, cat: :text, log_p: :float)
       model(:doccls, doc_id: :text, yes_p: :float, no_p: :float)
       model(:result, id: :text, cat: :text)
+    end
+
+    def close
+      @all_models.reverse.each do |model|
+        execute "drop table #{model.table_name}"
+      end
     end
 
     def train(dataset, cat)

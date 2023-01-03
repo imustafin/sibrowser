@@ -23,6 +23,8 @@ namespace :classify do
         where p.id = y.id
       SQL
     end
+
+    k.close
   end
 
   desc 'Show classification results on sample'

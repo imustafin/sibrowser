@@ -27,9 +27,9 @@ module Classification
     end
 
     def evaluate(train, test, category)
-      k = Classification::Classifier.new
-      k.train(train, category)
-      predicted = k.predict(test, true)
+      classifier = Classification::Classifier.new
+      classifier.train(train, category)
+      predicted = classifier.predict(test, true)
 
       matrix = {
         'yes' => { 'yes' => 0, 'no' => 0 },
@@ -49,6 +49,8 @@ module Classification
 
         matrix[correct][y] += 1
       end
+
+      classifier.close
 
       matrix
     end
