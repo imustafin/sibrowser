@@ -240,6 +240,13 @@ CREATE INDEX index_packages_on_download_count ON public.packages USING btree (do
 
 
 --
+-- Name: index_packages_on_file_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_packages_on_file_hash ON public.packages USING btree (file_hash);
+
+
+--
 -- Name: index_packages_on_searchable; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -306,6 +313,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221228171054'),
 ('20221228173701'),
 ('20221228180056'),
-('20221229153246');
+('20221229153246'),
+('20230103181223');
 
 

@@ -159,9 +159,20 @@ class Package < ApplicationRecord
 
   scope :superseders, ->(id) { where("superseded_ids @> ARRAY[?]::bigint[]", [id]) }
 
-  def supersede(p)
-    superseded_ids << p.id
-    p.destroy!
+  def supersede!(p)
+    with_lock do
+      superseded_ids << p.id
+
+      p.downloads.each do |k, v|
+        downloads[k] ||= 0
+        downloads[k] += v
+      end
+
+      self.posts = (posts + p.posts).uniq { |x| x['link'] }
+
+      p.destroy!
+      save!
+    end
   end
 
   def add_download
