@@ -62,7 +62,8 @@ class ParseBoardWorker
 
       package.update!(
         posts: new_posts,
-        vk_download_url: doc['url']
+        vk_download_url: doc['url'],
+        vk_download_url_updated_at: Time.current
       )
     end
   end
