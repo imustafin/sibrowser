@@ -79,9 +79,13 @@ module Classification
       fp = matrix['no']['yes']
       tn = matrix['no']['no']
 
+      precision = tp.fdiv(tp + fp)
+      recall = tp.fdiv(tp + fn)
+      f1 = (2 * (precision * recall)).fdiv(precision + recall)
       {
-        precision: tp.fdiv(tp + fp),
-        recall: tp.fdiv(tp + fn)
+        precision:,
+        recall:,
+        f1:
       }
     end
   end
