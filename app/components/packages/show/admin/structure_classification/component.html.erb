@@ -40,9 +40,19 @@
       <% end %>
     <% end %>
   <% end %>
+  <tr class="bg-indigo-800 text-white">
+    <td>Save all:</td>
+    <td>
+      <% categories.each do |c| %>
+        <%= form.submit 'SAV',
+         class: 'font-bold bg-black text-white',
+         tabindex: tabindex(c)
+        %>
+      <% end %>
+    </td>
+  </tr>
 </table>
 
-<%= form.submit class: 'font-bold bg-black text-white'  %>
 <div class="text-xl">
   <%= flash[:set_cat] %>
 </div>

@@ -14,7 +14,9 @@ module Packages
             total_questions = @package.question_distribution[:total]
 
             categories.each_with_index do |cat, i|
-              @tabs[cat] = total_questions * i * 3 # 3 is yes-null-no
+              # (total_questions + 1) for submit button
+              # * 3 for yes-null-no 3 radio buttons
+              @tabs[cat] = (total_questions + 1) * i * 3
             end
           end
 
