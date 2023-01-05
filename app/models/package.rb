@@ -133,16 +133,16 @@ class Package < ApplicationRecord
   scope :by_tag, ->(tag) { where('LOWER(tags::text)::jsonb @> to_jsonb(LOWER(?)::text)', tag) }
 
   scope :by_category, ->(cat) {
-    if cat == 'anime'
-      where('cat_anime_ratio >= ?', CAT_ANIME_RATIO_MIN)
+    if SibrowserConfig::CATEGORIES_2.include?(cat)
+      where("cat_#{cat}_ratio >= ?", CAT_ANIME_RATIO_MIN)
     else
       where("(categories->>?) IS NOT NULL", cat)
     end
   }
 
   scope :order_by_category, ->(cat) {
-    if cat == 'anime'
-      order(cat_anime_ratio: :desc)
+    if SibrowserConfig::CATEGORIES_2.include?(cat)
+      order("cat_#{cat}_ratio" => :desc)
     else SibrowserConfig::CATEGORIES.include?(cat)
       order(Arel.sql("categories->>'#{cat}' DESC"))
     end

@@ -69,6 +69,8 @@ module Classification
       model(:docprob, doc_id: :text, cat: :text, log_p: :float)
       model(:doccls, doc_id: :text, yes_p: :float, no_p: :float)
       model(:result, id: :text, cat: :text)
+
+      execute "create index on #{termprob.table_name} (term)"
     end
 
     def close
@@ -186,8 +188,6 @@ module Classification
       packages
         .select(:id, :name, :structure)
         .find_in_batches.with_index do |batch, i|
-          puts "Predict doc batch #{i}/#{packages.count / 1000}"
-
           inserts = []
 
           batch.each do |package|

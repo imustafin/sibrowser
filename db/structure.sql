@@ -111,6 +111,7 @@ CREATE TABLE public.packages (
     posts jsonb DEFAULT '[]'::jsonb NOT NULL,
     parsed_at timestamp(6) without time zone NOT NULL,
     searchable tsvector GENERATED ALWAYS AS ((((((setweight(to_tsvector('russian'::regconfig, (COALESCE(name, ''::character varying))::text), 'A'::"char") || setweight(to_tsvector('russian'::regconfig, COALESCE(authors, '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(tags, '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(jsonb_path_query_array(structure, '$[*]."name"'::jsonpath), '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(jsonb_path_query_array(structure, '$[*]."themes"[*]."name"'::jsonpath), '{}'::jsonb)), 'B'::"char")) || setweight(to_tsvector('russian'::regconfig, COALESCE(jsonb_path_query_array(posts, '$[*]."text"'::jsonpath), '{}'::jsonb)), 'C'::"char"))) STORED,
+    cat_videogames_ratio double precision DEFAULT 0.0 NOT NULL,
     CONSTRAINT file_hash_since_version_9 CHECK (((version < 9) OR (disappeared_at IS NOT NULL) OR (file_hash IS NOT NULL)))
 );
 
@@ -314,6 +315,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221228173701'),
 ('20221228180056'),
 ('20221229153246'),
-('20230103181223');
+('20230103181223'),
+('20230105161121');
 
 

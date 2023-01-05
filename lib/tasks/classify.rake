@@ -1,30 +1,47 @@
 namespace :classify do
   desc "Classify packages"
   task run: :environment do
-    all_all = Package.where.not(structure: {})
+    all = Package.where.not(structure: {})
 
-    mapped = all_all.where.not(structure_classification: {})
+    SibrowserConfig::CATEGORIES_2.each do |cat|
+      mapped = all
+        .where.not(structure_classification: {})
+        .select do |p| # should have at least one for this cat
+          p.structure_classification.any? do |k, v|
+            # this can and not null mapping
+            k.split('_').last == cat.to_s \
+              && v != 'null'
+          end
+        end
 
-    k = Classification::Classifier.new
-    k.train(mapped, 'anime')
+      mapped_rel = all.where(id: mapped.pluck(:id))
 
-    of = 200
-    i = 0
-    all_all.in_batches(of:) do |batch|
-      puts "Saving predictions #{i}/#{all_all.count / of}"
-      i += 1
+      k = Classification::Classifier.new
+      k.train(mapped_rel, cat)
 
-      prediction = k.predict(batch, false)
+      of = 200
+      i = 0
+      times = []
+      all.in_batches(of:) do |batch|
+        puts "Saving predictions of #{cat}: #{i}/#{all.count / of}"
+        i += 1
 
-      Package.connection.execute(<<~SQL.squish)
-        update #{Package.table_name} as p
-        set cat_anime_ratio = y.match_part
-        from (#{prediction.to_sql}) as y
-        where p.id = y.id
-      SQL
+        a = Time.current
+        prediction = k.predict(batch, false)
+        b = Time.current
+        times << (b - a)
+        puts "Last batch in #{times.last}, avg #{times.sum.fdiv(times.size)}"
+
+        Package.connection.execute(<<~SQL.squish)
+          update #{Package.table_name} as p
+          set cat_#{cat}_ratio = y.match_part
+          from (#{prediction.to_sql}) as y
+          where p.id = y.id
+        SQL
+      end
+
+      k.close
     end
-
-    k.close
   end
 
   desc 'Show classification results on sample'
