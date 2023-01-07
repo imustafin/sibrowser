@@ -146,6 +146,8 @@
   </div>
 
   <% if admin? %>
+    Anime: <%= @package.cat_anime_ratio %> <br>
+    Videogames: <%= @package.cat_videogames_ratio %>
     <%= render Packages::Show::Admin::StructureClassification::Component.new(package: @package) %>
   <% end %>
 </article>
