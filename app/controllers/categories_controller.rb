@@ -4,7 +4,7 @@ class CategoriesController < ApplicationController
   helper_method :category, :packages, :show_title
 
   def index
-    @categories = SibrowserConfig::CATEGORIES
+    @categories = (SibrowserConfig::CATEGORIES + SibrowserConfig::CATEGORIES_2)
       .map { |c| [c, Package.by_category(c).count] }
       .sort_by(&:last)
       .reverse
@@ -13,6 +13,12 @@ class CategoriesController < ApplicationController
   end
 
   def show
+    if SibrowserConfig::CATEGORIES_2_MAPPING.key?(category)
+      to = SibrowserConfig::CATEGORIES_2_MAPPING[category]
+
+      return redirect_to allowed_params.merge(id: to), status: :moved_permanently
+    end
+
     return packages_pagination(packages) if request.format.turbo_stream?
 
     package_count = packages.total_count
@@ -29,6 +35,10 @@ class CategoriesController < ApplicationController
         tc
       ]
     }
+  end
+
+  def allowed_params
+    params.permit(:id, :page, :sort)
   end
 
   def category

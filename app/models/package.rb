@@ -115,14 +115,17 @@ class Package < ApplicationRecord
       .exists?
   end
 
-  CAT_ANIME_RATIO_MIN = 0.6
-
   def categories
     cats = (self[:categories] || {})
-    cats.delete('anime')
 
-    if cat_anime_ratio >= CAT_ANIME_RATIO_MIN
-      cats[:anime] = cat_anime_ratio
+    # Delete old CATEGORIES replaced by CATEGORIES_2
+    cats.delete('anime')
+    cats.delete('gam')
+
+    %i[anime videogames].each do |c|
+      if self["cat_#{c}_ratio"] >= CATEGORY_2_MIN
+        cats[c] = self["cat_#{c}_ratio"]
+      end
     end
 
     cats
@@ -132,9 +135,11 @@ class Package < ApplicationRecord
 
   scope :by_tag, ->(tag) { where('LOWER(tags::text)::jsonb @> to_jsonb(LOWER(?)::text)', tag) }
 
+  CATEGORY_2_MIN = 0.6
+
   scope :by_category, ->(cat) {
     if SibrowserConfig::CATEGORIES_2.include?(cat)
-      where("cat_#{cat}_ratio >= ?", CAT_ANIME_RATIO_MIN)
+      where("cat_#{cat}_ratio >= ?", CATEGORY_2_MIN)
     else
       where("(categories->>?) IS NOT NULL", cat)
     end

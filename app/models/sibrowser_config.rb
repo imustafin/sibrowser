@@ -1,8 +1,6 @@
 class SibrowserConfig < ApplicationRecord
 
   CATEGORIES = [
-    'anime',
-    'gam',
     'fic',
     'mus',
     'pzl',
@@ -18,6 +16,10 @@ class SibrowserConfig < ApplicationRecord
     'anime',
     'videogames'
   ]
+
+  CATEGORIES_2_MAPPING = {
+    'gam' => 'videogames'
+  }
 
   def self.instance
     first_or_create
