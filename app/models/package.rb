@@ -135,7 +135,7 @@ class Package < ApplicationRecord
 
   scope :by_tag, ->(tag) { where('LOWER(tags::text)::jsonb @> to_jsonb(LOWER(?)::text)', tag) }
 
-  CATEGORY_2_MIN = 0.6
+  CATEGORY_2_MIN = 0.5
 
   scope :by_category, ->(cat) {
     if SibrowserConfig::CATEGORIES_2.include?(cat)
