@@ -103,6 +103,7 @@ tt:
   category_names:
     anime: Аниме
     videogames: Видео уеннар
+    music: Музыка
 
   categories_index_short_description: |
     Категорияләр — тегларга охшаган, әмма аларны пакет ясаучы урында

@@ -2,7 +2,6 @@ class SibrowserConfig < ApplicationRecord
 
   CATEGORIES = [
     'fic',
-    'mus',
     'pzl',
     'meme',
     'exact',
@@ -14,11 +13,13 @@ class SibrowserConfig < ApplicationRecord
 
   CATEGORIES_2 = [
     'anime',
-    'videogames'
+    'videogames',
+    'music'
   ]
 
   CATEGORIES_2_MAPPING = {
-    'gam' => 'videogames'
+    'gam' => 'videogames',
+    'mus' => 'music'
   }
 
   def self.instance

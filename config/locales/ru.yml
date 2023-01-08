@@ -106,6 +106,7 @@ ru:
   category_names:
     anime: Аниме
     videogames: Видеоигры
+    music: Музыка
 
   categories_index_short_description: |
     Категории — это как теги, только устанавливаются сайтом автоматически,

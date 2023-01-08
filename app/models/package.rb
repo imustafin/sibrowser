@@ -121,8 +121,9 @@ class Package < ApplicationRecord
     # Delete old CATEGORIES replaced by CATEGORIES_2
     cats.delete('anime')
     cats.delete('gam')
+    cats.delete('mus')
 
-    %i[anime videogames].each do |c|
+    SibrowserConfig::CATEGORIES_2.map(&:to_sym).each do |c|
       if self["cat_#{c}_ratio"] >= CATEGORY_2_MIN
         cats[c] = self["cat_#{c}_ratio"]
       end

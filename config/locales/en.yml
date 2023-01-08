@@ -105,6 +105,7 @@ en:
   category_names:
     anime: Anime
     videogames: Video Games
+    music: Music
 
   categories_index_short_description: |
     Categories are like tags but are set automatically by the website
