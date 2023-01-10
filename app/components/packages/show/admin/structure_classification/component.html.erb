@@ -20,8 +20,16 @@
             <%= question['question_text'] %>
             <br>
             <span class="font-bold">
-              <%= question['answers'].join(' ') %></td>
+              <%= question['answers'].join(' ') %>
             </span>
+            <br>
+            <span class="italic">
+              <%= question['question_types']
+                .map { |x| x == 'marker' ? '|' : x }
+                .join(', ')
+              %>
+            </span>
+          </td>
           <td>
             <% categories.each do |c| %>
               <div class="inline-block w-16">
