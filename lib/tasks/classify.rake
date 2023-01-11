@@ -65,6 +65,8 @@ namespace :classify do
       results[cat] = Classification::Evaluator.new.repeated_k_fold(mapped_rel, 1, 5, cat)
     end
 
+    f1s = results.map { |k, v| v[:metrics][:f1] }
+    results[:average_f1] = f1s.sum.fdiv(f1s.size)
     pp results
   end
 end
