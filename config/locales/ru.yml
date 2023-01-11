@@ -26,7 +26,6 @@ ru:
   sigame_author: Автор игры — %{link}.
   khil: Владимир Хиль
   on_this_site_packages: На этом сайте собраны пакеты из темы %{link}.
-  sigame_package: Пакет для Своей Игры (%{link}).
   community_vk: Сообщество в VK
   source_code: Исходный код
   roadmap: План разработки
@@ -124,3 +123,5 @@ ru:
   categories_index_short_description: |
     Категории — это как теги, только устанавливаются сайтом автоматически,
     а не авторами пакетов вручную
+
+  similar_packages: Похожие пакеты

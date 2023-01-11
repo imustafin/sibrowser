@@ -26,7 +26,6 @@ tt:
   sigame_author: Уен ясаучы — %{link}.
   khil: Владимир Хиль
   on_this_site_packages: Сайтка %{link} темадагы пакетлары җыелган.
-  sigame_package: "%{link} уены өчен пакет."
   community_vk: VK берләшмә
   source_code: Башлангыч текст
   roadmap: Төзү планы
@@ -122,3 +121,5 @@ tt:
   categories_index_short_description: |
     Категорияләр — тегларга охшаган, әмма аларны пакет ясаучы урында
     сайт автоматик рәвештә куя
+
+  similar_packages: Охшаш пакетлар

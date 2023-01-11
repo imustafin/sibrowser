@@ -10,6 +10,20 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: cube; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS cube WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION cube; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION cube IS 'data type for multidimensional cubes';
+
+
+--
 -- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -114,6 +128,7 @@ CREATE TABLE public.packages (
     cat_videogames_ratio double precision DEFAULT 0.0 NOT NULL,
     cat_music_ratio double precision DEFAULT 0.0 NOT NULL,
     cat_movies_ratio double precision DEFAULT 0.0 NOT NULL,
+    cat_cube public.cube GENERATED ALWAYS AS (public.cube(ARRAY[cat_anime_ratio, cat_videogames_ratio, cat_music_ratio, cat_movies_ratio])) STORED,
     CONSTRAINT file_hash_since_version_9 CHECK (((version < 9) OR (disappeared_at IS NOT NULL) OR (file_hash IS NOT NULL)))
 );
 
@@ -229,6 +244,13 @@ CREATE INDEX authors_icase_index ON public.packages USING gin (((lower((authors)
 
 
 --
+-- Name: index_packages_on_cat_cube; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_packages_on_cat_cube ON public.packages USING gist (cat_cube);
+
+
+--
 -- Name: index_packages_on_cat_movies_ratio; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -334,6 +356,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230103181223'),
 ('20230105161121'),
 ('20230108182726'),
-('20230110171334');
+('20230110171334'),
+('20230111184818');
 
 

@@ -134,16 +134,18 @@
       </h3>
       <%= render Packages::Show::Questions::Component.new(structure: @package.structure) %>
     <% end %>
-
-    <p class="mt-4">
-      <%= t('sigame_package',
-            link: link_to('SIGame', 'https://vladimirkhil.com/si/game', class: 'font-bold')).html_safe
-      %>
-      <%= t('sigame_author',
-            link: link_to(t('khil'), 'https://vladimirkhil.com/', class: 'font-bold')).html_safe
-      %>
-    </p>
   </div>
+
+  <h3 class="text-center font-bold text-2xl mt-4 mb-2">
+    <%= t(:similar_packages) %>
+  </h3>
+
+  <% @package.similar.limit(3).each_with_index do |similar, i| %>
+    <% if admin? %>
+      Distance: <%= similar.distance.round(3) %>
+    <% end %>
+    <%= render PackageCard::Component.new(package: similar, position: i + 1) %>
+  <% end %>
 
   <% if admin? %>
     <% SibrowserConfig::CATEGORIES_2.each do |cat| %>

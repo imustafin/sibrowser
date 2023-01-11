@@ -26,7 +26,6 @@ en:
   sigame_author: The game is made by %{link}.
   khil: Vladimir Khil
   on_this_site_packages: The packages are collected from the %{link} topic.
-  sigame_package: A package for %{link}.
   community_vk: VK Community
   source_code: Source Code
   roadmap: Development Roadmap
@@ -124,3 +123,5 @@ en:
   categories_index_short_description: |
     Categories are like tags but are set automatically by the website
     and not manually by the package authors
+
+  similar_packages: Similar Packages

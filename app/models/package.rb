@@ -79,6 +79,15 @@ class Package < ApplicationRecord
     }
   end
 
+  def similar
+    dist = self.class.sanitize_sql(['cat_cube <-> ?', cat_cube])
+
+    Package
+      .where.not(id:)
+      .select("#{dist} as distance", '*')
+      .order(Arel.sql(dist) => :asc)
+  end
+
   def question_distribution
     return nil unless structure
 
