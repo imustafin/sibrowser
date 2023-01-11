@@ -7,21 +7,17 @@
         </div>
 
         <%= turbo_stream_from :download_counts %>
-        <div class="flex justify-center mt-8 mb-4">
-          <%= link_to package_direct_download_path(@package),
-           target: '_blank',
-           class: button_class + "w-full flex items-center justify-center" \
-             do
-          %>
-            <%= heroicon "document-arrow-down", options: { class: "h-6 inline" } %>
+        <%= link_to package_direct_download_path(@package),
+          target: '_blank',
+          class: button_class + "!px-0 w-full flex items-center justify-center mt-8 mb-4" \
+            do
+        %>
+          <%= heroicon "document-arrow-down", options: { class: "h-6 inline sm:max-lg:hidden" } %>
+          <span class="text-center">
             <%= t(:link) %>
-            (
-            <span id="<%= dom_id(@package, :download_count) %>">
-              <%= @package.download_count %>
-            </span>
-            )
-          <% end %>
-        </div>
+            (<span id="<%= dom_id(@package, :download_count) %>"><%= @package.download_count %></span>)
+          </span>
+        <% end %>
       </div>
 
       <div class="col-span-4">
