@@ -54,7 +54,7 @@ tt:
   title_tag: "%{tag} — SIGame пакет тегы"
   description_tag: "%{tag} теглы пакет саны — %{package_count}"
   tag_packages: Бу теглы пакетлар
-  categories: Категорияләр
+  categories_page_title: Категорияләр
   category: Категория
   category_packages: Бу категориядәге пакетлар
   description_category: "%{category} категориядәге пакет саны — %{package_count}"
@@ -100,11 +100,24 @@ tt:
       title: Иң туры килгән %{category} пакетлар
       link: Туры килүе буенча
 
-  category_names:
-    anime: Аниме
-    videogames: Видео уеннар
-    music: Музыка
-    movies: Кино
+  categories:
+    anime:
+      name: Аниме
+      description: |
+        Япон мультипликациясе һәм манга (япон комикслары) буенча пакетлар
+    videogames:
+      name: Видео уеннар
+      description: |
+        Санак уеннар һәм алар белән бәйле бар нәрсә буенча пакетлар
+    music:
+      name: Музыка
+      description: |
+        Караоке биремнәрле һәм җырлар, көйләр һәм алар кайда очрашалар турында буенча пакетлар
+    movies:
+      name: Кино
+      description: |
+        Сериаллар, фильмнар һәм мультфильмнар (аниме булмаган гына) буенча пакетлар
+
 
   categories_index_short_description: |
     Категорияләр — тегларга охшаган, әмма аларны пакет ясаучы урында

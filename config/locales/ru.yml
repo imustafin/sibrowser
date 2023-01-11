@@ -54,7 +54,7 @@ ru:
   title_tag: "%{tag} — Тег пакетов для SIGame"
   description_tag: Всего пакетов с тегом %{tag} — %{package_count}
   tag_packages: Пакеты с этим тегом
-  categories: Категории
+  categories_page_title: Категории
   category: Категория
   category_packages: Пакеты в этой категории
   description_category: Всего пакетов в категории %{category} — %{package_count}
@@ -103,12 +103,24 @@ ru:
       title: Самые релевантные %{category} пакеты
       link: По релевантности
 
-  category_names:
-    anime: Аниме
-    videogames: Видеоигры
-    music: Музыка
-    movies: Кино
+  categories:
+    anime:
+      name: Аниме
+      description: |
+        Пакеты по японской мультипликации и манге (японские комиксы)
+    videogames:
+      name: Видеоигры
+      description: |
+        Пакеты по компьютерным играм и всем, что с ними связано
+    music:
+      name: Музыка
+      description: |
+        Пакеты с караоке заданиями и по песням, мелодиям и том, где они встречаются
+    movies:
+      name: Кино
+      description: |
+        Пакеты по кинематографии: сериалам, фильмам и мультфильмам (но не аниме)
 
   categories_index_short_description: |
     Категории — это как теги, только устанавливаются сайтом автоматически,
-    а не авторами пакетов вручную.
+    а не авторами пакетов вручную

@@ -45,7 +45,7 @@
         <ul class="space-x-2 sm:space-x-8 inline">
           <li class="inline"><%= link_to t(:authors), authors_path %></li>
           <li class="inline"><%= link_to t(:tags), tags_path %></li>
-          <li class="inline"><%= link_to t(:categories), categories_path %></li>
+          <li class="inline"><%= link_to t(:categories_page_title), categories_path %></li>
           <% if admin? %>
             <li class="inline"><%= button_to "Logout", logout_path, method: :post, class: 'bg-red-700' %></li>
           <% end %>

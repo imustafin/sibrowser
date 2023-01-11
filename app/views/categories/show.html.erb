@@ -2,6 +2,15 @@
   <%= show_title %>
 </h1>
 
+<%
+category_translation = t(:description, scope: [:categories, category], default: '$$')
+unless category_translation == '$$'
+%>
+  <p class="mb-2">
+    <%= category_translation %>
+  </p>
+<% end %>
+
 <%=
 begin
   text_rendered = render "category_text_#{category}_#{I18n.locale}"
@@ -12,7 +21,7 @@ end
 
 <% unless text_rendered %>
   <h2 class="text-xl mb-2 text-center">
-    <%= t('category_packages') %>
+    <%= t(:category_packages) %>
   </h2>
 <% end %>
 

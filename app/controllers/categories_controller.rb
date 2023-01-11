@@ -9,7 +9,8 @@ class CategoriesController < ApplicationController
       .sort_by(&:last)
       .reverse
 
-    @page_title = t(:categories)
+    @page_title = t(:categories_page_title)
+    @page_description = t(:categories_index_short_description)
   end
 
   def show
@@ -23,16 +24,16 @@ class CategoriesController < ApplicationController
 
     package_count = packages.total_count
 
-    tc = t(category, scope: :category_names, default: category)
     @page_title = show_title
-    @page_description = t('description_category', category: tc, package_count:)
+    old_description = t('description_category', category: category_translation, package_count:)
+    @page_description = t(:description, scope: [:categories, category], default: old_description)
 
     set_meta_tags noindex: params['page'].present?
 
     @breadcrumbs = {
       parts: [
-        [t(:categories), categories_path],
-        tc
+        [t(:categories_page_title), categories_path],
+        category_translation
       ]
     }
   end
@@ -76,7 +77,12 @@ class CategoriesController < ApplicationController
   end
 
   def show_title
-    tc = t(category, scope: :category_names, default: category)
-    t("categories_show_sort.#{sort_column}.title", category: tc)
+    t("categories_show_sort.#{sort_column}.title", category: category_translation)
+  end
+
+  private
+
+  def category_translation
+    t(:name, scope: [:categories, category], default: category)
   end
 end

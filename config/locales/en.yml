@@ -54,7 +54,7 @@ en:
   title_tag: "%{tag} — SIGame Package Tag"
   description_tag: Total packages tagged %{tag} — %{package_count}
   tag_packages: Packages with this tag
-  categories: Categories
+  categories_page_title: Categories
   category: Category
   category_packages: Packages in this category
   description_category: Total packages in category %{category} — %{package_count}
@@ -102,12 +102,25 @@ en:
       title: Most relevant %{category} packages
       link: By relevance
 
-  category_names:
-    anime: Anime
-    videogames: Video Games
-    music: Music
-    movies: Movies
+  categories:
+    anime:
+      name: Anime
+      description: |
+        Packages about Japanese animation and manga (Japanese comic books)
+    videogames:
+      name: Video Games
+      description: |
+        Packages about computer games and everything related to them
+    music:
+      name: Music
+      description: |
+        Packages with karaoke tasks and about songs, melodies and where they appear
+    movies:
+      name: Movies
+      description: |
+        Packages about cinematography: series, films and cartoons (but not anime)
+
 
   categories_index_short_description: |
     Categories are like tags but are set automatically by the website
-    and not manually by the package authors.
+    and not manually by the package authors
