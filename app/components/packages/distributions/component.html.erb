@@ -1,0 +1,37 @@
+<table class="<%= @class %>">
+  <tr class="bg-indigo-600 text-white font-bold">
+    <td colspan="4" class="text-center">
+      <%= t('total_questions') %>: <%= @package.question_distribution[:total] %>
+    </td>
+  </tr>
+  <% SibrowserConfig::QUESTION_TYPES.in_groups_of(2) do |group| %>
+    <tr class="odd:bg-indigo-50 even:bg-indigo-100">
+      <% group.each do |type| %>
+        <td class="pl-2">
+          <%= t(type) %>
+        </td>
+        <td class="pl-2">
+          <%= number_to_percentage \
+            @package.question_distribution[:types][type] * 100,
+            precision: 0
+          %>
+        </td>
+      <% end %>
+    </tr>
+  <% end %>
+  <tr class="bg-indigo-600 text-white font-bold">
+    <td colspan="4" class="text-center">
+      <%= t(:categories_page_title) %>
+    </td>
+  </tr>
+  <% @package.categories(true).each do |cat, ratio| %>
+    <tr class="odd:bg-indigo-100 even:bg-indigo-50">
+      <td colspan="2" class="pl-2">
+        <%= t(:short, scope: [:categories, cat]) %>
+      </td>
+      <td colspan="2" class="pl-2 text-center">
+        <%= number_to_percentage ratio * 100, precision: 0 %>
+      </td>
+    </tr>
+  <% end %>
+</table>

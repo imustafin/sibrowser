@@ -1,4 +1,10 @@
 class SibrowserConfig < ApplicationRecord
+  QUESTION_TYPES = %i[
+    text
+    image
+    voice
+    video
+  ]
 
   CATEGORIES = [
     'pzl',

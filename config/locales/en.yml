@@ -34,7 +34,6 @@ en:
   text: Text
   voice: Sound
   video: Video
-  mixed: Mixed
   questions: Questions
   total_questions: Total questions
   site_name: SIBrowser
@@ -104,22 +103,27 @@ en:
   categories:
     anime:
       name: Anime
+      short: Anime
       description: |
         Packages about Japanese animation and manga (Japanese comic books)
     videogames:
       name: Video Games
+      short: Video Games
       description: |
         Packages about computer games and everything related to them
     music:
       name: Music
+      short: Music
       description: |
         Packages with karaoke tasks and about songs, melodies and where they appear
     movies:
       name: Movies
+      short: Movies
       description: |
         Packages about cinematography: series, films and cartoons (but not anime)
     social:
       name: Social Sciences
+      short: Social sc.
       description: |
         Packages about history, politics, economics and human geography
 

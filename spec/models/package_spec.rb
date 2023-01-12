@@ -95,19 +95,6 @@ RSpec.describe Package, type: :model do
         }
       })
     end
-
-    it 'keeps gives :mixed if more than one of image-voice-video' do
-      p = build(:package_one_theme, questions: [{
-        'question_types' => %w[text text image voice video]
-      }])
-
-      expect(p.question_distribution).to eq({
-        total: 1,
-        types: {
-          mixed: 1
-        }
-      })
-    end
   end
 
   describe '.search_freetext' do

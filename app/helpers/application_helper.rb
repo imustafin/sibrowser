@@ -3,8 +3,7 @@ module ApplicationHelper
     image: 'bg-red-500',
     text: 'bg-green-500',
     video: 'bg-yellow-500',
-    voice: 'bg-blue-500',
-    mixed: 'bg-black'
+    voice: 'bg-blue-500'
   }
 
   def sortable(title, column, html_params={})

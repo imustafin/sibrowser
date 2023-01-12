@@ -30,11 +30,10 @@ ru:
   source_code: Исходный код
   roadmap: План разработки
   search: Искать
-  image: Изображение
+  image: Фото
   text: Текст
   voice: Звук
   video: Видео
-  mixed: Смешанный
   questions: Вопросы
   total_questions: Всего вопросов
   site_name: SIBrowser
@@ -105,22 +104,27 @@ ru:
   categories:
     anime:
       name: Аниме
+      short: Аниме
       description: |
         Пакеты по японской мультипликации и манге (японские комиксы)
     videogames:
       name: Видеоигры
+      short: Видеоигры
       description: |
         Пакеты по компьютерным играм и всем, что с ними связано
     music:
       name: Музыка
+      short: Музыка
       description: |
         Пакеты с караоке заданиями и по песням, мелодиям и том, где они встречаются
     movies:
       name: Кино
+      short: Кино
       description: |
         Пакеты по кинематографии: сериалам, фильмам и мультфильмам (но не аниме)
     social:
       name: Общественные науки
+      short: Обществ. н.
       description: |
         Пакеты по истории, политике, экономике и социально-экономической географии
 

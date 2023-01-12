@@ -51,32 +51,29 @@ class Package < ApplicationRecord
     (Time.now - vk_download_url_updated_at) < SOURCE_LINK_LIFESPAN
   end
 
-  def self.question_type(q)
-    ts = q['question_types'].take_while { |t| t != 'marker' }
-
-    ts.delete('say')
-    ts.delete('text')
-    ts.uniq!
-
-    if ts.empty?
-      :text
-    elsif ts.count == 1
-      ts.first.to_sym
-    else
-      :mixed
-    end
+  def self.question_types(q)
+    q['question_types']
+      .take_while { |t| t != 'marker' }
+      .map { |x| x == 'say' ? 'text' : x }
+      .uniq
+      .map(&:to_sym)
   end
 
   def self.question_distribution(col)
     col = col.flat_map { |r| r['themes'] } if col.first&.key?('themes')
     col = col.flat_map { |r| r['questions'] } if col.first&.key?('questions')
 
-    types = col.map { |q| question_type(q) }
+    types = SibrowserConfig::QUESTION_TYPES.to_h { |k| [k, 0] }
 
-    {
-      total: col.count,
-      types: types.tally.sort_by { |x| -x.last }.to_h
-    }
+    col.each do |q|
+      question_types(q).each { |t| types[t] += 1 }
+    end
+
+    total = col.count
+
+    types.transform_values! { |v| v.fdiv(total)  }
+
+    { total:, types: }
   end
 
   def similar
@@ -124,7 +121,7 @@ class Package < ApplicationRecord
       .exists?
   end
 
-  def categories
+  def categories(all = false)
     cats = (self[:categories] || {})
 
     # Delete old CATEGORIES replaced by CATEGORIES_2
@@ -135,12 +132,12 @@ class Package < ApplicationRecord
     cats.delete('hum')
 
     SibrowserConfig::CATEGORIES_2.map(&:to_sym).each do |c|
-      if self["cat_#{c}_ratio"] >= CATEGORY_2_MIN
+      if all || self["cat_#{c}_ratio"] >= CATEGORY_2_MIN
         cats[c] = self["cat_#{c}_ratio"]
       end
     end
 
-    cats
+    cats.sort_by(&:last).reverse.to_h
   end
 
   scope :by_author, ->(author) { where('LOWER(authors::text)::jsonb @> to_jsonb(LOWER(?)::text)', author) }

@@ -6,14 +6,14 @@
 >
   <meta itemprop="position" content="<%= @position %>">
 
-  <div class="grid grid-cols-1 sm:grid-cols-5 sm:grid-rows-[auto_1fr_auto]">
-    <div class="sm:row-span-3 sm:col-span-1 px-2 sm:p-2 sm:border-r">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-9 xl:grid-cols-10 lg:grid-cols-10 md:grid-rows-[auto_1fr_auto]">
+    <div class="col-span-12 md:row-span-3 md:col-span-1 lg:col-span-2 lg:col-span-3 xl:col-span-2 px-2 md:p-2 lg:border-r">
       <%= link_to @package do %>
         <%= render Packages::Logo::Component.new(package: @package) %>
       <% end %>
     </div>
 
-    <div class="order-first sm:order-1 col-span-4 p-2"> <!-- titles -->
+    <div class="order-first lg:order-1 col-span-6 lg:col-span-5 xl:col-span-6 p-2"> <!-- titles -->
       <h2 class="pb-1">
         <% (@package.authors || []).each do |author| %>
           <span class="pr-2">
@@ -23,22 +23,14 @@
         <%= time_tag @package.published_at.to_date, class: 'inline-block', itemprop: 'datePublished' %>
       </h2>
 
-      <%= link_to @package, itemprop: "url" do %>
-        <h1 class="text-xl font-bold" itemprop="name headline">
-          <%= @package.name %>
-        </h1>
+      <h1 class="text-xl font-bold" itemprop="name headline">
+        <%= link_to @package.name, @package, itemprop: "url" %>
+      </h1>
+      <%= link_to @package do %>
         <%= render Packages::FileName::Component.new \
           package: @package,
           class: 'text-l font-semibold'
         %>
-      <% end %>
-      <% if helpers.admin? %>
-        <div>
-          <% SibrowserConfig::CATEGORIES_2.each do |cat| %>
-            <%= cat.titleize %>: <%= @package["cat_#{cat}_ratio"] %>
-            <br>
-          <% end %>
-        </div>
       <% end %>
 
       <div class="pt-2">
@@ -51,31 +43,29 @@
       </div>
     </div>
 
-    <div class="order-3 col-span-4 pt-2 px-2"> <!-- text -->
-      <%= simple_format \
-        @package.earliest_post&.[]('text').present? \
-          ? @package.earliest_post['text'].truncate(150, separator: /\s/) \
-          : helpers.package_description(@package, true),
-        itemprop: 'description'
-      %>
+    <div class="order-3 col-span-6 lg:col-span-5 xl:col-span-6 pt-2 px-2"> <!-- text -->
+      <% if @package.earliest_post&.[]('text').present? %>
+        <%= simple_format \
+          @package.earliest_post['text'].truncate(150, separator: /\s/),
+          itemprop: 'description',
+          class: 'pb-4'
+        %>
+      <% end %>
+
+      <% @package.structure.each do |round| %>
+        <span class="font-medium"><%= round['name'] %></span>:
+        <span class="text-neutral-700">
+          <%= round['themes'].pluck('name').reject(&:blank?).map(&:strip).join(', ') %>
+        </span>
+        <br>
+      <% end %>
     </div>
 
-    <div class="order-4 col-span-4 p-2"> <!-- distribution -->
-      <% if @package.question_distribution.present? %>
-        <p class="text-gray-700">
-          <%= t('total_questions') %>: <%= @package.question_distribution[:total] %>
-        </p>
-        <% @package.question_distribution[:types].each do |type, count| %>
-          <span class="mr-4 inline-block text-gray-700">
-            <div class="<%= ApplicationHelper::TYPE_COLORS[type] %> w-4 h-4 inline-block bottom-0"></div>
-            <%= t type %>
-            <%= number_to_percentage \
-            count.to_f / @package.question_distribution[:total] * 100,
-             precision: 0
-            %>
-          </span>
-        <% end %>
-      <% end %>
+    <div class="md:row-span-3 order-2 col-span-9 md:col-span-3 lg:col-span-2 px-2 md:pr-2 lg:pt-2"> <!-- distribution -->
+      <%= render Packages::Distributions::Component.new \
+        package: @package,
+        class: 'w-full'
+      %>
     </div>
   </div>
 
