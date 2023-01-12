@@ -4,7 +4,6 @@ class SibrowserConfig < ApplicationRecord
     'pzl',
     'meme',
     'exact',
-    'hum',
     'inet',
     'ero',
     'unk'
@@ -21,7 +20,8 @@ class SibrowserConfig < ApplicationRecord
   CATEGORIES_2_MAPPING = {
     'gam' => 'videogames',
     'mus' => 'music',
-    'fic' => 'movies'
+    'fic' => 'movies',
+    'hum' => 'social'
   }
 
   def self.instance
