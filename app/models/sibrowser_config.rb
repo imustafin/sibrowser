@@ -14,7 +14,8 @@ class SibrowserConfig < ApplicationRecord
     'anime',
     'videogames',
     'music',
-    'movies'
+    'movies',
+    'social'
   ]
 
   CATEGORIES_2_MAPPING = {

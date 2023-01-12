@@ -128,7 +128,8 @@ CREATE TABLE public.packages (
     cat_videogames_ratio double precision DEFAULT 0.0 NOT NULL,
     cat_music_ratio double precision DEFAULT 0.0 NOT NULL,
     cat_movies_ratio double precision DEFAULT 0.0 NOT NULL,
-    cat_cube public.cube GENERATED ALWAYS AS (public.cube(ARRAY[cat_anime_ratio, cat_videogames_ratio, cat_music_ratio, cat_movies_ratio])) STORED,
+    cat_social_ratio double precision DEFAULT 0.0 NOT NULL,
+    cat_cube public.cube GENERATED ALWAYS AS (public.cube(ARRAY[cat_anime_ratio, cat_videogames_ratio, cat_music_ratio, cat_movies_ratio, cat_social_ratio])) STORED,
     CONSTRAINT file_hash_since_version_9 CHECK (((version < 9) OR (disappeared_at IS NOT NULL) OR (file_hash IS NOT NULL)))
 );
 
@@ -265,6 +266,13 @@ CREATE INDEX index_packages_on_cat_music_ratio ON public.packages USING btree (c
 
 
 --
+-- Name: index_packages_on_cat_social_ratio; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_packages_on_cat_social_ratio ON public.packages USING btree (cat_social_ratio);
+
+
+--
 -- Name: index_packages_on_disappeared_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -357,6 +365,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230105161121'),
 ('20230108182726'),
 ('20230110171334'),
-('20230111184818');
+('20230111184818'),
+('20230112163610');
 
 

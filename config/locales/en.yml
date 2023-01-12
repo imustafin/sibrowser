@@ -118,6 +118,10 @@ en:
       name: Movies
       description: |
         Packages about cinematography: series, films and cartoons (but not anime)
+    social:
+      name: Social Sciences
+      description: |
+        Packages about history, politics, economics and human geography
 
 
   categories_index_short_description: |
