@@ -32,7 +32,7 @@ tt:
   voice: Тавыш
   video: Видео
   questions: Сораулар
-  total_questions: Сораулар саны
+  total_questions: '%{count} сорау'
   site_name: SIBrowser
   default_title: SIBrowser — SIGame (Своя Игра) өчен пакетлар
   title_package: "%{name}%{authors} — SIGame өчен пакет"

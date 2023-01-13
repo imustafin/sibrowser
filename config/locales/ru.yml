@@ -32,7 +32,11 @@ ru:
   voice: Звук
   video: Видео
   questions: Вопросы
-  total_questions: Всего вопросов
+  total_questions:
+    one: '%{count} вопрос'
+    few: '%{count} вопроса'
+    many: '%{count} вопросов'
+
   site_name: SIBrowser
   default_title: SIBrowser — пакеты для Своей Игры (SIGame)
   title_package: "%{name}%{authors} — Пакет для SIGame"
