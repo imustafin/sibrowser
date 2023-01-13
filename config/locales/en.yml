@@ -18,9 +18,6 @@ en:
   ilgiz: Ilgiz Mustafin
   original_message: Original Message
   rounds: Rounds
-  added_to_sibrowser: Added to SIBrowser
-  updated_in_sibrowser: Updated in SIBrowser
-  filename: Filename
   tags: Tags
   packages_for_sigame: Packages for %{link}.
   sigame_author: The game is made by %{link}.

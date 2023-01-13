@@ -1,0 +1,38 @@
+<h2 class="pb-1">
+  <% (@package.authors || []).each do |author| %>
+    <span class="pr-2">
+      <%= render AuthorLinkComponent.new(author: author) %>
+    </span>
+  <% end %>
+  <%= time_tag @package.published_at.to_date, class: 'inline-block', itemprop: 'datePublished' %>
+</h2>
+
+<h1 class="<%= title_size %> font-bold" itemprop="name headline">
+  <% if link? %>
+    <%= link_to @package.name, @package, itemprop: "url" %>
+  <% else %>
+    <%= @package.name %>
+  <% end %>
+</h1>
+<% if link? %>
+  <%= link_to @package do %>
+    <%= render Packages::FileName::Component.new \
+      package: @package,
+      class: 'text-l font-semibold'
+    %>
+  <% end %>
+<% else %>
+  <%= render Packages::FileName::Component.new \
+    package: @package,
+    class: 'text-l font-semibold'
+  %>
+<% end %>
+
+<div class="pt-2">
+  <%= render KeywordLinksComponent.new(tags: @package.tags || [], categories: @package.categories || {}) %>
+  <% if @package.too_big_for_online? %>
+    <div class="pb-1">
+      <%= render Packages::TooBigForOnlineTag::Component.new %>
+    </div>
+  <% end %>
+</div>

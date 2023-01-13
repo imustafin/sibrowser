@@ -13,34 +13,8 @@
       <% end %>
     </div>
 
-    <div class="order-first lg:order-1 col-span-6 lg:col-span-5 xl:col-span-6 p-2"> <!-- titles -->
-      <h2 class="pb-1">
-        <% (@package.authors || []).each do |author| %>
-          <span class="pr-2">
-            <%= render AuthorLinkComponent.new(author: author) %>
-          </span>
-        <% end %>
-        <%= time_tag @package.published_at.to_date, class: 'inline-block', itemprop: 'datePublished' %>
-      </h2>
-
-      <h1 class="text-xl font-bold" itemprop="name headline">
-        <%= link_to @package.name, @package, itemprop: "url" %>
-      </h1>
-      <%= link_to @package do %>
-        <%= render Packages::FileName::Component.new \
-          package: @package,
-          class: 'text-l font-semibold'
-        %>
-      <% end %>
-
-      <div class="pt-2">
-        <%= render KeywordLinksComponent.new(tags: @package.tags || [], categories: @package.categories || {}) %>
-        <% if @package.too_big_for_online? %>
-          <div class="pb-1">
-            <%= render Packages::TooBigForOnlineTag::Component.new %>
-          </div>
-        <% end %>
-      </div>
+    <div class="order-first lg:order-1 col-span-6 lg:col-span-5 xl:col-span-6 p-2">
+      <%= render Packages::CardTitle::Component.new(package: @package, variant: :small) %>
     </div>
 
     <div class="order-3 col-span-6 lg:col-span-5 xl:col-span-6 pt-2 px-2"> <!-- text -->
