@@ -15,7 +15,7 @@ services:
     environment:
       PG_HOST: pg
       PG_USERNAME: postgres
-      PG_PASSWORD: 123
+      PGPASSWORD: 123
       VK_APP_ID:
       VK_SECRET:
       VK_SERVICE:
