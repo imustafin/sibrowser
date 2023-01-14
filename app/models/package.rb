@@ -122,7 +122,7 @@ class Package < ApplicationRecord
   end
 
   def categories(all = false)
-    cats = (self[:categories] || {})
+    cats = (read_attribute(:categories)&.dup || {})
 
     # Delete old CATEGORIES replaced by CATEGORIES_2
     cats.delete('anime')
