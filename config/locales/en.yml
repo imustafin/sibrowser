@@ -125,6 +125,11 @@ en:
       short: Social sc.
       description: |
         Packages about history, politics, economics and human geography
+    meme:
+      name: Memes
+      short: Memes
+      description: |
+        Packages about memes
 
 
   categories_index_short_description: |

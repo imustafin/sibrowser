@@ -121,6 +121,11 @@ tt:
       short: Иҗтимагый ф.
       description: |
         Тарих, сәясәт, икътисад һәм җәмгыять географиясе турында пакетлар
+    meme:
+      name: Мемлар
+      short: Мемлар
+      description: |
+        Мемлар турында пакетла
 
 
   categories_index_short_description: |

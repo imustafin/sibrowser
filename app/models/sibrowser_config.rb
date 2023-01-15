@@ -8,7 +8,6 @@ class SibrowserConfig < ApplicationRecord
 
   CATEGORIES = [
     'pzl',
-    'meme',
     'exact',
     'inet',
     'ero',
@@ -20,7 +19,8 @@ class SibrowserConfig < ApplicationRecord
     'videogames',
     'music',
     'movies',
-    'social'
+    'social',
+    'meme'
   ]
 
   CATEGORIES_2_MAPPING = {
