@@ -13,22 +13,25 @@
       <% end %>
     </div>
 
-    <div class="order-first lg:order-1 col-span-6 lg:col-span-5 xl:col-span-6 p-2">
+    <div class="order-first lg:order-1 col-span-6 lg:col-span-5 xl:col-span-6 pt-2 px-2">
       <%= render Packages::CardTitle::Component.new(package: @package, variant: :small) %>
     </div>
 
-    <div class="order-3 col-span-6 lg:col-span-5 xl:col-span-6 pt-2 px-2"> <!-- text -->
+    <div class="order-3 col-span-6 lg:col-span-5 xl:col-span-6 px-2"> <!-- text -->
       <% if @package.earliest_post&.[]('text').present? %>
         <%= simple_format \
           @package.earliest_post['text'].truncate(150, separator: /\s/),
           itemprop: 'description',
-          class: 'pb-4'
+          class: 'pt-2'
         %>
       <% end %>
 
+      <h2 class="text-xl pt-2">
+        <%= t(:themes_by_rounds) %>
+      </h2>
       <% @package.structure.each do |round| %>
-        <span class="font-medium"><%= round['name'] %></span>:
-        <span class="text-neutral-700">
+        <%= round['name'].strip %>:
+        <span class="text-neutral-500">
           <%= round['themes'].pluck('name').reject(&:blank?).map(&:strip).join(', ') %>
         </span>
         <br>

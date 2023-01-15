@@ -28,7 +28,7 @@
   %>
 <% end %>
 
-<div class="pt-2">
+<div>
   <%= render KeywordLinksComponent.new(tags: @package.tags || [], categories: @package.categories || {}) %>
   <% if @package.too_big_for_online? %>
     <div class="pb-1">
