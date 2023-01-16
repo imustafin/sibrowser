@@ -200,9 +200,9 @@ GEM
       zeitwerk (~> 2.5)
     rake (13.0.6)
     rate_throttle_client (0.1.2)
-    redis (5.0.5)
+    redis (5.0.6)
       redis-client (>= 0.9.0)
-    redis-client (0.12.0)
+    redis-client (0.12.1)
       connection_pool
     rspec-core (3.12.0)
       rspec-support (~> 3.12.0)
