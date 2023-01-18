@@ -34,7 +34,17 @@
                 data-<%= ctrl %>-round-param="<%= round_id %>"
                 data-<%= ctrl %>-theme-param="<%= theme_id %>"
                 data-<%= ctrl %>-cat-param="<%= c %>"
-              ><%= ans %></button><br>
+                data-<%= ctrl %>-only-param="false"
+              ><%= ans %></button>
+              <button
+                data-action="<%= ctrl %>#setThemeCat:prevent"
+                data-<%= ctrl %>-ans-param="<%= ans %>"
+                data-<%= ctrl %>-round-param="<%= round_id %>"
+                data-<%= ctrl %>-theme-param="<%= theme_id %>"
+                data-<%= ctrl %>-cat-param="<%= c %>"
+                data-<%= ctrl %>-only-param="true"
+                >Only</button>
+              <br>
             <% end %>
           </td>
         <% end %>
