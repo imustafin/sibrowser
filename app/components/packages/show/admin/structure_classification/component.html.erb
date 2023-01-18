@@ -7,8 +7,7 @@
 >
   <% @package.structure.each_with_index do |round, round_id| %>
     <tr class="h-10 bg-indigo-500 text-white">
-      <td><%= round['name'] %></td>
-      <td></td>
+      <td colspan="<%= categories.size + 1%>"><%= round['name'] %></td>
     </tr>
     <% round['themes'].each_with_index do |theme, theme_id| %>
       <tr class="h-10 bg-indigo-300 font-bold" id="<%= [round_id, theme_id].join('_') %>">
@@ -26,22 +25,19 @@
             ><%= ans %></button>
           <% end %>
         </td>
-        <td>
-          <% categories.each do |c| %>
-            <div class="inline-block text-center">
-              <%= c[0..3] %><br>
-              <% %w[yes null no].each do |ans| %>
-                <button
-                  data-action="<%= ctrl %>#setThemeCat:prevent"
-                  data-<%= ctrl %>-ans-param="<%= ans %>"
-                  data-<%= ctrl %>-round-param="<%= round_id %>"
-                  data-<%= ctrl %>-theme-param="<%= theme_id %>"
-                  data-<%= ctrl %>-cat-param="<%= c %>"
-                ><%= ans %></button><br>
-              <% end %>
-            </div>
-          <% end %>
-        </td>
+        <% categories.each do |c| %>
+          <td class="w-16">
+            <% %w[yes null no].each do |ans| %>
+              <button
+                data-action="<%= ctrl %>#setThemeCat:prevent"
+                data-<%= ctrl %>-ans-param="<%= ans %>"
+                data-<%= ctrl %>-round-param="<%= round_id %>"
+                data-<%= ctrl %>-theme-param="<%= theme_id %>"
+                data-<%= ctrl %>-cat-param="<%= c %>"
+              ><%= ans %></button><br>
+            <% end %>
+          </td>
+        <% end %>
       </tr>
       <% theme['questions'].each_with_index do |question, question_id| %>
         <tr
@@ -62,39 +58,36 @@
               %>
             </span>
           </td>
-          <td>
-            <% categories.each do |c| %>
-              <div class="inline-block w-16">
-                <div class="text-center">
-                  <%= c %>
+          <% categories.each do |c| %>
+            <td class="w-16">
+              <%= c %>
+              <br>
+              <% n = radio_name(round_id, theme_id, question_id, c) %>
+              <% ['yes', 'null', 'no'].each do |ans| %>
+                <div>
+                  <%= form.radio_button n, ans,
+                  checked: value_by_name(n) == ans,
+                  tabindex: tabindex,
+                  name: n,
+                  class: (
+                    case ans
+                    when 'yes' then 'peer checked:bg-green-500'
+                    when 'no' then 'peer checked:bg-red-500'
+                    end
+                  )
+                  %>
+                  <%= form.label "#{n}_#{ans}", ans,
+                  class: (
+                    case ans
+                    when 'yes' then 'peer-checked:bg-green-500'
+                    when 'no' then 'peer-checked:bg-red-500 peer-checked:text-white'
+                    end
+                  )
+                  %>
                 </div>
-                <% n = radio_name(round_id, theme_id, question_id, c) %>
-                <% ['yes', 'null', 'no'].each do |ans| %>
-                  <div>
-                    <%= form.radio_button n, ans,
-                    checked: value_by_name(n) == ans,
-                    tabindex: tabindex,
-                    name: n,
-                    class: (
-                      case ans
-                      when 'yes' then 'peer checked:bg-green-500'
-                      when 'no' then 'peer checked:bg-red-500'
-                      end
-                    )
-                    %>
-                    <%= form.label "#{n}_#{ans}", ans,
-                    class: (
-                      case ans
-                      when 'yes' then 'peer-checked:bg-green-500'
-                      when 'no' then 'peer-checked:bg-red-500 peer-checked:text-white'
-                      end
-                    )
-                    %>
-                  </div>
-                <% end %>
-              </div>
-            <% end %>
-          </td>
+              <% end %>
+            </td>
+          <% end %>
         </tr>
       <% end %>
     <% end %>
