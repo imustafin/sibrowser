@@ -10,14 +10,7 @@ module Packages
           def initialize(package:)
             @package = package
 
-            @tabs = {}
-            total_questions = @package.question_distribution[:total]
-
-            categories.each_with_index do |cat, i|
-              # (total_questions + 1) for submit button
-              # * 3 for yes-null-no 3 radio buttons
-              @tabs[cat] = (total_questions + 1) * i * 3
-            end
+            @tabindex = 1
           end
 
           def categories
@@ -33,8 +26,15 @@ module Packages
             package&.structure_classification&.[](name) || 'null'
           end
 
-          def tabindex(category)
-            @tabs[category] += 1
+          def tabindex
+            @tabindex += 1
+          end
+
+          def ans_style(ans)
+            {
+              'ans' => 'checked:bg-green-200',
+              'no' => 'checked:bg-red-200'
+            }[ans]
           end
         end
       end

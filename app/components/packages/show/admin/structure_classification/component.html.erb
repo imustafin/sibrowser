@@ -1,5 +1,10 @@
 <%= form_with url: package_set_cat_path(package_id: @package.id) do |form| %>
-<table class="border-2 border-black w-full">
+<% ctrl = "packages--show--admin--structure_classification--component" %>
+<table
+  class="border-2 border-black w-full"
+  data-controller="<%= ctrl %>"
+  data-<%= ctrl %>-target="table"
+>
   <% @package.structure.each_with_index do |round, round_id| %>
     <tr class="h-10 bg-indigo-500 text-white">
       <td><%= round['name'] %></td>
@@ -7,8 +12,35 @@
     </tr>
     <% round['themes'].each_with_index do |theme, theme_id| %>
       <tr class="h-10 bg-indigo-300 font-bold" id="<%= [round_id, theme_id].join('_') %>">
-        <td><%= round['name'] %> <br> >> <%= theme['name'] %></td>
         <td>
+          <%= round['name'] %>
+          <br>
+          >> <%= theme['name'] %>
+          <br>
+          <% %w[yes null no].each do |ans| %>
+            <button
+              data-action="<%= ctrl %>#setWholeTheme:prevent"
+              data-<%= ctrl %>-ans-param="<%= ans %>"
+              data-<%= ctrl %>-round-param="<%= round_id %>"
+              data-<%= ctrl %>-theme-param="<%= theme_id %>"
+            ><%= ans %></button>
+          <% end %>
+        </td>
+        <td>
+          <% categories.each do |c| %>
+            <div class="inline-block text-center">
+              <%= c[0..3] %><br>
+              <% %w[yes null no].each do |ans| %>
+                <button
+                  data-action="<%= ctrl %>#setThemeCat:prevent"
+                  data-<%= ctrl %>-ans-param="<%= ans %>"
+                  data-<%= ctrl %>-round-param="<%= round_id %>"
+                  data-<%= ctrl %>-theme-param="<%= theme_id %>"
+                  data-<%= ctrl %>-cat-param="<%= c %>"
+                ><%= ans %></button><br>
+              <% end %>
+            </div>
+          <% end %>
         </td>
       </tr>
       <% theme['questions'].each_with_index do |question, question_id| %>
@@ -38,8 +70,27 @@
                 </div>
                 <% n = radio_name(round_id, theme_id, question_id, c) %>
                 <% ['yes', 'null', 'no'].each do |ans| %>
-                  <%= form.radio_button n, ans, checked: value_by_name(n) == ans, tabindex: tabindex(c), name: n %>
-                  <%= form.label "#{n}_#{ans}", ans %>
+                  <div>
+                    <%= form.radio_button n, ans,
+                    checked: value_by_name(n) == ans,
+                    tabindex: tabindex,
+                    name: n,
+                    class: (
+                      case ans
+                      when 'yes' then 'peer checked:bg-green-500'
+                      when 'no' then 'peer checked:bg-red-500'
+                      end
+                    )
+                    %>
+                    <%= form.label "#{n}_#{ans}", ans,
+                    class: (
+                      case ans
+                      when 'yes' then 'peer-checked:bg-green-500'
+                      when 'no' then 'peer-checked:bg-red-500 peer-checked:text-white'
+                      end
+                    )
+                    %>
+                  </div>
                 <% end %>
               </div>
             <% end %>
@@ -54,7 +105,7 @@
       <% categories.each do |c| %>
         <%= form.submit 'SAV',
          class: 'font-bold bg-black text-white',
-         tabindex: tabindex(c)
+         tabindex: tabindex
         %>
       <% end %>
     </td>

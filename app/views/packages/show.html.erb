@@ -70,10 +70,6 @@
   <% end %>
 
   <% if admin? %>
-    <% SibrowserConfig::CATEGORIES_2.each do |cat| %>
-      <%= cat.titleize %>: <%= @package["cat_#{cat}_ratio"] %>
-      <br>
-    <% end %>
     <%= render Packages::Show::Admin::StructureClassification::Component.new(package: @package) %>
   <% end %>
 </article>
