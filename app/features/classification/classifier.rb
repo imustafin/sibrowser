@@ -63,7 +63,7 @@ module Classification
       )
 
 
-      model(:term, term: 'text primary key')
+      model(:term, term: 'text primary key', docs: :int)
       model(:apriori, id: :int, cat: :text, log_p: :float)
       model(:termprob, term: :text, cat: :text, log_p: :float)
       model(:docprob, doc_id: :text, cat: :text, log_p: :float)
@@ -244,8 +244,8 @@ module Classification
     def fill_term
       data = document
         .joins("JOIN #{docterm.table_name} ON document_id = #{document.table_name}.id")
-        .select('term')
-        .distinct
+        .select('term', 'count(distinct document_id) as docs')
+        .group(:term)
 
       insert(term, data)
     end
@@ -275,7 +275,7 @@ module Classification
 
       # (term, cat)
       term_cat = term
-        .reselect('term', 'cat')
+        .reselect('term', 'cat', 'docs')
         .joins("CROSS JOIN (values ('yes'), ('no')) s(cat)")
 
       # occurences of term in cat
@@ -295,13 +295,24 @@ module Classification
         .select('cat', 'sum(real_count) as category_len')
         .group('cat')
 
+      all_docs_len = document.count
+
+
       data = Package
         .from(term_cat)
         .select(
           'term',
           'cat',
-          # Laplace smoothing for log_p
-          "LOG((coalesce(real_count, 0) + 1)::float) - LOG(category_len + #{all_terms_n}) AS log_p")
+          # Laplace smoothing (add one of each word to all documents)
+          # multiply (add) idf: log[|all docs|] - log[|docs having term|]
+          <<~SQL
+            LOG((coalesce(real_count, 0) + 1)::float)
+            - LOG(category_len + #{all_terms_n})
+            + LOG(1 + #{all_docs_len})
+            - LOG(1 + docs)
+            as log_p
+          SQL
+        )
         .joins("LEFT OUTER JOIN (#{real_counts.to_sql}) rr using (term, cat)")
         .joins("JOIN (#{category_len.to_sql}) clen using(cat)")
 
