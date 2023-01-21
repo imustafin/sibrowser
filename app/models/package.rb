@@ -131,6 +131,7 @@ class Package < ApplicationRecord
     cats.delete('fic')
     cats.delete('hum')
     cats.delete('meme')
+    cats.delete('inet')
 
     SibrowserConfig::CATEGORIES_2.map(&:to_sym).each do |c|
       if all || self["cat_#{c}_ratio"] >= CATEGORY_2_MIN

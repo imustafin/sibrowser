@@ -9,7 +9,6 @@ class SibrowserConfig < ApplicationRecord
   CATEGORIES = [
     'pzl',
     'exact',
-    'inet',
     'ero',
     'unk'
   ].freeze
@@ -27,7 +26,8 @@ class SibrowserConfig < ApplicationRecord
     'gam' => 'videogames',
     'mus' => 'music',
     'fic' => 'movies',
-    'hum' => 'social'
+    'hum' => 'social',
+    'inet' => 'meme'
   }
 
   def self.instance
