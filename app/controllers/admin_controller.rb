@@ -15,16 +15,13 @@ class AdminController < ApplicationController
 
     if good_login && good_password
       session[:admin] = true
-      redirect_to root_path
     else
       flash[:notice] = 'wrong'
-      redirect_to admin_path
     end
   end
 
   def logout
     session.delete(:admin)
-    redirect_to root_path
   end
 
   def cat_stats
@@ -37,14 +34,23 @@ class AdminController < ApplicationController
       .select("#{split} as cat, x.value as val, count(*) as count")
       .group("#{split}, x.value")
       .as_json
+      .tap { |x| pp x }
       .group_by { |x| x['cat'] }
       .transform_values do |v|
-        [:yes, :null, :no].to_h do |val|
+        [:yes, :no].to_h do |val|
           row = v.find { |x| x['val'] == val.to_s }
 
           [val, row['count']]
         end
       end
+
+    @cats = @cats.sort_by do |k, v|
+      if v[:no] == 0
+        999
+      else
+        -v[:yes].fdiv(v[:no])
+      end
+    end
 
     pp @cats
   end

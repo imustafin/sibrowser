@@ -3,7 +3,7 @@
 <% if admin? %>
   <%= button_to "Logout", logout_path, method: :post %>
 <% else %>
-  <%= form_with url: login_path, method: :post do |f| %>
+  <%= form_with url: login_path  do |f| %>
     <%= f.label :login %>
     <%= f.text_field :login, tabindex: 1 %>
 
@@ -12,4 +12,8 @@
 
     <%= submit_tag 'Login' %>
   <% end %>
+<% end %>
+
+<% if admin? %>
+  <%= link_to 'Category stats', admin_cat_stats_path, class: 'font-bold' %>
 <% end %>
