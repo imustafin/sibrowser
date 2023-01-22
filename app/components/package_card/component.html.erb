@@ -30,7 +30,7 @@
         <%= t(:themes_by_rounds) %>
       </h2>
       <% @package.structure.each do |round| %>
-        <%= round['name'].strip %>:
+        <%= round['name']&.strip %>:
         <span class="text-neutral-500">
           <%= round['themes'].pluck('name').reject(&:blank?).map(&:strip).join(', ') %>
         </span>
