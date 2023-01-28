@@ -4,7 +4,7 @@
   </div>
 <% else %>
   <%= helpers.turbo_stream_from :download_counts %>
-  <div data-controller="packages_paginated--component">
+  <div data-controller="packages_paginated--component package_card--bookmark">
     <div data-packages_paginated--component-target="beforeFloating"></div>
     <% if has_sort? %>
       <div class="w-fit float-left py-2 space-x-2">

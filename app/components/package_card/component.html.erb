@@ -46,8 +46,7 @@
     </div>
   </div>
 
-
-  <div class="border-t divide-x flex">
+  <div class="border-t flex">
     <% if @package.vk_download_url %>
       <%= link_to package_direct_download_path(@package),
         target: '_blank',
@@ -63,5 +62,25 @@
         )
       <% end %>
     <% end %>
+    <div class="divide-x ml-auto">
+      <div
+        class="flex w-fit font-bold px-4 py-4 hover:bg-gray-100 items-center cursor-pointer"
+        data-action="click->package_card--bookmark#switch:prevent"
+      >
+        <input
+          type="checkbox"
+          class="hidden peer"
+          data-package_card--bookmark-target="checkbox"
+          data-id="<%= @package.id %>"
+        >
+        <div class="peer-checked:hidden">
+          <%= heroicon "bookmark", variant: :outline, options: { class: "h-6 mr-1 inline" } %>
+        </div>
+        <div class="peer-checked:inline hidden">
+          <%= heroicon "bookmark", variant: :solid, options: { class: "h-6 mr-1 inline" } %>
+        </div>
+        <%= t('bookmark') %>
+      </div>
+    </div>
   </div>
 </article>
