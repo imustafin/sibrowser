@@ -62,7 +62,7 @@ gem 'sentry-ruby', '~> 5.6'
 gem 'sentry-rails', '~> 5.7'
 gem 'sentry-sidekiq', '~> 5.4'
 
-gem 'chartkick', '~> 4.2'
+gem 'chartkick', '~> 5.0'
 
 gem 'crawler_detect', '~> 1.2'
 gem 'activerecord-import', '~> 1.4'
