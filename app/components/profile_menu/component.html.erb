@@ -1,0 +1,27 @@
+<div
+  data-controller="profile_menu--component"
+  data-profile_menu--component-target="wrapper"
+  class="<%= @class %> cursor-pointer relative"
+  data-action="click->profile_menu--component#toggle:stop"
+>
+  <input
+    type="checkbox"
+    class="hidden peer"
+    data-profile_menu--component-target="checkbox"
+  />
+  <%= helpers.heroicon 'user-circle', options: {
+    class: 'w-full h-full text-white hover:text-gray-300 focus:text-gray-300 active:text-gray-400'
+  } %>
+  <div
+    data-profile_menu--component-target="menu"
+    class="hidden peer-checked:block absolute right-0 mt-2 cursor-auto"
+  >
+    <ul class="p-2 bg-white text-black shadow">
+      <li class="mt-2 mb-2">
+        <%= link_to t(:bookmarks), profile_bookmarks_path,
+          class: 'px-4 py-2 hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-200'
+        %>
+      </li>
+    </ul>
+  </div>
+</div>
