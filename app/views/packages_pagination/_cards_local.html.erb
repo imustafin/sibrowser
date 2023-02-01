@@ -1,0 +1,10 @@
+<% packages.each do |package| %>
+  <%= render PackageCard::Component.new \
+    package:,
+    position: 0,
+    options: {
+      'data-packages_paginated--local--component-target' => 'package',
+      'data-id' => package.id
+    }
+  %>
+<% end %>

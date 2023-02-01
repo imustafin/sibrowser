@@ -6,10 +6,17 @@
           <%= render Packages::Logo::Component.new(package: @package) %>
         </div>
 
+
+        <%= render BookmarkButton::Component.new \
+          class: button_class + ' !px-0 w-full flex items-center justify-center mt-8 mb-4',
+          package_id: @package.id,
+          with_controller: true
+        %>
+
         <%= turbo_stream_from :download_counts %>
         <%= link_to package_direct_download_path(@package),
           target: '_blank',
-          class: button_class + "!px-0 w-full flex items-center justify-center mt-8 mb-4" \
+          class: button_class + "!px-0 w-full flex items-center justify-center mb-4" \
             do
         %>
           <%= heroicon "document-arrow-down", options: { class: "h-6 inline sm:max-lg:hidden" } %>

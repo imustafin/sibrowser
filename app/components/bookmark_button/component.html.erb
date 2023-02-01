@@ -1,0 +1,22 @@
+<div
+  class="<%= @class %>"
+  data-action="click->package_card--bookmark#switch:prevent"
+  data-id="<%= @package_id %>"
+  <% if @with_controller %>
+    data-controller="package_card--bookmark"
+  <% end %>
+>
+  <input
+    type="checkbox"
+    class="hidden peer"
+    data-package_card--bookmark-target="checkbox"
+    data-id="<%= @package_id %>"
+  >
+  <div class="peer-checked:hidden">
+    <%= helpers.heroicon "bookmark", variant: :outline, options: { class: "h-6 mr-1 inline" } %>
+  </div>
+  <div class="peer-checked:inline hidden">
+    <%= helpers.heroicon "bookmark", variant: :solid, options: { class: "h-6 mr-1 inline" } %>
+  </div>
+  <%= t('bookmark') %>
+</div>

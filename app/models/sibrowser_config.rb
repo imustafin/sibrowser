@@ -1,4 +1,7 @@
 class SibrowserConfig < ApplicationRecord
+  # How many packages can be loaded by ids
+  LOCAL_PAGINATION_SIZE = 5
+
   QUESTION_TYPES = %i[
     text
     image
