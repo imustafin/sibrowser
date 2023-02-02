@@ -2,4 +2,8 @@
   <%= t(:bookmarks) %>
 </h1>
 
+<div class="space-y-2 mb-8">
+  <%= t(:bookmarks_description_html, link: 'https://vk.com/donut/sibrowser') %>
+</div>
+
 <%= render PackagesPaginated::Local::Component.new local_key: 'sibrowser:bookmarks'%>

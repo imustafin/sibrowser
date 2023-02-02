@@ -141,3 +141,19 @@ en:
 
   bookmark: Bookmark
   bookmarks: Bookmarks
+  bookmarks_description_html: |
+    <p>
+      Bookmarks allow you not to lose interesting packages, even if you
+      do not have the time to play them right away. Bookmarks .
+    <p>
+      After bookmarking a package, it is easy to find it on this page
+    <p>
+      The newest bookmarks appear higher in the list.
+    <p>
+      Currently, bookmarks are stored not on the server, but directly in the browser.
+      When we will have the real registration feature on the website,
+      bookmarks will be sent to the server and we will be able to
+      access them from any device.
+    <p>
+      <a href=%{link}" class="font-bold">
+        Support us on VK</a> and make the registration a reality!
