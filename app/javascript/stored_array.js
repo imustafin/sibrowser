@@ -33,7 +33,7 @@ export default class {
     const ar = this.getAll();
 
     if (!ar.includes(id)) {
-      ar.push(id);
+      ar.unshift(id);
       window.localStorage.setItem(this.key, JSON.stringify(ar));
     }
   }
