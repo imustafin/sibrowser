@@ -202,7 +202,7 @@ GEM
     rate_throttle_client (0.1.2)
     redis (5.0.6)
       redis-client (>= 0.9.0)
-    redis-client (0.12.1)
+    redis-client (0.12.2)
       connection_pool
     rspec-core (3.12.0)
       rspec-support (~> 3.12.0)
@@ -232,7 +232,7 @@ GEM
     sentry-sidekiq (5.8.0)
       sentry-ruby (~> 5.8.0)
       sidekiq (>= 3.0)
-    sidekiq (7.0.3)
+    sidekiq (7.0.6)
       concurrent-ruby (< 2)
       connection_pool (>= 2.3.0)
       rack (>= 2.2.4)
