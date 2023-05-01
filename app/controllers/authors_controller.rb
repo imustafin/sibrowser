@@ -55,7 +55,7 @@ class AuthorsController < ApplicationController
   end
 
   def plot_data
-    start = Date.today - 30
+    start = Date.current - 30
 
     dates = Package
       .by_author(params[:id])
@@ -63,7 +63,7 @@ class AuthorsController < ApplicationController
       .where('date >= ?', start)
       .to_h { |x| [x.date, x.count] }
 
-    (start..Date.today).map do |date|
+    (start..Date.current).map do |date|
       [date, dates[date] || 0]
     end
   end

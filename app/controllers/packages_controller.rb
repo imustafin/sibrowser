@@ -196,7 +196,7 @@ class PackagesController < ApplicationController
 
     p.update!(structure_classification: x)
 
-    flash[:set_cat] = "Saved at #{Time.now}"
+    flash[:set_cat] = "Saved at #{Time.current}"
     redirect_to p
   end
 end

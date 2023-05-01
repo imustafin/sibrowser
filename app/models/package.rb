@@ -44,11 +44,11 @@ class Package < ApplicationRecord
   SOURCE_LINK_LIFESPAN = 24.hours
 
   def touch_vk_download_url
-    self.vk_download_url_updated_at = Time.now
+    self.vk_download_url_updated_at = Time.current
   end
 
   def vk_download_url_fresh?
-    (Time.now - vk_download_url_updated_at) < SOURCE_LINK_LIFESPAN
+    (Time.current - vk_download_url_updated_at) < SOURCE_LINK_LIFESPAN
   end
 
   def self.question_types(q)
@@ -192,7 +192,7 @@ class Package < ApplicationRecord
   end
 
   def add_download
-    k = self.class.date_to_download_key(Date.today)
+    k = self.class.date_to_download_key(Date.current)
     downloads[k] ||= 0
     downloads[k] += 1
   end
@@ -202,7 +202,7 @@ class Package < ApplicationRecord
   end
 
   def self.download_stats
-    d = Date.today
+    d = Date.current
     binds = {
       day: date_to_download_key(d),
       week: date_to_download_key(d.beginning_of_week),

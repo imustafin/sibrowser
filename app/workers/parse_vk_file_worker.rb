@@ -139,7 +139,7 @@ class ParseVkFileWorker
       tags: si_package.tags,
       disappeared_at: nil,
       vk_download_url:,
-      vk_download_url_updated_at: Time.now,
+      vk_download_url_updated_at: Time.current,
       file_size:,
       logo_bytes: si_package.logo_bytes,
       logo_width: si_package.logo_width,

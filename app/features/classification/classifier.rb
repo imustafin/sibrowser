@@ -114,9 +114,9 @@ module Classification
 
     def report(model, &blk)
       puts "Filling #{model}"
-      start = Time.now
+      start = Time.current
       send("fill_#{model}")
-      finish = Time.now
+      finish = Time.current
       puts "Filled #{send(model).count} of #{model} in #{(finish - start).round(2)}"
     end
 
