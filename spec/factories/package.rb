@@ -7,6 +7,7 @@ FactoryBot.define do
     name { 'Package Name' }
     version { Package::VERSION }
     file_hash
+    parsed_at { Time.current }
 
     factory :package_one_theme do
       transient do
