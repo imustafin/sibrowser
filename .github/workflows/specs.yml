@@ -1,0 +1,20 @@
+on:
+  - push
+
+jobs:
+  Specs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Start docker-compose
+        run: docker compose up -d --wait --quiet-pull
+
+      - name: Bundler
+        run: docker compose exec app bundle install
+
+      - name: Prepare test db
+        run: docker compose exec app rails db:test:prepare
+
+      - name: Run specs
+        run: docker compose exec app rspec

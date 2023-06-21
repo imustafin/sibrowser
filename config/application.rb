@@ -41,5 +41,7 @@ module Sibrowser
     Sidekiq.strict_args!
 
     config.middleware.use Rack::CrawlerDetect
+
+    config.active_record.dump_schemas = :all
   end
 end

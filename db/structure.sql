@@ -10,17 +10,38 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: public; Type: SCHEMA; Schema: -; Owner: -
+-- Name: heroku_ext; Type: SCHEMA; Schema: -; Owner: -
 --
 
-CREATE SCHEMA public;
+CREATE SCHEMA heroku_ext;
 
 
 --
--- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: -
+-- Name: cube; Type: EXTENSION; Schema: -; Owner: -
 --
 
-COMMENT ON SCHEMA public IS 'standard public schema';
+CREATE EXTENSION IF NOT EXISTS cube WITH SCHEMA heroku_ext;
+
+
+--
+-- Name: EXTENSION cube; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION cube IS 'data type for multidimensional cubes';
+
+
+--
+-- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
 
 
 --
@@ -116,7 +137,7 @@ CREATE TABLE public.packages (
     cat_movies_ratio double precision DEFAULT 0.0 NOT NULL,
     cat_social_ratio double precision DEFAULT 0.0 NOT NULL,
     cat_meme_ratio double precision DEFAULT 0.0 NOT NULL,
-    cat_cube public.cube GENERATED ALWAYS AS (public.cube(ARRAY[cat_anime_ratio, cat_videogames_ratio, cat_music_ratio, cat_movies_ratio, cat_social_ratio, cat_meme_ratio])) STORED,
+    cat_cube heroku_ext.cube GENERATED ALWAYS AS (heroku_ext.cube(ARRAY[cat_anime_ratio, cat_videogames_ratio, cat_music_ratio, cat_movies_ratio, cat_social_ratio, cat_meme_ratio])) STORED,
     CONSTRAINT file_hash_since_version_9 CHECK (((version < 9) OR (disappeared_at IS NOT NULL) OR (file_hash IS NOT NULL)))
 );
 
