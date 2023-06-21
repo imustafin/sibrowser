@@ -13,6 +13,10 @@ module Vk
     Rails.configuration.x.vk_service
   end
 
+  def self.has_tokens?
+    app_id && secret && service
+  end
+
   def self.base_configs
     {
       access_token: service,

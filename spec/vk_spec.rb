@@ -3,6 +3,8 @@ require 'rails_helper'
 RSpec.describe Vk do
   describe '.board_get_comments' do
     it 'loads comments' do
+      pending('no vk token') unless described_class.has_tokens?
+
       expect(
         described_class.board_get_comments({
           group_id: 1,
@@ -25,6 +27,8 @@ RSpec.describe Vk do
 
   describe '.groups_get_by_id' do
     it 'loads member_count field' do
+      pending('no vk token') unless described_class.has_tokens?
+
       expect(
         described_class.groups_get_by_id({
           group_id: 'sibrowser',
