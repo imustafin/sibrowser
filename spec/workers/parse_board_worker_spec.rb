@@ -3,24 +3,6 @@ require 'rails_helper'
 RSpec.describe ParseBoardWorker do
   subject(:instance) { described_class.new }
 
-  describe '#packages_for_doc' do
-    it 'has only packages with this doc and outdated version' do
-      this = {
-        'document_id' => 'this_id',
-        'owner_id' => 'this_owner'
-      }
-      other = {
-        'document_id' => 'other_id',
-        'owner_id' => 'other_owner'
-      }
-      matching = create(:package, posts: [this, other])
-      non_matching = create(:package, posts: [other])
-
-      expect(instance.packages_for_doc(doc_id: 'this_id', owner_id: 'this_owner'))
-        .to contain_exactly(matching)
-    end
-  end
-
   describe '#packages_with_post_extra_files' do
     it 'has only packages with this post link and docs not present in current_files' do
       # This is in current_files
@@ -82,10 +64,10 @@ RSpec.describe ParseBoardWorker do
           'owner_id' => 'this owner'
         }
       ]
-      date = Time.current.iso8601
+      date = Time.current
       message = {
         'text' => 'new text',
-        'date' => date
+        'date' => date.to_i
       }
       doc = {
         'owner_id' => 'this owner',
@@ -106,7 +88,7 @@ RSpec.describe ParseBoardWorker do
             'owner_id' => 'this owner',
             'text' => 'new text',
             'filename' => 'new filename',
-            'published_at' => date
+            'published_at' => date.to_datetime.iso8601
           }
         ],
         vk_download_url: 'new url'

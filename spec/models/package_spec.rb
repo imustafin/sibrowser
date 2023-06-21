@@ -6,10 +6,9 @@ RSpec.describe Package, type: :model do
       it 'creates new' do
         expect {
           described_class.update_or_create!(
-            vk_document_id: 1,
-            vk_owner_id: 1,
+            file_hash: '1',
             name: 'qwe',
-            source_link: 'qweqwe',
+            parsed_at: Time.current,
             version: described_class::VERSION
           )
         }
@@ -18,40 +17,24 @@ RSpec.describe Package, type: :model do
     end
 
     context 'with existing' do
-      let(:base_params) do
-        {
-          vk_document_id: 1,
-          vk_owner_id: 1,
-          post_text: 'original'
+
+      it 'updates existing by hash' do
+        base_params = {
+          parsed_at: Time.current,
+          name: 'original',
+          file_hash: '1'
         }
-      end
 
-      def create_base
-        create(:package_one_theme, **base_params, published_at: Time.zone.at(10))
-      end
-
-      it 'does not update if new is newer' do
-        base = create_base
-
-        described_class.update_or_create!(
-          **base_params,
-          published_at: Time.zone.at(100),
-          post_text: 'newer',
-        )
-
-        expect(base.reload.post_text).to eq('original')
-      end
-
-      it 'updates if new is older' do
-        base = create_base
+        base = create(:package_one_theme,
+          **base_params, published_at: Time.zone.at(10))
 
         described_class.update_or_create!(
           **base_params,
           published_at: Time.zone.at(1),
-          post_text: 'older',
+          name: 'older',
         )
 
-        expect(base.reload.post_text).to eq('older')
+        expect(base.reload.name).to eq('older')
       end
     end
   end
@@ -65,33 +48,26 @@ RSpec.describe Package, type: :model do
       expect(p.question_distribution).to eq({
         total: 1,
         types: {
-          text: 1
+          text: 1,
+          image: 0,
+          video: 0,
+          voice: 0
         }
       })
     end
 
-    it 'takes the type of non-text atoms' do
+    it 'treats "say" as "text"' do
       p = build(:package_one_theme, questions: [{
-        'question_types' => %w[text text image text text text]
+        'question_types' => %w[say]
       }])
 
       expect(p.question_distribution).to eq({
         total: 1,
         types: {
-          image: 1
-        }
-      })
-    end
-
-    it 'ignores "say"' do
-      p = build(:package_one_theme, questions: [{
-        'question_types' => %w[text text say say text say]
-      }])
-
-      expect(p.question_distribution).to eq({
-        total: 1,
-        types: {
-          text: 1
+          text: 1,
+          image: 0,
+          video: 0,
+          voice: 0
         }
       })
     end

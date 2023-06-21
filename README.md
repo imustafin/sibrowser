@@ -4,12 +4,12 @@ SIGame Package Browser. See it live at <https://www.sibrowser.ru/>.
 ## Development
 Run docker-compose:
 ```
-docker-compose -f docker-compose.development.yml up --build
+docker-compose up
 ```
 
 Run rails and other commands in docker-compose:
 ```
-docker-compose -f docker-compose.development.yml exec app bash
+docker-compose exec app bash
 
 ./bin/dev
 ```
