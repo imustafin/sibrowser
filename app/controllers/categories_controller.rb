@@ -19,6 +19,9 @@ class CategoriesController < ApplicationController
 
       return redirect_to allowed_params.merge(id: to), status: :moved_permanently
     end
+    if (params.keys - ['controller', 'action'] - allowed_params.keys).present?
+      return redirect_to allowed_params, status: :moved_permanently
+    end
 
     return packages_pagination(packages) if request.format.turbo_stream?
 
@@ -39,7 +42,7 @@ class CategoriesController < ApplicationController
   end
 
   def allowed_params
-    params.permit(:id, :page, :sort)
+    params.permit(:id, :page, :sort, :only_pagination)
   end
 
   def category
