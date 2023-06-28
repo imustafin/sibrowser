@@ -148,7 +148,7 @@ GEM
       timeout
     net-smtp (0.3.3)
       net-protocol
-    nio4r (2.5.8)
+    nio4r (2.5.9)
     nokogiri (1.14.0)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
@@ -160,7 +160,7 @@ GEM
       heroics (~> 0.1.1)
       moneta (~> 1.0.0)
       rate_throttle_client (~> 0.1.0)
-    puma (6.0.2)
+    puma (6.3.0)
       nio4r (~> 2.0)
     qonfig (0.28.0)
     racc (1.6.2)
@@ -290,7 +290,7 @@ DEPENDENCIES
   pg (~> 1.5)
   pg_search (~> 2.3)
   platform-api (~> 3.5)
-  puma (~> 6.0)
+  puma (~> 6.3)
   rack-mini-profiler (~> 3.0)
   rails (~> 7.0)
   rails-i18n (~> 7.0)
