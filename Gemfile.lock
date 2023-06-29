@@ -249,7 +249,7 @@ GEM
       railties (>= 6.0.0)
     tailwindcss-rails (2.0.29)
       railties (>= 6.0.0)
-    test-prof (1.2.0)
+    test-prof (1.2.2)
     thor (1.2.2)
     timeout (0.3.1)
     turbo-rails (1.4.0)
