@@ -21,7 +21,7 @@ class ParseVkFileWorker
 
     Net::HTTP.get_response(URI(url)) do |resp|
       unless resp.is_a?(Net::HTTPOK)
-        logger.info "HTTP result if #{resp.class.name}, skipping"
+        logger.info "HTTP result is #{resp.class.name}, skipping"
         return
       end
       resp.read_body(tempfile)
@@ -124,7 +124,16 @@ class ParseVkFileWorker
 
     logger.info "Body length #{file_size}, parsing"
 
-    si_package = Si::Package.new(siq)
+    begin
+      si_package = Si::Package.new(siq)
+    rescue Zip::Error => e
+      if e.message == 'Zip end of central directory signature not found'
+        logger.info "Siq zip file error: #{e.message}"
+        return
+      end
+
+      raise
+    end
 
     name = si_package.name
     name = params['filename'] if name.blank?
