@@ -41,7 +41,7 @@ class Package < ApplicationRecord
     (self[:authors] || []).reject(&:blank?)
   end
 
-  SOURCE_LINK_LIFESPAN = 24.hours
+  SOURCE_LINK_LIFESPAN = 36.hours
 
   def touch_vk_download_url
     self.vk_download_url_updated_at = Time.current
