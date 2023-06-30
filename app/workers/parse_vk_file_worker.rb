@@ -45,6 +45,7 @@ class ParseVkFileWorker
     messages = [
       'Файл недоступен или удалён',
       'This file is unavailable or has been deleted',
+      'Tài liệu không có sẵn hoặc bị xóa', # vn
 
       'Пользователь, который загрузил файл, заблокирован.',
       'The owner of this file has been blocked.'
