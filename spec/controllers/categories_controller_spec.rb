@@ -7,6 +7,11 @@ RSpec.describe CategoriesController do
       expect(response).to have_http_status(:ok)
     end
 
+    it 'is ok for existing category with locale' do
+      get :show, params: { id: :videogames, locale: :tt }
+      expect(response).to have_http_status(:ok)
+    end
+
     it 'redirects legacy category to new category if mapped' do
       get :show, params: { id: :gam }
       expect(response).to redirect_to('/categories/videogames')

@@ -19,7 +19,7 @@ class CategoriesController < ApplicationController
 
       return redirect_to allowed_params.merge(id: to), status: :moved_permanently
     end
-    if (params.keys - ['controller', 'action'] - allowed_params.keys).present?
+    if (params.keys - ['controller', 'action', 'locale'] - allowed_params.keys).present?
       return redirect_to allowed_params, status: :moved_permanently
     end
 
