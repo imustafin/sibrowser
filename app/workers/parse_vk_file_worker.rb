@@ -125,7 +125,7 @@ class ParseVkFileWorker
     logger.info "Body length #{file_size}, parsing"
 
     begin
-      si_package = Si::Package.new(siq)
+      si_package = Si::Package.new_from_siq_buffer(siq)
     rescue Zip::Error => e
       if e.message == 'Zip end of central directory signature not found'
         logger.info "Siq zip file error: #{e.message}"

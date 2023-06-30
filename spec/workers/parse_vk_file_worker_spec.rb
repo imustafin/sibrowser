@@ -11,8 +11,8 @@ RSpec.describe ParseVkFileWorker do
     end
   end
 
-  context 'in Ananas_v_narezku.siq' do
-    let(:file) { File.open(file_fixture('Ananas_v_narezku.siq'), 'rb') }
+  context 'in real siq file' do
+    let(:file) { File.open(file_fixture('SIGameTest.siq'), 'rb') }
 
     it 'does not have vk error' do
       expect(instance.vk_error?(file)).to be_falsey

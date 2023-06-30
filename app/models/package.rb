@@ -5,6 +5,8 @@ class Package < ApplicationRecord
   after_save :reload
 
   # CHANGELOG
+  # 10
+  # * Try to fix comma separated tags, when has only one tag xml node
   #
   # 9
   # * Add package file hash
@@ -23,7 +25,7 @@ class Package < ApplicationRecord
   #   VK identifies docs by (vk_owner_id, vk_document_id),
   #   so search by the whole pair
   # * Add vk_download_url
-  VERSION = 9
+  VERSION = 10
 
   validates :name, presence: true
   validates :version, presence: true

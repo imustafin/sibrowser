@@ -2,7 +2,7 @@ require 'zip'
 
 module Si
   class Package
-    def initialize(buffer)
+    def init_from_siq_buffer(buffer)
       Zip::File.open_buffer(buffer) do |zip|
         @content = Nokogiri::XML(zip.read('content.xml'))
 
@@ -37,6 +37,22 @@ module Si
           end
         end
       end
+    end
+
+    def self.new_from_siq_buffer(...)
+      instance = new
+      instance.init_from_siq_buffer(...)
+      instance
+    end
+
+    def self.new_from_xml_path(...)
+      instance = new
+      instance.init_from_xml_path(...)
+      instance
+    end
+
+    def init_from_xml_path(path)
+      @content = File.open(path) { |f| Nokogiri::XML(f) }
     end
 
     def logo_file_path
@@ -120,7 +136,16 @@ module Si
     end
 
     def tags
-      package.css('> tags tag').map(&:text).reject(&:empty?)
+      strings = package.css('> tags tag').map(&:text).map(&:strip).reject(&:empty?)
+      if strings.size == 1
+        split_tags(strings.first)
+      else
+        strings
+      end
+    end
+
+    def split_tags(string)
+      string.split(',').map(&:strip).reject(&:empty?)
     end
   end
 end
