@@ -12,6 +12,6 @@ release:
 run:
   sidekiq:
     command:
-      - bundle exec sidekiq -c 4
+      - bundle exec sidekiq
     image: web
 
