@@ -5,7 +5,7 @@ class CategoriesController < ApplicationController
 
   def index
     @categories = (SibrowserConfig::CATEGORIES + SibrowserConfig::CATEGORIES_2)
-      .map { |c| [c, Package.by_category(c).count] }
+      .map { |c| [c, Package.visible.by_category(c).count] }
       .sort_by(&:last)
       .reverse
 

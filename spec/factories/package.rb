@@ -9,6 +9,8 @@ FactoryBot.define do
     file_hash
     parsed_at { Time.current }
 
+    posts { [{}] }
+
     factory :package_one_theme do
       transient do
         questions { [] }

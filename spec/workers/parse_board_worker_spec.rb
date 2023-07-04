@@ -46,6 +46,20 @@ RSpec.describe ParseBoardWorker do
       expect(missing_this.posts).to eq([])
       expect(missing_other.posts).to eq([**missing, **other])
     end
+
+    it 'sets disappeared_at if all posts removed' do
+      package = create(:package, posts: [
+        'document_id' => 'd',
+        'owner_id' => 'o',
+        'link' => 'link'
+      ])
+      instance.remove_extra_downloads([package], 'link', [])
+
+      expect(package.reload).to have_attributes(
+        posts: [],
+        disappeared_at: within(1.second).of(Time.current)
+      )
+    end
   end
 
   describe '#update_message_info' do

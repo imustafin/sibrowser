@@ -1,6 +1,28 @@
 require 'rails_helper'
 
 RSpec.describe Package, type: :model do
+  describe '#disappeared_at' do
+    it 'is required when no posts' do
+      package = build(:package, disappeared_at: nil, posts: [])
+
+      expect(package).not_to be_valid
+
+      package.disappeared_at = Time.current
+
+      expect(package).to be_valid
+    end
+
+    it 'is required to be absent when has posts' do
+      package = build(:package, disappeared_at: Time.current, posts: [1])
+
+      expect(package).not_to be_valid
+
+      package.disappeared_at = nil
+
+      expect(package).to be_valid
+    end
+  end
+
   describe '.update_or_create!' do
     context 'no existing' do
       it 'creates new' do
@@ -9,7 +31,8 @@ RSpec.describe Package, type: :model do
             file_hash: '1',
             name: 'qwe',
             parsed_at: Time.current,
-            version: described_class::VERSION
+            version: described_class::VERSION,
+            posts: [{}]
           )
         }
           .to change { described_class.count }.by(1)

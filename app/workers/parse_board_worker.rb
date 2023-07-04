@@ -27,12 +27,18 @@ class ParseBoardWorker
       package.with_lock do
         new_posts = package.posts.select do |p|
           # Keep other links
-          next true if p['link'] != post_link
-
-          cf.include?(p.symbolize_keys.slice(:document_id, :owner_id))
+          p['link'] != post_link || \
+            cf.include?(p.symbolize_keys.slice(:document_id, :owner_id))
         end
 
-        package.update!(posts: new_posts)
+        if new_posts.empty?
+          package.update!(
+            posts: [],
+            disappeared_at: Time.current
+          )
+        else
+          package.update!(posts: new_posts)
+        end
       end
     end
   end

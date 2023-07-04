@@ -29,6 +29,8 @@ class Package < ApplicationRecord
 
   validates :name, presence: true
   validates :version, presence: true
+  validates :disappeared_at, absence: { if: :posts? }
+  validates :disappeared_at, presence: { unless: :posts? }
 
   pg_search_scope :search_freetext,
     against: :searchable, # actually not used if tsvector_column is specified

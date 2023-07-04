@@ -107,10 +107,18 @@ class ParseVkFileWorker
             p['document_id'] == document_id && p['owner_id'] == owner_id
           end
 
-          existing.update!(
-            posts: new_posts,
-            parsed_at: Time.current
-          )
+          if new_posts.empty?
+            existing.update!(
+              posts: [],
+              disappeared_at: Time.current,
+              parsed_at: Time.current
+            )
+          else
+            existing.update!(
+              posts: new_posts,
+              parsed_at: Time.current
+            )
+          end
         end
       end
 
