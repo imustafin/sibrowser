@@ -1,16 +1,14 @@
-FROM ruby:3.1.2-slim-bullseye AS sibrowser_base
+FROM ruby:3.2.2-slim-bookworm AS sibrowser_base
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-      postgresql-client-13 build-essential libpq-dev \
+      postgresql-client-15 build-essential libpq-dev \
       libvips
 
 WORKDIR /app
 
 ## Full installation
 FROM sibrowser_base AS sibrowser_full
-
-ARG RAILS_ENV
 
 COPY Gemfile .
 COPY Gemfile.lock .
@@ -20,8 +18,6 @@ COPY . .
 
 RUN rm -rf spec
 
-RUN if [ "x$RAILS_ENV" = "xproduction" ]; then \
-    SECRET_KEY_BASE="$(openssl rand -base64 32)" bundle exec rake assets:precompile ; \
-fi
+RUN SECRET_KEY_BASE="$(openssl rand -base64 32)" bundle exec rake assets:precompile
 
 CMD bundle exec rails server

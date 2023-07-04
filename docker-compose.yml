@@ -2,11 +2,9 @@ version: '3.4'
 
 services:
   pg:
-    image: postgres:13.3
+    image: postgres:15.3
     environment:
       POSTGRES_PASSWORD: 123
-    volumes:
-      - ../sibrowser_data/pg:/var/lib/postgresql/data
 
   app:
     build:
