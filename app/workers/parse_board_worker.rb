@@ -99,7 +99,8 @@ class ParseBoardWorker
       'url' => doc['url'],
       'default_post' => default_post,
       'parsing_timestamp' => parsing_timestamp,
-      'published_at' => published_at
+      'published_at' => published_at,
+      'filename' => doc['title']
     )
   end
 
