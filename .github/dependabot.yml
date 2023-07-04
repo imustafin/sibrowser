@@ -8,3 +8,4 @@ updates:
     schedule:
       interval: "daily"
     rebase-strategy: "disabled"
+    versioning-strategy: increase
