@@ -8,6 +8,7 @@ FactoryBot.define do
     version { Package::VERSION }
     file_hash
     parsed_at { Time.current }
+    vk_download_url_updated_at { Time.current }
 
     posts { [{}] }
 

@@ -45,7 +45,7 @@ class Package < ApplicationRecord
     (self[:authors] || []).reject(&:blank?)
   end
 
-  SOURCE_LINK_LIFESPAN = 36.hours
+  SOURCE_LINK_LIFESPAN = 48.hours
 
   def touch_vk_download_url
     self.vk_download_url_updated_at = Time.current
@@ -168,7 +168,10 @@ class Package < ApplicationRecord
     end
   }
 
-  scope :visible, -> { where(disappeared_at: nil) }
+  scope :visible, -> {
+    where(disappeared_at: nil)
+      .where('vk_download_url_updated_at > ?', Time.current - SOURCE_LINK_LIFESPAN)
+  }
 
   scope :visible_paged, ->(page) {
     visible

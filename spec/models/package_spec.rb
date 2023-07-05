@@ -1,6 +1,24 @@
 require 'rails_helper'
 
 RSpec.describe Package, type: :model do
+  describe '.visible' do
+    it 'does not have with disappeared_at' do
+      create(:package, disappeared_at: Time.current, posts: [])
+      good = create(:package)
+
+      expect(described_class.visible).to contain_exactly(good)
+    end
+
+    it 'does not have with stale download link' do
+      create(:package,
+        vk_download_url_updated_at: Time.current - 2 * described_class::SOURCE_LINK_LIFESPAN
+      )
+      good = create(:package, vk_download_url_updated_at: Time.current - 1)
+
+      expect(described_class.visible).to contain_exactly(good)
+    end
+  end
+
   describe '#disappeared_at' do
     it 'is required when no posts' do
       package = build(:package, disappeared_at: nil, posts: [])
