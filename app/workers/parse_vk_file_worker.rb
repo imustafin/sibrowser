@@ -10,7 +10,12 @@ class ParseVkFileWorker
     until redirects_finished
       Net::HTTP.get_response(URI(url)) do |resp|
         if resp.is_a?(Net::HTTPRedirection)
-          url = resp['location']
+          location = resp['location']
+          url = if location.start_with?('/')
+            URI.join(url, location)
+          else
+            location
+          end
         else
           redirects_finished = true
         end
