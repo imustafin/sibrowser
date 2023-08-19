@@ -7,32 +7,38 @@ class ParseVkFileWorker
   def download_vk(url)
     redirects_finished = false
 
-    until redirects_finished
-      Net::HTTP.get_response(URI(url)) do |resp|
+    tempfile = nil
+
+    uri = URI(url)
+    download_done = false
+    until download_done
+      Net::HTTP.get_response(uri) do |resp|
         if resp.is_a?(Net::HTTPRedirection)
           location = resp['location']
-          url = if location.start_with?('/')
-            URI.join(url, location)
+          uri = if location.start_with?('/')
+            URI.join(uri, location)
           else
-            location
+            URI(location)
           end
+
+          # https://github.com/yt-dlp/yt-dlp/issues/3797#issuecomment-1170071123
+          if resp['x-challenge'] == 'required'
+            queries = CGI.parse(uri.query).to_h { |k, v| [k, v.first] }
+            digest = Digest::MD5.hexdigest(queries['hash429'])
+            queries['key'] = digest
+            uri.query = queries.to_query
+          end
+        elsif resp.is_a?(Net::HTTPOK)
+          tempfile = Tempfile.new(['package', '.siq'], binmode: true)
+          resp.read_body(tempfile)
+          tempfile.rewind
+          download_done = true
         else
-          redirects_finished = true
+          logger.info "HTTP result is #{resp.class.name}, skipping"
+          download_done = true
         end
       end
     end
-
-    tempfile = Tempfile.new(['package', '.siq'], binmode: true)
-
-    Net::HTTP.get_response(URI(url)) do |resp|
-      unless resp.is_a?(Net::HTTPOK)
-        logger.info "HTTP result is #{resp.class.name}, skipping"
-        return
-      end
-      resp.read_body(tempfile)
-    end
-
-    tempfile.rewind
 
     tempfile
   end
