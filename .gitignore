@@ -47,3 +47,5 @@ yarn-debug.log*
 
 # Heroku dumps
 latest.dump*
+
+*.~undo-tree~
