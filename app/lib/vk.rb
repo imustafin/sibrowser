@@ -40,4 +40,31 @@ module Vk
   def self.groups_get_by_id(params)
     request('groups.getById', params)
   end
+
+  # Returns uri to retry
+  #
+  # https://github.com/yt-dlp/yt-dlp/issues/3797#issuecomment-1170071123
+  def self.retry_handle_429(response, desired_uri)
+    location = response['location']
+
+    vk = URI('https://vk.com')
+    x = URI.join(vk, location)
+
+    queries = CGI.parse(x.query).to_h { |k, v| [k, v.first] }
+    digest = Digest::MD5.hexdigest(queries['hash429'])
+
+    queries['key'] = digest
+    x.query = queries.to_query
+
+    last_response = Net::HTTP.get_response(x)
+
+    raise 'Vk 429 not success' if last_response['x-challenge'] != 'success'
+    s429 = CGI.parse(URI.join(vk, last_response['location']).query)['s429'].first
+
+    URI("#{desired_uri}&s429=#{s429}")
+  end
+
+  def self.response_requires_429?(response)
+    response['x-challenge'] == 'required'
+  end
 end

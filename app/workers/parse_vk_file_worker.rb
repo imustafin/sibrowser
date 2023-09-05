@@ -13,20 +13,15 @@ class ParseVkFileWorker
     download_done = false
     until download_done
       Net::HTTP.get_response(uri) do |resp|
-        if resp.is_a?(Net::HTTPRedirection)
+        if Vk.response_requires_429?(resp)
+          uri = Vk.retry_handle_429(resp, uri)
+        elsif resp.is_a?(Net::HTTPRedirection)
+          # Normal redirect
           location = resp['location']
           uri = if location.start_with?('/')
             URI.join(uri, location)
           else
             URI(location)
-          end
-
-          # https://github.com/yt-dlp/yt-dlp/issues/3797#issuecomment-1170071123
-          if resp['x-challenge'] == 'required'
-            queries = CGI.parse(uri.query).to_h { |k, v| [k, v.first] }
-            digest = Digest::MD5.hexdigest(queries['hash429'])
-            queries['key'] = digest
-            uri.query = queries.to_query
           end
         elsif resp.is_a?(Net::HTTPOK)
           tempfile = Tempfile.new(['package', '.siq'], binmode: true)
@@ -64,7 +59,7 @@ class ParseVkFileWorker
 
     raise UnknownVkError, error_body if messages.exclude?(error_body)
 
-    true
+    error_body
   end
 
   def clean_url(url)
@@ -109,8 +104,9 @@ class ParseVkFileWorker
     logger.info "Parsing url #{url} (#{document_id} by #{owner_id})"
 
     siq = download_vk(url)
+    vk_error = vk_error?(siq)
 
-    if !siq || vk_error?(siq)
+    if !siq || vk_error
       if existing
         # Remove post
         existing.with_lock do
@@ -133,7 +129,7 @@ class ParseVkFileWorker
         end
       end
 
-      logger.info 'Vk file unavailable'
+      logger.info "Vk file unavailable (vk error #{vk_error})"
 
       return
     end
