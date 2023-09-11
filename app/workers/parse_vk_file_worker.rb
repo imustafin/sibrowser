@@ -104,9 +104,8 @@ class ParseVkFileWorker
     logger.info "Parsing url #{url} (#{document_id} by #{owner_id})"
 
     siq = download_vk(url)
-    vk_error = vk_error?(siq)
 
-    if !siq || vk_error
+    if !siq || (vk_error = vk_error?(siq))
       if existing
         # Remove post
         existing.with_lock do
@@ -129,7 +128,7 @@ class ParseVkFileWorker
         end
       end
 
-      logger.info "Vk file unavailable (vk error #{vk_error})"
+      logger.info "Vk file unavailable (vk error #{vk_error || '<nil>'})"
 
       return
     end
