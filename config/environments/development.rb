@@ -70,5 +70,5 @@ Rails.application.configure do
 
   # Allow docker subnet for console
   # from https://stackoverflow.com/a/46105295/8559107
-  config.web_console.whitelisted_ips = '172.16.0.0/12'
+  config.web_console.allowed_ips = '172.16.0.0/12'
 end
