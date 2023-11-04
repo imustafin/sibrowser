@@ -93,13 +93,32 @@ class ParseBoardWorker
       params[:offset] += items.count
 
       items.each do |i|
-        process_post(i, group_id:, topic_id:, parsing_timestamp:)
+        process_post(i, group_id:, topic_id:, parsing_timestamp:, async: true)
       end
     end
   end
 
-  def parse_file(doc, default_post:, parsing_timestamp:, published_at:)
-    ParseVkFileWorker.perform_async(
+  # Used only for rake task
+  def parse_one_post(group_id, topic_id, start_comment_id)
+    parsing_timestamp = Time.current.iso8601
+
+    params = { count: 1, group_id:, topic_id:, start_comment_id: }
+
+    result = Vk.board_get_comments(params)
+    items = result.dig('response', 'items')
+    if items.blank?
+      puts 'No posts returned'
+      return
+    end
+
+    items.each do |i|
+      puts "Parsing post"
+      process_post(i, group_id:, topic_id:, parsing_timestamp:, async: false)
+    end
+  end
+
+  def parse_file(doc, default_post:, parsing_timestamp:, published_at:, async:)
+    params = {
       'document_id' => doc['id'],
       'owner_id' => doc['owner_id'],
       'url' => doc['url'],
@@ -107,10 +126,16 @@ class ParseBoardWorker
       'parsing_timestamp' => parsing_timestamp,
       'published_at' => published_at,
       'filename' => doc['title']
-    )
+    }
+
+    if async
+      ParseVkFileWorker.perform_async(**params)
+    else
+      ParseVkFileWorker.new.perform(**params)
+    end
   end
 
-  def process_post(message, group_id:, topic_id:, parsing_timestamp:)
+  def process_post(message, group_id:, topic_id:, parsing_timestamp:, async:)
     docs = (message['attachments'] || [])
       .filter { |a| a['type'] == 'doc' && a['doc']['title'].end_with?('.siq') }
       .map { |a| a['doc'] }
@@ -141,6 +166,7 @@ class ParseBoardWorker
         if package.version < Package::VERSION
           parse_file(
             doc,
+            async:,
             default_post: nil,
             parsing_timestamp:,
             published_at: Time.at(message['date']).to_datetime.iso8601
@@ -154,6 +180,7 @@ class ParseBoardWorker
         )
         parse_file(
           doc,
+          async:,
           default_post:,
           parsing_timestamp:,
           published_at: Time.at(message['date']).to_datetime.iso8601
