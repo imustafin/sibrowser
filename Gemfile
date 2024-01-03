@@ -10,7 +10,7 @@ gem 'pg', '~> 1.5'
 # Use Puma as the app server
 gem 'puma', '~> 6.4'
 gem 'turbo-rails', '~> 1.4'
-gem 'stimulus-rails', '~> 1.2'
+gem 'stimulus-rails', '~> 1.3'
 # Use Redis adapter to run Action Cable in production
 gem 'redis', '~> 5.0'
 # Use Active Model has_secure_password
