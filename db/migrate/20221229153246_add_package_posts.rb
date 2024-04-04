@@ -21,6 +21,7 @@ class AddPackagePosts < ActiveRecord::Migration[7.0]
     SQL
 
     change_table :packages do |t|
+      t.remove :searchable
       t.remove :source_link
       t.remove :post_text
       t.remove :vk_document_id
