@@ -50,8 +50,12 @@ module Vk
     vk = URI('https://vk.com')
     x = URI.join(vk, location)
 
+    challenge = Net::HTTP.get_response(x)
+
     queries = CGI.parse(x.query).to_h { |k, v| [k, v.first] }
-    digest = Digest::MD5.hexdigest(queries['hash429'])
+    hash429 = queries['hash429']
+    salt = challenge.body.match(/salt = '(.*)'/).captures[0]
+    digest = Digest::MD5.hexdigest("#{hash429}:#{salt}")
 
     queries['key'] = digest
     x.query = queries.to_query
