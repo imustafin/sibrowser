@@ -58,9 +58,9 @@ gem 'sprockets-rails', '~> 3.4', '>= 3.4.2'
 
 gem 'platform-api', '~> 3.6', require: false
 
-gem 'sentry-ruby', '~> 5.12'
-gem 'sentry-rails', '~> 5.12'
-gem 'sentry-sidekiq', '~> 5.12'
+gem 'sentry-ruby', '~> 5.17'
+gem 'sentry-rails', '~> 5.17'
+gem 'sentry-sidekiq', '~> 5.17'
 
 gem 'chartkick', '~> 5.0'
 
