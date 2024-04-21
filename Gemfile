@@ -4,12 +4,12 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '3.3.0'
 
 gem 'rails', '~> 7.1', '>= 7.1.3.2'
-gem 'importmap-rails', '~> 1.2'
+gem 'importmap-rails', '~> 2.0', '>= 2.0.1'
 # Use postgres as the database for Active Record
 gem 'pg', '~> 1.5'
 # Use Puma as the app server
-gem 'puma', '~> 6.4'
-gem 'turbo-rails', '~> 1.4'
+gem 'puma', '~> 6.4', '>= 6.4.2'
+gem 'turbo-rails', '~> 2.0', '>= 2.0.5'
 gem 'stimulus-rails', '~> 1.3'
 # Use Redis adapter to run Action Cable in production
 gem 'redis', '~> 5.2'
@@ -27,8 +27,8 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 
   gem 'rspec-rails', '~> 6.1'
-  gem 'factory_bot_rails', '~> 6.2'
-  gem 'test-prof', '~> 1.2'
+  gem 'factory_bot_rails', '~> 6.4', '>= 6.4.3'
+  gem 'test-prof', '~> 1.3', '>= 1.3.3'
 end
 
 group :development do
@@ -62,7 +62,7 @@ gem 'sentry-ruby', '~> 5.17'
 gem 'sentry-rails', '~> 5.17'
 gem 'sentry-sidekiq', '~> 5.17'
 
-gem 'chartkick', '~> 5.0'
+gem 'chartkick', '~> 5.0', '>= 5.0.6'
 
 gem 'crawler_detect', '~> 1.2'
-gem 'activerecord-import', '~> 1.5'
+gem 'activerecord-import', '~> 1.6'
