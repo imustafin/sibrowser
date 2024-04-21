@@ -130,7 +130,7 @@ GEM
       net-pop
       net-smtp
     marcel (1.0.2)
-    meta-tags (2.20.0)
+    meta-tags (2.21.0)
       actionpack (>= 6.0.0, < 7.2)
     method_source (1.1.0)
     mini_magick (4.11.0)
@@ -290,7 +290,7 @@ DEPENDENCIES
   image_processing (~> 1.12, >= 1.12.2)
   importmap-rails (~> 1.2)
   kaminari (~> 1.2)
-  meta-tags (~> 2.20)
+  meta-tags (~> 2.21)
   pg (~> 1.5)
   pg_search (~> 2.3)
   platform-api (~> 3.6)

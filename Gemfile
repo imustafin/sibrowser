@@ -50,7 +50,7 @@ gem 'heroicon', '~> 1.0.0'
 gem 'rails-i18n', '~> 7.0'
 gem 'sidekiq', '~> 7.2'
 gem 'pg_search', '~> 2.3'
-gem 'meta-tags', '~> 2.20'
+gem 'meta-tags', '~> 2.21'
 
 gem 'view_component', '~> 3.12'
 
