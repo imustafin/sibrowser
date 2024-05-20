@@ -65,4 +65,4 @@ gem 'sentry-sidekiq', '~> 5.17'
 gem 'chartkick', '~> 5.0', '>= 5.0.6'
 
 gem 'crawler_detect', '~> 1.2'
-gem 'activerecord-import', '~> 1.6'
+gem 'activerecord-import', '~> 1.7'
