@@ -48,7 +48,7 @@ gem 'tailwindcss-rails', '~> 2.4'
 gem 'rubyzip', '~> 2.3'
 gem 'heroicon', '~> 1.0.0'
 gem 'rails-i18n', '~> 7.0'
-gem 'sidekiq', '~> 7.2'
+gem 'sidekiq', '~> 7.3'
 gem 'pg_search', '~> 2.3'
 gem 'meta-tags', '~> 2.21'
 
