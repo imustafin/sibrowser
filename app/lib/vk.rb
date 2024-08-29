@@ -54,8 +54,11 @@ module Vk
 
     queries = CGI.parse(x.query).to_h { |k, v| [k, v.first] }
     hash429 = queries['hash429']
-    salt = challenge.body.match(/salt = '(.*)'/).captures[0]
-    digest = Digest::MD5.hexdigest("#{hash429}:#{salt}")
+    salt = challenge.body.match(/salt = ([^\n]*)/)&.captures&.[](0)
+    salt = parse_salt(salt)
+    data = hash429
+    data += ':' + salt if salt
+    digest = Digest::MD5.hexdigest(data)
 
     queries['key'] = digest
     x.query = queries.to_query
@@ -66,6 +69,12 @@ module Vk
     s429 = CGI.parse(URI.join(vk, last_response['location']).query)['s429'].first
 
     URI("#{desired_uri}&s429=#{s429}")
+  end
+
+  def self.parse_salt(s)
+    if data = /'(.*)'/.match(s)
+      return data.captures[0]
+    end
   end
 
   def self.response_requires_429?(response)
