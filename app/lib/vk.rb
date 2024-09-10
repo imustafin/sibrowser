@@ -72,8 +72,63 @@ module Vk
   end
 
   def self.parse_salt(s)
-    if data = /'(.*)'/.match(s)
+    if data = /^'(.*)'$/.match(s)
       return data.captures[0]
+    end
+
+    return unless s.starts_with?('(function() {') && s.ends_with?(';})();')
+    s = s.delete_prefix('(function() {')
+    s = s.delete_suffix(';})();')
+
+    codes = s.delete_prefix('var codes = [[').split(']];').first.split('],[')
+    codes = codes.map do |carr|
+      carr
+        .split(/\(function\(e?\) ?{/)
+        .reject(&:blank?)
+        .map { |s| s.delete_suffix(',').delete_suffix(';})') }
+        .reverse
+    end
+
+
+    nums = codes.map do |cod|
+      cod
+        .reduce(0) { |code, f| js_func(f, code) }
+        .chr
+    end
+
+    nums.join
+  end
+
+  def self.js_func(s, arg = nil)
+    if s.start_with?('return')
+      s = s.delete_prefix('return ')
+      if s.match?(/^-?\d+$/)
+        return s.to_i
+      end
+      matches = /.* (.) (.*)/.match(s)
+      r = matches[2].to_i
+      op = matches[1]
+      if op == '-'
+        return arg.to_i - r
+      elsif op == '+'
+        return arg.to_i + r
+      elsif op == '^'
+        if arg
+          return arg.to_i ^ r
+        else
+          r
+        end
+      end
+    elsif s.start_with?('var map = {')
+      s = s.delete_prefix('var map = {')
+      m = s.split('};return').first.split(',')
+      m.each do |s|
+        k, v = s.split(':')
+        if k == "\"#{arg}\""
+          return v.to_i
+        end
+      end
+      return nil
     end
   end
 
