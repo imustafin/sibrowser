@@ -3,7 +3,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.3.0'
 
-gem 'rails', '~> 7.2', '>= 7.2.1'
+gem 'rails', '~> 7.2'
 gem 'importmap-rails', '~> 2.0', '>= 2.0.1'
 # Use postgres as the database for Active Record
 gem 'pg', '~> 1.5'
