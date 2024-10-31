@@ -54,7 +54,7 @@ gem 'meta-tags', '~> 2.21'
 
 gem 'view_component', '~> 3.12'
 
-gem 'sprockets-rails', '~> 3.4', '>= 3.4.2'
+gem 'sprockets-rails', '~> 3.5'
 
 gem 'platform-api', '~> 3.6', require: false
 
