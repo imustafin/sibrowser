@@ -1,6 +1,9 @@
 default: &default
   adapter: redis
   url: <%= ENV['REDIS_PROVIDER'] ? ENV[ENV["REDIS_PROVIDER"]] : 'set_redis_in_cable.yml' %>
+  ssl_params:
+    # Redis on Heroku needs no ssl
+    verify_mode: <%= OpenSSL::SSL::VERIFY_NONE %>
 
 development:
   <<: *default
