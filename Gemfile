@@ -12,7 +12,7 @@ gem 'puma', '~> 6.5'
 gem 'turbo-rails', '~> 2.0'
 gem 'stimulus-rails', '~> 1.3'
 # Use Redis adapter to run Action Cable in production
-gem 'redis', '~> 5.2'
+gem 'redis', '~> 5.3'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
