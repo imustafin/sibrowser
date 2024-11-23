@@ -261,8 +261,7 @@ GEM
     sentry-sidekiq (5.21.0)
       sentry-ruby (~> 5.21.0)
       sidekiq (>= 3.0)
-    sidekiq (7.3.1)
-      concurrent-ruby (< 2)
+    sidekiq (7.3.6)
       connection_pool (>= 2.3.0)
       logger
       rack (>= 2.2.4)
