@@ -143,12 +143,12 @@ GEM
       net-pop
       net-smtp
     marcel (1.0.4)
-    meta-tags (2.22.0)
+    meta-tags (2.22.1)
       actionpack (>= 6.0.0, < 8.1)
     method_source (1.1.0)
     mini_magick (4.13.2)
     mini_mime (1.1.5)
-    minitest (5.25.1)
+    minitest (5.25.2)
     moneta (1.0.0)
     msgpack (1.7.2)
     multi_json (1.15.0)
@@ -251,7 +251,7 @@ GEM
       ffi (~> 1.12)
       logger
     rubyzip (2.3.2)
-    securerandom (0.3.1)
+    securerandom (0.3.2)
     sentry-rails (5.21.0)
       railties (>= 5.0)
       sentry-ruby (~> 5.21.0)
@@ -317,7 +317,7 @@ DEPENDENCIES
   image_processing (~> 1.13)
   importmap-rails (~> 2.0, >= 2.0.1)
   kaminari (~> 1.2)
-  meta-tags (~> 2.21)
+  meta-tags (~> 2.22)
   pg (~> 1.5)
   pg_search (~> 2.3)
   platform-api (~> 3.6)
