@@ -91,7 +91,7 @@ GEM
     drb (2.2.1)
     erubi (1.13.0)
     erubis (2.7.0)
-    excon (0.110.0)
+    excon (1.2.1)
     factory_bot (6.4.6)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.4.3)
@@ -102,7 +102,8 @@ GEM
       activesupport (>= 6.1)
     heroicon (1.0.0)
       rails (>= 5.2)
-    heroics (0.1.2)
+    heroics (0.1.3)
+      base64
       erubis (~> 2.0)
       excon
       moneta
@@ -168,7 +169,7 @@ GEM
     pg_search (2.3.6)
       activerecord (>= 5.2)
       activesupport (>= 5.2)
-    platform-api (3.6.0)
+    platform-api (3.7.0)
       heroics (~> 0.1.1)
       moneta (~> 1.0.0)
       rate_throttle_client (~> 0.1.0)
@@ -319,7 +320,7 @@ DEPENDENCIES
   meta-tags (~> 2.22)
   pg (~> 1.5)
   pg_search (~> 2.3)
-  platform-api (~> 3.6)
+  platform-api (~> 3.7)
   puma (~> 6.5)
   rack-mini-profiler (~> 3.3)
   rails (~> 7.2)
