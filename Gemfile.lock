@@ -161,7 +161,7 @@ GEM
       timeout
     net-smtp (0.5.0)
       net-protocol
-    nio4r (2.7.3)
+    nio4r (2.7.4)
     nokogiri (1.16.7-x86_64-linux)
       racc (~> 1.4)
     pg (1.5.9)
@@ -174,7 +174,7 @@ GEM
       rate_throttle_client (~> 0.1.0)
     psych (5.1.2)
       stringio
-    puma (6.4.2)
+    puma (6.5.0)
       nio4r (~> 2.0)
     qonfig (0.28.0)
     racc (1.8.1)
@@ -321,7 +321,7 @@ DEPENDENCIES
   pg (~> 1.5)
   pg_search (~> 2.3)
   platform-api (~> 3.6)
-  puma (~> 6.4, >= 6.4.2)
+  puma (~> 6.5)
   rack-mini-profiler (~> 3.3)
   rails (~> 7.2)
   rails-i18n (~> 7.0)
