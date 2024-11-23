@@ -56,7 +56,7 @@ gem 'view_component', '~> 3.20'
 
 gem 'sprockets-rails', '~> 3.5'
 
-gem 'platform-api', '~> 3.6', require: false
+gem 'platform-api', '~> 3.7', require: false
 
 gem 'sentry-ruby', '~> 5.17'
 gem 'sentry-rails', '~> 5.17'
