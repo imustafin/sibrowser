@@ -42,7 +42,7 @@ class ParseVkFileWorker
     start = file.read(50)
     file.rewind
 
-    return false unless start.start_with?('<!DOCTYPE html>')
+    return false unless ['<!DOCTYPE html>', '  <!DOCTYPE html>'].any? { |s| start.start_with?(s) }
 
     doc = Nokogiri::HTML(file)
 
