@@ -66,12 +66,10 @@ module Vk
     challenge_response = Net::HTTP.get_response(x)
 
     raise 'Vk 429 not success' if challenge_response['x-challenge'] != 'success'
-    cookies = challenge_response['set-cookie']
+    cookie = challenge_response['set-cookie']
     location = URI.join(vk, challenge_response['location'])
 
-    redirected = Net::HTTP.get_response(location, { 'Cookie' => cookies })
-
-    URI.join(vk, redirected['location'])
+    [location, cookie]
   end
 
   def self.parse_salt(s)

@@ -10,11 +10,12 @@ class ParseVkFileWorker
     tempfile = nil
 
     uri = URI(url)
+    cookie = nil
     download_done = false
     until download_done
-      Net::HTTP.get_response(uri) do |resp|
+      Net::HTTP.get_response(uri, { 'Cookie' => cookie }) do |resp|
         if Vk.response_requires_429?(resp)
-          uri = Vk.retry_handle_429(resp, uri)
+          uri, cookie = Vk.retry_handle_429(resp, uri)
         elsif resp.is_a?(Net::HTTPRedirection)
           # Normal redirect
           location = resp['location']
