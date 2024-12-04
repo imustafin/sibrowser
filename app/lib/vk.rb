@@ -63,12 +63,15 @@ module Vk
     queries['key'] = digest
     x.query = queries.to_query
 
-    last_response = Net::HTTP.get_response(x)
+    challenge_response = Net::HTTP.get_response(x)
 
-    raise 'Vk 429 not success' if last_response['x-challenge'] != 'success'
-    s429 = CGI.parse(URI.join(vk, last_response['location']).query)['s429'].first
+    raise 'Vk 429 not success' if challenge_response['x-challenge'] != 'success'
+    cookies = challenge_response['set-cookie']
+    location = URI.join(vk, challenge_response['location'])
 
-    URI("#{desired_uri}&s429=#{s429}")
+    redirected = Net::HTTP.get_response(location, { 'Cookie' => cookies })
+
+    URI.join(vk, redirected['location'])
   end
 
   def self.parse_salt(s)
@@ -129,6 +132,8 @@ module Vk
         end
       end
       return nil
+    else
+      raise "Unknown function #{s}"
     end
   end
 
