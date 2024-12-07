@@ -66,3 +66,4 @@ gem 'chartkick', '~> 5.1'
 
 gem 'crawler_detect', '~> 1.2'
 gem 'activerecord-import', '~> 1.8'
+gem 'rack-attack', '~> 6.7'
