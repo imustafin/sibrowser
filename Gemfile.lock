@@ -281,10 +281,10 @@ GEM
     stimulus-rails (1.3.4)
       railties (>= 6.0.0)
     stringio (3.1.2)
-    tailwindcss-rails (3.0.0)
+    tailwindcss-rails (3.2.0)
       railties (>= 7.0.0)
       tailwindcss-ruby
-    tailwindcss-ruby (3.4.15-x86_64-linux)
+    tailwindcss-ruby (3.4.17-x86_64-linux)
     test-prof (1.4.2)
     thor (1.3.2)
     timeout (0.4.3)
@@ -343,7 +343,7 @@ DEPENDENCIES
   sidekiq (~> 7.3)
   sprockets-rails (~> 3.5)
   stimulus-rails (~> 1.3)
-  tailwindcss-rails (~> 3.0)
+  tailwindcss-rails (~> 3.2)
   test-prof (~> 1.4)
   turbo-rails (~> 2.0)
   tzinfo-data
