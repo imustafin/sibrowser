@@ -5,7 +5,7 @@ ruby '3.4.1'
 
 gem 'rails', '~> 8.0'
 gem 'rails-i18n', '~> 8.0'
-gem 'importmap-rails', '~> 2.0'
+gem 'importmap-rails', '~> 2.1'
 # Use postgres as the database for Active Record
 gem 'pg', '~> 1.5'
 # Use Puma as the app server
