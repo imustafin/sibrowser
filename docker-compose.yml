@@ -1,5 +1,3 @@
-version: '3.4'
-
 services:
   pg:
     image: postgres:15.7
