@@ -3,7 +3,8 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.4.1'
 
-gem 'rails', '~> 7.2'
+gem 'rails', '~> 8.0'
+gem 'rails-i18n', '~> 8.0'
 gem 'importmap-rails', '~> 2.0'
 # Use postgres as the database for Active Record
 gem 'pg', '~> 1.5'
@@ -47,7 +48,6 @@ gem 'kaminari', '~> 1.2'
 gem 'tailwindcss-rails', '~> 3.0'
 gem 'rubyzip', '~> 2.3'
 gem 'heroicon', '~> 1.0.0'
-gem 'rails-i18n', '~> 7.0'
 gem 'sidekiq', '~> 7.3'
 gem 'pg_search', '~> 2.3'
 gem 'meta-tags', '~> 2.22'
