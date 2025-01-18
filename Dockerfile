@@ -1,4 +1,4 @@
-FROM ruby:3.3.0-slim-bookworm AS sibrowser_base
+FROM ruby:3.4.1-slim-bookworm AS sibrowser_base
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
