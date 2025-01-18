@@ -285,7 +285,7 @@ GEM
       railties (>= 7.0.0)
       tailwindcss-ruby
     tailwindcss-ruby (3.4.17-x86_64-linux)
-    test-prof (1.4.2)
+    test-prof (1.4.4)
     thor (1.3.2)
     timeout (0.4.3)
     turbo-rails (2.0.11)
