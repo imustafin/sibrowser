@@ -53,7 +53,7 @@ GEM
       activemodel (= 8.0.1)
       activesupport (= 8.0.1)
       timeout (>= 0.4.0)
-    activerecord-import (1.8.1)
+    activerecord-import (2.0.0)
       activerecord (>= 4.2)
     activestorage (8.0.1)
       actionpack (= 8.0.1)
@@ -315,7 +315,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  activerecord-import (~> 1.8)
+  activerecord-import (~> 2.0)
   bootsnap (>= 1.4.4)
   byebug
   chartkick (~> 5.1)
