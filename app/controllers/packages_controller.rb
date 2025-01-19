@@ -127,15 +127,6 @@ class PackagesController < ApplicationController
 
     # Update and broadcast download counts
     package.with_lock do
-      unless package.vk_download_url_fresh?
-        new_url = fetch_new_vk_download_url(package)
-
-        package.touch_vk_download_url
-        package.vk_download_url = new_url
-
-        url = new_url
-      end
-
       package.add_download
       package.save!
     end
@@ -147,21 +138,6 @@ class PackagesController < ApplicationController
     )
 
     redirect_to url, allow_other_host: true
-  end
-
-  def fetch_new_vk_download_url(package)
-    group_id, topic_id, start_comment_id = \
-      package.source_link.scan(/vk\.com\/topic-(\d+)_(\d+)\?post=(\d+)/).first
-
-    posts = Vk.board_get_comments(group_id:, topic_id:, start_comment_id:, count: 1)
-    post = posts.dig('response', 'items', 0)
-
-    return nil unless post['id'].to_s == start_comment_id
-
-    doc = post['attachments'].find { |x| x.dig('doc', 'id')&.to_s == package.vk_document_id }
-
-
-    doc&.dig('doc', 'url')
   end
 
   def logo

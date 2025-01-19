@@ -53,4 +53,10 @@ Rails.application.routes.draw do
       get :bookmarks
     end
   end
+
+  # SIStorage API
+  scope :sistorage do
+    mount Sistorage::Api => '/api'
+    mount GrapeSwaggerRails::Engine => 'swagger'
+  end
 end

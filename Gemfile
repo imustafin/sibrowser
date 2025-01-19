@@ -67,3 +67,10 @@ gem 'chartkick', '~> 5.1'
 gem 'crawler_detect', '~> 1.2'
 gem 'activerecord-import', '~> 2.0'
 gem 'rack-attack', '~> 6.7'
+
+# Using Grape for implementing SIStorage api
+gem 'grape', '~> 2.2'
+gem 'grape-entity', '~> 1.0', '>= 1.0.1'
+gem 'grape-swagger', '~> 2.1', '>= 2.1.2'
+gem 'grape-swagger-entity', '~> 0.5.5'
+gem 'grape-swagger-rails', '~> 0.6.0'

@@ -20,8 +20,8 @@ namespace :parse do
   end
 
   desc "Parse one post by post id synchronously"
-  task :vk_si_game_one, [:id] => :environment do |t, args|
-    ParseBoardWorker.new.parse_one_post(135725718, 34975471, args[:id])
+  task :vk_si_2_one, [:id] => :environment do |t, args|
+    ParseBoardWorker.new.parse_one_post(228528109, 53000017, args[:id])
   end
 
   desc 'Delete all packages'
