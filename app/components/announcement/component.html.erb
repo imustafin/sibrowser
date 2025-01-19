@@ -1,11 +1,11 @@
-<div class="w-full bg-white border-indigo-600 border-4 p-2 mb-4">
-  <p class="text-xl mb-2">
+<div class="w-full bg-white border-indigo-600 border-4 p-2 mb-4 min-h-14">
+  <p class="text-xl mb-1">
     <%= t('.title') %>
   </p>
+  <p class="mb-1">
+    <%= t('.message') %>
+  </p>
   <p>
-    <%= t('.body_pre') %>
-    <%= link_to t('.body_link'), category_path('anime'), class: 'font-bold' %><!-- 
-    --><%= t('.body_post', default: '') %>.
     <%= t('.body_2_pre', default: '') %>
     <%= link_to t('.body_2_link'), 'https://vk.com/sibrowser', class: 'font-bold' %><!--
     --><%= t('.body_2_post', default: '') %>!

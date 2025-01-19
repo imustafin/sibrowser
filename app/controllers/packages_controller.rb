@@ -108,6 +108,17 @@ class PackagesController < ApplicationController
     }
   end
 
+  def direct_play
+    package = Package.find(params[:package_id])
+    uri = URI('https://sigame.vladimirkhil.com/')
+    uri.query = URI.encode_www_form({
+      packageUri: package_direct_download_url(package),
+      packageName: package.name
+    })
+
+    redirect_to uri, allow_other_host: true
+  end
+
   def direct_download
     package = Package.find(params[:package_id])
 

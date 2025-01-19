@@ -38,6 +38,7 @@ Rails.application.routes.draw do
     resources :packages, only: [:index, :show] do
       post :set_cat
       get :direct_download
+      get :direct_play
       get :logo, format: true, defaults: { format: Si::Package::IMAGE_EXT }
     end
 

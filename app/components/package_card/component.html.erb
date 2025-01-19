@@ -7,7 +7,7 @@
 >
   <meta itemprop="position" content="<%= @position %>">
 
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-9 xl:grid-cols-10 lg:grid-cols-10 md:grid-rows-[auto_1fr_auto]">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-9 xl:grid-cols-10 lg:grid-cols-10 md:grid-rows-[auto_1fr_auto] mb-2">
     <div class="col-span-12 md:row-span-3 md:col-span-1 lg:col-span-2 lg:col-span-3 xl:col-span-2 px-2 md:p-2 lg:border-r">
       <%= link_to @package do %>
         <%= render Packages::Logo::Component.new(package: @package) %>
@@ -49,9 +49,17 @@
 
   <div class="border-t flex">
     <% if @package.vk_download_url %>
+      <%= link_to package_direct_play_path(@package),
+        target: '_blank',
+        class: 'flex w-fit font-bold p-2 md:p-4 hover:bg-gray-100 items-center' \
+        do
+      %>
+        <%= heroicon 'play-circle', options: { class: 'h-6 mr-1 inline' } %>
+        <%= t('direct_play') %>
+      <% end %>
       <%= link_to package_direct_download_path(@package),
         target: '_blank',
-        class: "flex w-fit font-bold px-4 py-4 hover:bg-gray-100 items-center" \
+        class: "flex w-fit font-bold p-2 md:p-4 hover:bg-gray-100 items-center" \
         do
       %>
         <%= heroicon "document-arrow-down", options: { class: "h-6 mr-1 inline" } %>
@@ -63,10 +71,11 @@
         )
       <% end %>
     <% end %>
-    <div class="divide-x ml-auto">
+    <div class="ml-auto">
       <%= render BookmarkButton::Component.new \
-        class: 'flex w-fit font-bold px-4 py-4 hover:bg-gray-100 items-center cursor-pointer',
-        package_id: @package.id
+        class: 'flex w-fit font-bold p-2 md:p-4 hover:bg-gray-100 items-center cursor-pointer',
+        package_id: @package.id,
+        thin: true
       %>
     </div>
   </div>

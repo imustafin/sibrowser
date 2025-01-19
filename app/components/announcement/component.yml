@@ -1,21 +1,26 @@
 ru:
-  title: Ищешь аниме пакеты? Теперь это удобнее!
-  body_pre: Мы добавили
-  body_link: автоматическую категорию Аниме
+  title: Создавай комнату в один клик!
+  message: >-
+    Мы добавили кнопку Играть.
+
+    С ней можно создать комнату на сервере без скачивания пакета.
   body_2_pre: Следи за новостями в нашем
   body_2_link: сообществе в VK
 
 en:
-  title: Searching for anime packages? It is more convenient now!
-  body_pre: We added the
-  body_link: automatic Anime category
+  title: One click to create a game room!
+  message: >-
+    We have added the Play button.
+
+    It allows you to create a game room on the server without downloading the package.
   body_2_pre: Read the latest news in our
   body_2_link: VK Community
 
 tt:
-  title: Аниме пакетлар эзлисеңме? Хәзер бу уңайлырак!
-  body_pre: Бездә
-  body_link: Аниме автоматик категориясе
-  body_post: ' өстәлгән'
+  title: Бер чирттерү белән уен бүлмәне яса!
+  message: >-
+    Без Уйнау төймәсене өстәдек.
+
+    Уйнау төймәсе белән пакет йөкләүсез серверда уйнау бүлмәне ясап була.
   body_2_link: VK берләшмәсебездә
   body_2_post: ' соңгы яңалыкларны укы'

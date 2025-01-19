@@ -47,7 +47,7 @@ gem 'kaminari', '~> 1.2'
 
 gem 'tailwindcss-rails', '~> 3.2'
 gem 'rubyzip', '~> 2.4'
-gem 'heroicon', '~> 1.0.0'
+gem 'heroicons', '~> 2.0', '>= 2.0.1'
 gem 'sidekiq', '~> 7.3'
 gem 'pg_search', '~> 2.3'
 gem 'meta-tags', '~> 2.22'

@@ -1,33 +1,43 @@
 <article itemscope itemtype="http://schema.org/Article">
-  <div class="bg-white p-4 mt-4">
+  <div class="bg-white mt-2">
     <div class="grid grid-cols-1 sm:grid-cols-5 sm:border-b">
-      <div class="sm:row-span-3 sm:col-span-1 px-2 sm:p-2 sm:border-r mr-4">
+      <div class="sm:row-span-3 sm:col-span-1 sm:border-r">
         <div>
           <%= render Packages::Logo::Component.new(package: @package) %>
         </div>
 
-
-        <%= render BookmarkButton::Component.new \
-          class: button_class + ' !px-0 w-full flex items-center justify-center mt-8 mb-4',
-          package_id: @package.id,
-          with_controller: true
+        <%= link_to package_direct_play_path(@package),
+          target: '_blank',
+          class: 'flex w-full font-bold p-2 md:p-4 hover:bg-gray-100 items-center' \
+          do
         %>
+          <%= heroicon 'play-circle', options: { class: 'h-6 mr-1 inline' } %>
+          <%= t('direct_play') %>
+        <% end %>
 
         <%= turbo_stream_from :download_counts %>
         <%= link_to package_direct_download_path(@package),
           target: '_blank',
-          class: button_class + "!px-0 w-full flex items-center justify-center mb-4" \
-            do
+          class: "flex w-full font-bold p-2 md:p-4 hover:bg-gray-100 items-center" \
+          do
         %>
-          <%= heroicon "document-arrow-down", options: { class: "h-6 inline sm:max-lg:hidden" } %>
-          <span class="text-center">
-            <%= t(:link) %>
-            (<span id="<%= dom_id(@package, :download_count) %>"><%= @package.download_count %></span>)
+          <%= heroicon "document-arrow-down", options: { class: "h-6 mr-1 inline" } %>
+          <%= t('link') %>
+          (
+          <span id="<%= dom_id(@package, :download_count) %>">
+            <%= @package.download_count %>
           </span>
+          )
         <% end %>
+
+        <%= render BookmarkButton::Component.new \
+          class: 'flex w-full font-bold p-2 md:p-4 hover:bg-gray-100 items-center cursor-pointer',
+          package_id: @package.id,
+          with_controller: true
+        %>
       </div>
 
-      <div class="col-span-4">
+      <div class="col-span-4 order-first sm:order-1 p-2">
         <div class="md:inline md:float-right hidden">
           <%= render Packages::Distributions::Component.new package: @package %>
         </div>
@@ -58,10 +68,12 @@
 
 
     <% if @package.structure.present? %>
-      <h3 class="text-xl mt-4 mb-2">
-        <%= t(:questions) %>
-      </h3>
-      <%= render Packages::Show::Questions::Component.new(structure: @package.structure) %>
+      <div class="p-2">
+        <h3 class="text-xl mt-4 mb-2">
+          <%= t(:questions) %>
+        </h3>
+        <%= render Packages::Show::Questions::Component.new(structure: @package.structure) %>
+      </div>
     <% end %>
   </div>
 
