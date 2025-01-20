@@ -45,7 +45,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'kaminari', '~> 1.2'
 
-gem 'tailwindcss-rails', '~> 3.2'
+gem 'tailwindcss-rails', '~> 3.3'
 gem 'rubyzip', '~> 2.4'
 gem 'heroicons', '~> 2.0', '>= 2.0.1'
 gem 'sidekiq', '~> 7.3'
