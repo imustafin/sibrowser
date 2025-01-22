@@ -26,9 +26,7 @@ module Sistorage
 
           total = packages.count
 
-          if from
-            packages = packages.where('id > ?', from)
-          end
+          packages = packages.offset(from) if from
 
           packages = packages.limit(limit)
 
