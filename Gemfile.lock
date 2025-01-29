@@ -218,7 +218,7 @@ GEM
     psych (5.2.3)
       date
       stringio
-    puma (6.5.0)
+    puma (6.6.0)
       nio4r (~> 2.0)
     qonfig (0.29.0)
     racc (1.8.1)
@@ -377,7 +377,7 @@ DEPENDENCIES
   pg (~> 1.5)
   pg_search (~> 2.3)
   platform-api (~> 3.7)
-  puma (~> 6.5)
+  puma (~> 6.6)
   rack-attack (~> 6.7)
   rack-mini-profiler (~> 3.3)
   rails (~> 8.0)

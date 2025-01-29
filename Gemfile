@@ -9,7 +9,7 @@ gem 'importmap-rails', '~> 2.1'
 # Use postgres as the database for Active Record
 gem 'pg', '~> 1.5'
 # Use Puma as the app server
-gem 'puma', '~> 6.5'
+gem 'puma', '~> 6.6'
 gem 'turbo-rails', '~> 2.0'
 gem 'stimulus-rails', '~> 1.3'
 # Use Redis adapter to run Action Cable in production
