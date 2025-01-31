@@ -30,6 +30,16 @@ module Sistorage
             * `0`: ascending
             * `1`: descending
           DESC
+          optional :searchText, type: String, length: { max: 100 }, desc: <<~DESC
+            Free-text search.
+
+            Maximum length is 100 characters.
+          DESC
+          optional :tags, type: String, desc: <<~DESC
+            Comma-separated list of tags.
+
+            Maximum length is 100 characters.
+          DESC
         end
         get :search do
           limit = params[:count] || 10
@@ -48,9 +58,21 @@ module Sistorage
           sort_dir = sort_dirs[params[:sortDirection]] || :asc
 
           packages = Package.visible.order(sort_key => sort_dir)
+
+          if params[:searchText].present?
+            packages = packages.search_freetext(params[:searchText])
+          end
+
           if sort_key != :id
             # Add order by id to break ties in predictable order
             packages = packages.order(id: :asc)
+          end
+
+          if params[:tags]
+            params[:tags]
+              .split(',')
+              .map(&:strip)
+              .each { packages = packages.by_tag(it) }
           end
 
           total = packages.count

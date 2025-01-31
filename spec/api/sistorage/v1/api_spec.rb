@@ -68,5 +68,28 @@ RSpec.describe Sistorage::V1::Api do
         expect(res['packages'].pluck('id')).to eq([-10, -15, -100])
       end
     end
+
+    describe 'filter' do
+      it 'can search by text' do
+        a = create(:package, name: 'apple juice')
+        _b = create(:package, name: 'apple pie')
+        c = create(:package, name: 'orange juice')
+
+        res = do_search(searchText: 'juice')
+        expect(res['packages'].pluck('id')).to contain_exactly(a.id, c.id)
+      end
+
+      it 'can search by tags' do
+        a = create(:package, tags: ['apple', 'juice'])
+        b = create(:package, tags: ['apple', 'pie'])
+        c = create(:package, tags: ['orange', 'juice'])
+
+        res = do_search(tags: 'apple')
+        expect(res['packages'].pluck('id')).to contain_exactly(a.id, b.id)
+
+        res = do_search(tags: 'orange,juice')
+        expect(res['packages'].pluck('id')).to contain_exactly(c.id)
+      end
+    end
   end
 end
