@@ -10,6 +10,7 @@
             itemprop="itemListElement"
             itemscope
             itemtype="https://schema.org/ListItem"
+            class="after:content-['/'] after:mx-1"
           >
             <%= link_to part.last, class: 'font-bold', itemprop: 'item' do %>
               <span itemprop="name">
@@ -18,9 +19,6 @@
             <% end %>
             <meta itemprop="position" content="<%= i + 1 %>" />
           </li>
-          <span class="mx-2">
-            /
-          </span>
         <% else %>
           <li
             itemprop="itemListElement"
