@@ -7,7 +7,7 @@ module Sistorage
       get :info do
         {
           randomPackagesSupported: false,
-          identifiersSupported: true # all ids are integers
+          identifiersSupported: false
         }
       end
       resource :packages do
