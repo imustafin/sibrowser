@@ -92,4 +92,16 @@ RSpec.describe Sistorage::V1::Api do
       end
     end
   end
+
+  describe 'GET /facets/tags' do
+    it 'returns tags in alphabetical order without duplicates' do
+      create(:package, tags: ['Aone', 'Btwo'])
+      create(:package, tags: ['Btwo', 'Cthree'])
+
+      get '/sistorage/api/v1/facets/tags'
+      expect(response).to be_successful
+      res = response.parsed_body
+      expect(res.pluck('name')).to eq(['Aone', 'Btwo', 'Cthree'])
+    end
+  end
 end

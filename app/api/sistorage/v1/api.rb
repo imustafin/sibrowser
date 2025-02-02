@@ -96,6 +96,24 @@ module Sistorage
           end
         end
       end
+
+      resource :facets do
+        resource :tags do
+          desc 'Get all tags',
+            entity: Entities::Tag,
+            is_array: true,
+            detail: ''
+          get do
+            tags = Package
+              .from(Package.visible.select('jsonb_array_elements_text(tags) AS tag'))
+              .where("tag <> ''")
+              .group('lower(tag)')
+              .order('lower(tag) asc')
+              .pluck('min(tag)')
+            present tags, with: Entities::Tag
+          end
+        end
+      end
     end
   end
 end
