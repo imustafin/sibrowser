@@ -65,7 +65,7 @@ gem 'sentry-sidekiq', '~> 5.22'
 gem 'chartkick', '~> 5.1'
 
 gem 'crawler_detect', '~> 1.2'
-gem 'activerecord-import', '~> 2.0'
+gem 'activerecord-import', '~> 2.1'
 gem 'rack-attack', '~> 6.7'
 
 # Using Grape for implementing SIStorage api
