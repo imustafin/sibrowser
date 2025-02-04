@@ -93,6 +93,23 @@ RSpec.describe Sistorage::V1::Api do
     end
   end
 
+  describe 'GET /packages/:id' do
+    describe 'logoUri' do
+      it 'has logo path or nil' do
+        a = create(:package, logo_bytes: 1)
+        b = create(:package)
+
+        get "/sistorage/api/v1/packages/#{a.id}"
+        expect(response).to be_successful
+        expect(response.parsed_body['logoUri']).to eq "/packages/#{a.id}/logo.webp"
+
+        get "/sistorage/api/v1/packages/#{b.id}"
+        expect(response).to be_successful
+        expect(response.parsed_body['logoUri']).to be_nil
+      end
+    end
+  end
+
   describe 'GET /facets/tags' do
     it 'returns tags in alphabetical order without duplicates' do
       create(:package, tags: ['Aone', 'Btwo'])

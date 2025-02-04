@@ -25,7 +25,7 @@ module Sistorage
             desc: 'Package logo location. Can be an absolute path on this host.'
           } \
         do |package, _options|
-          package_logo_path(package, locale: nil)
+          package_logo_path(package, locale: nil) if package.has_logo?
         end
 
         expose :size, documentation: {
