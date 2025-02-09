@@ -22,8 +22,6 @@ services:
       HEROKU_TOKEN:
       HEROKU_APP_NAME:
 
-    tmpfs:
-      - /tmp
     stdin_open: true
     tty: true
     volumes:
