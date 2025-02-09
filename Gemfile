@@ -3,6 +3,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.4.1'
 
+gem 'rack-cors', '~> 2.0', '>= 2.0.2'
 gem 'rails', '~> 8.0'
 gem 'rails-i18n', '~> 8.0'
 gem 'importmap-rails', '~> 2.1'
