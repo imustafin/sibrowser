@@ -1,5 +1,5 @@
 <article
-  class="w-full h-full border-solid border bg-white mb-4 flex flex-col"
+  class="w-full h-full bg-white mb-4 flex flex-col"
   itemscope
   itemtype="http://schema.org/Article"
   itemprop="itemListElement"
@@ -8,7 +8,7 @@
   <meta itemprop="position" content="<%= @position %>">
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-9 xl:grid-cols-10 lg:grid-cols-10 md:grid-rows-[auto_1fr_auto]">
-    <div class="col-span-12 md:row-span-3 md:col-span-1 lg:col-span-2 lg:col-span-3 xl:col-span-2 px-2 md:p-2 lg:border-r">
+    <div class="col-span-12 md:row-span-3 md:col-span-1 lg:col-span-2 lg:col-span-3 xl:col-span-2 px-2 md:p-2 lg:border-r border-gray-200">
       <%= link_to @package do %>
         <%= render Packages::Logo::Component.new(package: @package) %>
       <% end %>
@@ -46,7 +46,7 @@
     </div>
   </div>
 
-  <div class="border-t flex h-10 md:h-14"><%# specify height to avoid layout shift %>
+  <div class="border-t border-gray-200 flex h-10 md:h-14"><%# specify height to avoid layout shift %>
     <% if @package.vk_download_url %>
       <%= link_to package_direct_play_path(@package),
         target: '_blank',

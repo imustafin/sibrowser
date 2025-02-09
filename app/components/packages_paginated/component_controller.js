@@ -99,6 +99,6 @@ export default class extends Controller {
 
   beforeFloatingIntersects(intersection) {
     const isIntersecting = intersection.isIntersecting;
-    this.paginationTarget.classList.toggle('bg-white', !isIntersecting);
+    this.paginationTarget.classList.toggle('bg-white/95', !isIntersecting);
   }
 }
