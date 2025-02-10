@@ -70,7 +70,7 @@ gem 'activerecord-import', '~> 2.1'
 gem 'rack-attack', '~> 6.7'
 
 # Using Grape for implementing SIStorage api
-gem 'grape', '~> 2.2'
+gem 'grape', '~> 2.3'
 gem 'grape-entity', '~> 1.0', '>= 1.0.1'
 gem 'grape-swagger', '~> 2.1', '>= 2.1.2'
 gem 'grape-swagger-entity', '~> 0.5.5'
