@@ -86,7 +86,7 @@ GEM
     concurrent-ruby (1.3.5)
     connection_pool (2.5.1)
     crass (1.0.6)
-    crawler_detect (1.2.5)
+    crawler_detect (1.2.6)
       qonfig (>= 0.24)
     date (3.4.1)
     diff-lcs (1.5.1)
@@ -227,7 +227,8 @@ GEM
       stringio
     puma (6.6.0)
       nio4r (~> 2.0)
-    qonfig (0.29.0)
+    qonfig (0.30.0)
+      base64 (>= 0.2)
     racc (1.8.1)
     rack (3.1.13)
     rack-attack (6.7.0)
